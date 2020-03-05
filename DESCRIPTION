@@ -1,11 +1,26 @@
 Package: iNEXT.4steps
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Title: four steps of INterpolation and EXTrapolation analysis
+Version: 1.1.0
+Author: Anne Chao and Kai-Hsiang Hu
+Maintainer: Kai-Hsiang Hu <river19951224@gmail.com>
+Description: Provides simple functions to compute and plot a complete analysis process
+             with following four steps:
+             <Step1>Sample completeness profiles.
+             <Step2>Asymptotic analysis.
+             <Step3>Non-asymptotic coverage-based rarefaction and extrapolation analysis.
+             <Step4>Evenness among species abundances.
+             (You can find the paper(No.135) from Chao.website:
+             http://chao.stat.nthu.edu.tw/wordpress/publication-list/)
+License: GPL (>= 3)
+Imports:
+        devtools,
+        iNEXT,
+        gridExtra,
+        ggplot2,
+        reshape2,
+        dplyr,
+        stats
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 7.0.2

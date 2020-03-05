@@ -33,8 +33,11 @@
 #' @import gridExtra
 #' @import ggplot2
 #' @import reshape2
+#' @importFrom dplyr
 #' @importFrom stats rbinom
+#' @importFrom rmultinom
 #' @importFrom stats sd
+#' @importFrom stats qnorm
 #' @return a list of two of objects: \cr\cr
 #' \code{$summary} individual summary of 4 steps of data. \cr\cr
 #' \code{$figure} 5 figures of analysis process. \cr\cr
@@ -43,12 +46,16 @@
 #' @examples
 #' \donttest{
 #' ## Type (1) example for abundance based data (data.frame)
-#' data(bird)
-#' out <- iNEXT.4steps(data = bird, datatype = "abundance")
+#' Ex.1
+#' data(spider)
+#' out1 <- iNEXT.4steps(data = spider, datatype = "abundance")
 #' ## Type (2) example for incidence based data (list of data.frame)
-#' data(ant)
-#' out2 <- iNEXT.4steps(data = ant[1:2], datatype = "incidence_freq")
+#' out1
+#' Ex.2
+#' data(woody_incid)
+#' out2 <- iNEXT.4steps(data = woody_incid, datatype = "incidence_freq")
 #' }
+#' out2
 #' @references
 #' Chao,A.,Y.Kubota,D.Zelený,C.-H.Chiu,C.-F.Li,B.Kusumoto,M.Yasuhara,S.Thorn,C.-L.Wei,M.J.Costello,and R.K.olwell(2020).Quantifying sample completeness and comparing diversities among assemblages. Ecological Research.
 #' @export
