@@ -1,5 +1,5 @@
 #' iNEXT 4 steps
-#' 
+#'
 #' \code{iNEXT.4steps}:a complete (random sampling) biological analysis combined with four parts:\cr
 #' Step1:Sample Completeness\cr
 #' Step2:Interpolation and Extrapolation\cr
@@ -11,7 +11,7 @@
 #' The data input format for incidence data must be raw detection/non-detection data. That is, data for each community/assemblage
 #' consist of a species-by-sampling-unit matrix. Users must first merge multiple-community data by species identity to obtain a pooled
 #' list of species; then the rows of the input data refer to this pooled list. \cr
-#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}), 
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
 #' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
 #' @param size a vector of nonnegative integers specifying the sample sizes for which diversity estimates will be calculated. If \code{NULL}, the diversity estimates will
 #' be calculated for those sample sizes determined by the specified/default \code{endpoint} and \code{knot}. \cr
@@ -33,6 +33,8 @@
 #' @import gridExtra
 #' @import ggplot2
 #' @import reshape2
+#' @importFrom stats rbinom
+#' @importFrom stats sd
 #' @return a list of two of objects: \cr\cr
 #' \code{$summary} individual summary of 4 steps of data. \cr\cr
 #' \code{$figure} 5 figures of analysis process. \cr\cr
@@ -51,7 +53,7 @@
 #' Chao,A.,Y.Kubota,D.Zelený,C.-H.Chiu,C.-F.Li,B.Kusumoto,M.Yasuhara,S.Thorn,C.-L.Wei,M.J.Costello,and R.K.olwell(2020).Quantifying sample completeness and comparing diversities among assemblages. Ecological Research.
 #' @export
 
-iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL, 
+iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
                          knots=40, se=TRUE, conf=0.95, nboot=50, details=FALSE) {
   plot.names = c("(a)Sample completeness profiles",
                  "(b)Size-based rarefaction/extrapolation",
@@ -74,26 +76,26 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
                      Evenness=as.numeric(sapply(unique(estD$site), function(k) {
                        tmp=(estD %>% filter(site==k))$qD; tmp/tmp[1]}))
   )
-  
+
   level = levels(RE.table$DataInfo$site)
   levels(SC.table$Site) = level
   levels(asy.table$Site) = level
   levels(even.table$site) = level
-  
+
   ## 5 figures ##
   SC.plot <- ggSC(SC.table) +
     labs(title=plot.names[1]) +
     theme(text=element_text(size=10),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"))
-  size.RE.plot <- ggiNEXT(RE.table, type=1, facet.var="order", color.var="order") + 
+  size.RE.plot <- ggiNEXT(RE.table, type=1, facet.var="order", color.var="order") +
     labs(title=plot.names[2]) +
     theme(text=element_text(size=10),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"))
-  cover.RE.plot <- ggiNEXT(RE.table, type=3, facet.var="order", color.var="order") + 
+  cover.RE.plot <- ggiNEXT(RE.table, type=3, facet.var="order", color.var="order") +
     labs(title=plot.names[4]) +
     theme(text=element_text(size=10),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"))
-  asy.plot <- ggAsymDiv(asy.table) + 
+  asy.plot <- ggAsymDiv(asy.table) +
     labs(title=plot.names[3]) +
     theme(text=element_text(size=10),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"))
@@ -101,7 +103,7 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
     labs(title=plot.names[5]) +
     theme(text=element_text(size=10),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"))
-  
+
   ##  Outpue_summary ##
   summary = list(summary.deal(SC.table, 1),
                  summary.deal(asy.table, 2),
@@ -109,7 +111,7 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
                  summary.deal(even.table, 4, estD)
   )
   names(summary) = table.names
-  
+
   ##  Output_figures ##
   # steps.plot = grid.arrange(SC.plot, size.RE.plot, asy.plot,
   #                          cover.RE.plot, even.plot, nrow=2)
@@ -117,9 +119,9 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
                          cover.RE.plot, even.plot
   )
   if (details==FALSE) {
-    ans <- list(summary = summary, figure = steps.plot) 
+    ans <- list(summary = summary, figure = steps.plot)
   } else {
-    tab = list("Sample Completeness" = SC.table, "iNEXT" = RE.table, 
+    tab = list("Sample Completeness" = SC.table, "iNEXT" = RE.table,
                "Asymptotic Diversity" = asy.table, "Evenness" = even.table)
     ans <- list(summary = summary, figure = steps.plot, details = tab)
   }
