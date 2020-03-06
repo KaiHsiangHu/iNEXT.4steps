@@ -33,7 +33,7 @@
 #' @import gridExtra
 #' @import ggplot2
 #' @import reshape2
-#' @importFrom dplyr
+#' @import dplyr
 #' @importFrom stats rbinom
 #' @importFrom rmultinom
 #' @importFrom stats sd
@@ -49,13 +49,13 @@
 #' Ex.1
 #' data(spider)
 #' out1 <- iNEXT.4steps(data = spider, datatype = "abundance")
-#' ## Type (2) example for incidence based data (list of data.frame)
 #' out1
+#' ## Type (2) example for incidence based data (list of data.frame)
 #' Ex.2
 #' data(woody_incid)
-#' out2 <- iNEXT.4steps(data = woody_incid, datatype = "incidence_freq")
-#' }
+#' out2 <- iNEXT.4steps(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
 #' out2
+#' }
 #' @references
 #' Chao,A.,Y.Kubota,D.Zelený,C.-H.Chiu,C.-F.Li,B.Kusumoto,M.Yasuhara,S.Thorn,C.-L.Wei,M.J.Costello,and R.K.olwell(2020).Quantifying sample completeness and comparing diversities among assemblages. Ecological Research.
 #' @export
@@ -75,7 +75,7 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
   SC.table <- SC(data, q=seq(0,2,0.2), datatype, nboot, conf)
   RE.table <- iNEXT(data, q=c(0,1,2), datatype, size, endpoint, knots, se, conf, nboot)
   asy.table <- iNEXT:::AsymDiv(data, q=seq(0, 2, 0.2), datatype, nboot, conf)
-                 ## Evenness ##
+  ## Evenness ##
   estD = estimateD(data, q=seq(0,2,0.1), datatype, base="coverage", level=NULL, nboot=0)
   maxC = min(unique(estD[,"SC"]))
   # est = estimateD(data, q=seq(0,2,0.2), datatype, base="coverage", level=maxC, nboot=0)
@@ -85,9 +85,9 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
   )
 
   level = levels(RE.table$DataInfo$site)
-  levels(SC.table$Site) = level
-  levels(asy.table$Site) = level
-  levels(even.table$site) = level
+  SC.table$Site = factor(SC.table$Site, level)
+  asy.table$Site = factor(asy.table$Site, level)
+  even.table$site = factor(even.table$site, level)
 
   ## 5 figures ##
   SC.plot <- ggSC(SC.table) +

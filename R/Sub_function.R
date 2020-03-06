@@ -25,9 +25,9 @@ summary.deal <- function(table, step, Pielou=NULL) {
     tmp = table %>% filter(order %in% c(0,1,2))
     out = acast(tmp, site~order, value.var="Evenness")
 
-    logD = (Pielou %>% filter(order == 1))[,c("site","qD")]
-    logS = (Pielou %>% filter(order == 0))[,c("site","qD")]
-    out[,1] = log(logD$qD)/log(logS$qD)
+    D = (Pielou %>% filter(order == 1))[,c("site","qD")]
+    S = (Pielou %>% filter(order == 0))[,c("site","qD")]
+    out[,1] = sapply(rownames(out), function(x) log(D[D$site==x,"qD"])/log(S[S$site==x,"qD"]))
     colnames(out) = c("Pielou J'", paste("q=", c(1,2), sep=""))
   }
 
