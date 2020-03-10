@@ -1,13 +1,17 @@
 #' iNEXT 4 steps
 #'
-#' \code{iNEXT.4steps}:a complete (random sampling) biological analysis combined with four parts:\cr
-#' Step1:Sample Completeness\cr
-#' Step2:Interpolation and Extrapolation\cr
-#' Step3:Asymptotic diversity\cr
-#' Step4:Evenness.\cr
-#' @param data a matrix/data.frame of species abundances/incidences data.\cr Type (1) abundance data: When there are N assemblages, the
+#' \code{iNEXT.4steps}:\cr
+#' A complete (random sampling) biological analysis combined with four parts:\cr
+#' Step1: Sample Completeness.\cr
+#' Step2: Interpolation and Extrapolation.\cr
+#' Step3: Asymptotic diversity.\cr
+#' Step4: Evenness.\cr
+#' @param data a matrix/data.frame of species abundances/incidences data.\cr
+#' Type (1) abundance data:\cr
+#' When there are N assemblages, the
 #' observed species abundances should be arranged as a species (in rows) by assemblage (in columns) matrix. The first row
-#' (including N entries) lists the assemblage labels or site names for the N assemblages.\cr Type (2) incidence data:
+#' (including N entries) lists the assemblage labels or site names for the N assemblages.\cr
+#' Type (2) incidence data:\cr
 #' The data input format for incidence data must be raw detection/non-detection data. That is, data for each community/assemblage
 #' consist of a species-by-sampling-unit matrix. Users must first merge multiple-community data by species identity to obtain a pooled
 #' list of species; then the rows of the input data refer to this pooled list. \cr
@@ -30,34 +34,35 @@
 #' @param details a logical variable to determine whether do you want to print out the detailed value of 4 plots, default is \code{FALSE}.\cr
 #' @import devtools
 #' @import iNEXT
-#' @import gridExtra
 #' @import ggplot2
 #' @import reshape2
 #' @import dplyr
-#' @importFrom stats rbinom
-#' @importFrom rmultinom
-#' @importFrom stats sd
+#' @import ggpubr
 #' @importFrom stats qnorm
+#' @importFrom stats rbinom
+#' @importFrom stats rmultinom
+#' @importFrom stats sd
 #' @return a list of two of objects: \cr\cr
 #' \code{$summary} individual summary of 4 steps of data. \cr\cr
 #' \code{$figure} 5 figures of analysis process. \cr\cr
 #' \code{$details} the information for generating \code{figure}. \cr
 #' if you nees it, you should key in \code{details = TRUE}. \cr\cr
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' ## Type (1) example for abundance based data (data.frame)
-#' Ex.1
+#' ## Ex.1
 #' data(spider)
 #' out1 <- iNEXT.4steps(data = spider, datatype = "abundance")
 #' out1
 #' ## Type (2) example for incidence based data (list of data.frame)
-#' Ex.2
+#' ## Ex.2
 #' data(woody_incid)
 #' out2 <- iNEXT.4steps(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
 #' out2
 #' }
 #' @references
-#' Chao,A.,Y.Kubota,D.Zelený,C.-H.Chiu,C.-F.Li,B.Kusumoto,M.Yasuhara,S.Thorn,C.-L.Wei,M.J.Costello,and R.K.olwell(2020).Quantifying sample completeness and comparing diversities among assemblages. Ecological Research.
+#' Chao,A., Y.Kubota, D.Zeleny, C.-H.Chiu, C.-F.Li, B.Kusumoto, M.Yasuhara, S.Thorn, C.-L.Wei, M.J.Costello, and R.K.olwell(2020).
+#' Quantifying sample completeness and comparing diversities among assemblages. Ecological Research.
 #' @export
 
 iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
