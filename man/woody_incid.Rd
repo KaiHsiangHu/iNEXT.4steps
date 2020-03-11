@@ -12,10 +12,10 @@ The first row is total plots(quardrats). Other rows are species.
 \format{
   A data frame with 494 observations on the following 4 variables.
   \describe{
-    \item{\code{upper_cloud}}{a numeric vector}
-    \item{\code{lower_cloud}}{a numeric vector}
-    \item{\code{lowland}}{a numeric vector}
-    \item{\code{monsoon}}{a numeric vector}
+    \item{\code{Upper_cloud}}{a numeric vector}
+    \item{\code{Lower_cloud}}{a numeric vector}
+    \item{\code{Lowland}}{a numeric vector}
+    \item{\code{Monsoon}}{a numeric vector}
   }
 }
 \examples{

@@ -29,7 +29,7 @@
 #' (setting only for \code{step2}).\cr
 #' @param conf a positive number < 1 specifying the level of confidence interval, default is 0.95.\cr
 #' (setting only for \code{step2}).\cr
-#' @param nboot an integer specifying the number of bootstrap replications, default is 50.\cr
+#' @param nboot an integer specifying the number of bootstrap replications, default is 30.\cr
 #' (setting only for \code{step2}).\cr
 #' @param details a logical variable to determine whether do you want to print out the detailed value of 4 plots, default is \code{FALSE}.\cr
 #' @import devtools
@@ -66,7 +66,7 @@
 #' @export
 
 iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
-                         knots=40, se=TRUE, conf=0.95, nboot=50, details=FALSE) {
+                         knots=30, se=TRUE, conf=0.95, nboot=30, details=FALSE) {
   plot.names = c("(a)Sample completeness profiles",
                  "(b)Size-based rarefaction/extrapolation",
                  "(c)Asymptotic and empirical diversity profiles",
@@ -77,45 +77,44 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
                   "STEP3.Non-asymptotic coverage-based rarefaction and extrapolation analysis",
                   "STEP4:Evenness among species abundances")
   ## 4 Details ##
-  SC.table <- SC(data, q=seq(0,2,0.2), datatype, nboot, conf)
-  RE.table <- iNEXT(data, q=c(0,1,2), datatype, size, endpoint, knots, se, conf, nboot)
+  SC.table <- SC(data, q=seq(0, 2, 0.2), datatype, nboot, conf)
+  RE.table <- iNEXT(data, q=c(0, 1, 2), datatype, size, endpoint, knots, se, conf, nboot)
   asy.table <- iNEXT:::AsymDiv(data, q=seq(0, 2, 0.2), datatype, nboot, conf)
-  ## Evenness ##
-  estD = estimateD(data, q=seq(0,2,0.1), datatype, base="coverage", level=NULL, nboot=0)
-  maxC = min(unique(estD[,"SC"]))
-  # est = estimateD(data, q=seq(0,2,0.2), datatype, base="coverage", level=maxC, nboot=0)
-  even.table = cbind(estD[,c("site","order")],
-                     Evenness=as.numeric(sapply(unique(estD$site), function(k) {
-                       tmp=(estD %>% filter(site==k))$qD; tmp/tmp[1]}))
-  )
+  even.table <- Evenness(data, q=seq(0, 2, 0.2), datatype, nboot, conf, E.type=3)
 
   level = levels(RE.table$DataInfo$site)
   SC.table$Site = factor(SC.table$Site, level)
   asy.table$Site = factor(asy.table$Site, level)
-  even.table$site = factor(even.table$site, level)
+  even.table[[1]]$Site = factor(even.table[[1]]$Site, level)
 
   ## 5 figures ##
   SC.plot <- ggSC(SC.table) +
     labs(title=plot.names[1]) +
     theme(text=element_text(size=10),
-          plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"))
+          plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
+          plot.title = element_text(size=12, colour='blue', face="bold",hjust=0))
   size.RE.plot <- ggiNEXT(RE.table, type=1, facet.var="order", color.var="order") +
     labs(title=plot.names[2]) +
     theme(text=element_text(size=10),
-          plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"))
+          plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
+          plot.title = element_text(size=12, colour='blue', face="bold",hjust=0))
   cover.RE.plot <- ggiNEXT(RE.table, type=3, facet.var="order", color.var="order") +
     labs(title=plot.names[4]) +
     theme(text=element_text(size=10),
-          plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"))
+          plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
+          plot.title = element_text(size=12, colour='blue', face="bold",hjust=0))
   asy.plot <- ggAsymDiv(asy.table) +
     labs(title=plot.names[3]) +
     theme(text=element_text(size=10),
-          plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"))
-  even.plot <- ggEven(even.table) +
+          plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
+          plot.title = element_text(size=12, colour='blue', face="bold",hjust=0))
+  even.plot <- ggEven(even.table)[[1]] +
     labs(title=plot.names[5]) +
     theme(text=element_text(size=10),
-          plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"))
+          plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
+          plot.title = element_text(size=12, colour='blue', face="bold",hjust=0))
 
+  estD = estimateD(data, q=c(0,1,2), datatype, base="coverage", level=NULL, nboot=0)
   ##  Outpue_summary ##
   summary = list(summary.deal(SC.table, 1),
                  summary.deal(asy.table, 2),

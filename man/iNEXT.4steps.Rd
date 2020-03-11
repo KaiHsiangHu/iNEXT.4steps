@@ -9,10 +9,10 @@ iNEXT.4steps(
   datatype = "abundance",
   size = NULL,
   endpoint = NULL,
-  knots = 40,
+  knots = 30,
   se = TRUE,
   conf = 0.95,
-  nboot = 50,
+  nboot = 30,
   details = FALSE
 )
 }
@@ -47,7 +47,7 @@ reference sample size. It will be ignored if \code{size} is given. \cr
 \item{conf}{a positive number < 1 specifying the level of confidence interval, default is 0.95.\cr
 (setting only for \code{step2}).\cr}
 
-\item{nboot}{an integer specifying the number of bootstrap replications, default is 50.\cr
+\item{nboot}{an integer specifying the number of bootstrap replications, default is 30.\cr
 (setting only for \code{step2}).\cr}
 
 \item{details}{a logical variable to determine whether do you want to print out the detailed value of 4 plots, default is \code{FALSE}.\cr}
