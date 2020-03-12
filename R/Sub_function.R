@@ -332,7 +332,7 @@ even = function(q, qD, S, E) {
 #
 # \code{Evenness.profile} Estimation or Empirical of Evenness with order q
 #
-# @param x vector for data.
+# @param x a data.frame or a list for data.
 # @param q a integer vector for the order of Hill number.
 # @param datatype a binary choose with 'abundance' or 'incidence_freq'
 # @param method the number of bootstrap resampling times, default is 50
@@ -341,25 +341,51 @@ even = function(q, qD, S, E) {
 
 Evenness.profile <- function(x, q, datatype=c("abundance","incidence_freq"),
                              method=c("Estimated", "Empirical"), E.type) {
-  x = x[x>0]
+  if (class(x)=="list") {
+    y = x
+    if (is.null(names(y))) names(y) = paste("Data", 1:length(y), sep="")
+    y
+  }
+
+  if (class(x) == "data.frame" | class(x) == "matrix") {
+    y=lapply(1:ncol(x), function(k) x[,k])
+    names(y) = colnames(x)
+    if (is.null(names(y))) names(y) = paste("Data", 1:length(y), sep="")
+    y
+  }
+
+  if (class(x) == "numeric" | class(x) == "integer") {
+    y = list(Data = x)
+  }
+  x = lapply(y, function(i) i[i>0])
+
   if (method == "Estimated") {
     estqD = estimateD(x, q, datatype, base="coverage", level=NULL, nboot=0)
     estS = estimateD(x, 0, datatype, base="coverage", level=NULL, nboot=0)
 
-    out = lapply(E.type, function(i) even(q, estqD$qD, estS$qD, i))
-    out
+    out = lapply(E.type, function(i) {
+      tt = sapply(names(x), function(k) even(q, estqD[estqD$site==k, "qD"], estS[estS$site==k, "qD"], i))
+      rownames(tt) = q
+      tt
+      })
   } else if (method == "Empirical") {
+
     if (datatype == "abundance") {
-      empqD = iNEXT:::Diversity_profile_MLE(x, q)
-      empS = iNEXT:::Diversity_profile_MLE(x, 0)
+      empqD = sapply(y, function(k) iNEXT:::Diversity_profile_MLE(k, q))
+      empS = sapply(y, function(k) iNEXT:::Diversity_profile_MLE(k, 0))
     } else if (datatype == "incidence_freq") {
-      empqD = iNEXT:::Diversity_profile_MLE.inc(x, q)
-      empS = iNEXT:::Diversity_profile_MLE.inc(x, 0)
+      empqD = sapply(y, function(k) iNEXT:::Diversity_profile_MLE.inc(k, q))
+      empS = sapply(y, function(k) iNEXT:::Diversity_profile_MLE.inc(k, 0))
     }
 
-    out = lapply(E.type, function(i) even(q, empqD, empS, i))
-    out
+    out = lapply(E.type, function(i) {
+      tt = sapply(names(y), function(k) even(q, empqD[,k], empS[k], i))
+      rownames(tt) = q
+      tt
+    })
   }
+
+  names(out) = paste("E", E.type, sep="")
   return(out)
 }
 
@@ -418,64 +444,96 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
     x <- datalist
   }
 
-  out2 <- lapply(E.type, function(j) {
-    if (datatype == "abundance") {
-      out1 <- lapply(1:length(x), function(i) {
-        dq <- c(unlist(Evenness.profile(x[[i]], q, "abundance", "Estimated", j)),
-                unlist(Evenness.profile(x[[i]], q, "abundance", "Empirical", j)))
-        if (nboot > 1) {
-          Prob.hat <- iNEXT:::EstiBootComm.Ind(x[[i]])
-          Abun.Mat <- rmultinom(nboot, sum(x[[i]]), Prob.hat)
-          error <- qnorm(1-(1-conf)/2)*apply(
-            apply(Abun.Mat, 2, function(xb) c(unlist(Evenness.profile(xb, q, "abundance", "Estimated", j)),
-                                              unlist(Evenness.profile(xb, q, "abundance", "Empirical", j))))
-            , 1, sd, na.rm = TRUE)
-        } else {
-          error = 0
-        }
-        out <- data.frame(order = rep(q, 2), Evenness = dq, Even.LCL = dq - error,
-                          Even.UCL = dq + error, Site = names(x)[i],
-                          method = rep(c("Estimated", "Empirical"), each = length(q)))
-        out$Even.LCL[out$Even.LCL < 0] <- 0
-        out
-      })
-    } else if (datatype == "incidence") {
-      out1 <- lapply(1:length(x), function(i) {
-        dq <- c(unlist(Evenness.profile(x[[i]], q, "incidence_freq", "Estimated", j)),
-                unlist(Evenness.profile(x[[i]], q, "incidence_freq", "Empirical", j)))
-        if (nboot > 1) {
-          nT <- x[[i]][1]
-          Prob.hat <- iNEXT:::EstiBootComm.Sam(x[[i]])
-          Incid.Mat <- t(sapply(Prob.hat, function(p) rbinom(nboot, nT, p)))
-          Incid.Mat <- matrix(c(rbind(nT, Incid.Mat)), ncol = nboot)
-          tmp <- which(colSums(Incid.Mat) == nT)
-          if (length(tmp) > 0)
-            Incid.Mat <- Incid.Mat[, -tmp]
-          if (ncol(Incid.Mat) == 0) {
-            error = 0
-            warning("Insufficient data to compute bootstrap s.e.")
-          }
-          else {
-            error <- qnorm(1-(1-conf)/2)*apply(
-              apply(Incid.Mat, 2, function(yb) c(unlist(Evenness.profile(yb, q, "incidence_freq", "Estimated", j)),
-                                                 unlist(Evenness.profile(yb, q, "incidence_freq", "Empirical", j))))
-              , 1, sd, na.rm = TRUE)
-          }
-        } else {
-          error = 0
-        }
-        out <- data.frame(order = rep(q, 2), Evenness = dq, Even.LCL = dq - error,
-                          Even.UCL = dq + error, Site = names(x)[i],
-                          method = rep(c("Estimated", "Empirical"), each = length(q)))
-        out$Even.LCL[out$Even.LCL < 0] <- 0
-        out
-      })
-    }
-    out1 <- do.call(rbind, out1)
-  })
 
-  names(out2) <- paste("E", E.type, sep="")
-  return(out2)
+  if (datatype == "abundance") {
+    dqest <- Evenness.profile(x, q, "abundance", "Estimated", E.type)
+    dqemp <- Evenness.profile(x, q, "abundance", "Empirical", E.type)
+    dq <- lapply(1:length(E.type), function(i) as.vector(rbind(dqest[[i]], dqemp[[i]])))
+
+    if (nboot > 1) {
+      Prob.hat <- lapply(1:length(x), function(i) iNEXT:::EstiBootComm.Ind(x[[i]]))
+      Abun.Mat <- lapply(1:length(x), function(i) rmultinom(nboot, sum(x[[i]]), Prob.hat[[i]]))
+
+      se = qnorm(1-(1-conf)/2)*apply(
+        sapply(1:nboot, function(b) {
+          dat = lapply(1:length(Abun.Mat),function(j) Abun.Mat[[j]][,b])
+          dat.est = Evenness.profile(dat, q, "abundance", "Estimated", E.type)
+          dat.emp = Evenness.profile(dat, q, "abundance", "Empirical", E.type)
+          a = c()
+          for (m in 1:length(E.type)) {
+            for (n in 1:length(Abun.Mat)) {
+              a = c(a, dat.est[[m]][,n], dat.emp[[m]][,n])
+            }
+          }
+          a
+        })
+        , 1, sd, na.rm = TRUE)
+
+      error = lapply(1:length(E.type), function(k)
+        se[ (length(se)/length(E.type)*(k-1)+1) : (length(se)/length(E.type)*k)])
+
+    } else {
+      error = 0
+    }
+    out <- lapply(1:length(E.type), function(k) {
+      data.frame(order = rep(q, 2*length(x)), Evenness = dq[[k]], Even.LCL = dq[[k]] - error[[k]],
+                 Even.UCL = dq[[k]] + error[[k]], Site = rep(names(x), each=2*length(q)),
+                 method = rep( rep(c("Estimated", "Empirical"), each=length(q)), length(x))
+                 )
+    })
+
+  } else if (datatype == "incidence") {
+    dqest <- Evenness.profile(x, q, "incidence_freq", "Estimated", E.type)
+    dqemp <- Evenness.profile(x, q, "incidence_freq", "Empirical", E.type)
+    dq <- lapply(1:length(E.type), function(i) as.vector(rbind(dqest[[i]], dqemp[[i]])))
+
+    if (nboot > 1) {
+      nT <- lapply(1:length(x), function(i) x[[i]][1])
+      Prob.hat <- lapply(1:length(x), function(i) iNEXT:::EstiBootComm.Sam(x[[i]]))
+      Incid.Mat <- lapply(1:length(x), function(i) t(sapply(Prob.hat[[i]], function(p) rbinom(nboot, nT[[i]], p))))
+      Incid.Mat <- lapply(1:length(x), function(i) matrix(c(rbind(nT[[i]], Incid.Mat[[i]])), ncol = nboot))
+
+      for (i in 1:length(Incid.Mat)) {
+        tmp = which(colSums(Incid.Mat[[i]]) == nT[[i]])
+        if (length(tmp) > 0)
+          Incid.Mat <- lapply(Incid.Mat, function(k) k[, -tmp])
+      }
+
+      if (ncol(Incid.Mat[[1]]) == 0) {
+        error = 0
+        warning("Insufficient data to compute bootstrap s.e.")
+      } else {
+        se = qnorm(1-(1-conf)/2)*apply(
+          sapply(1:nboot, function(b) {
+            dat = lapply(1:length(Incid.Mat),function(j) Incid.Mat[[j]][,b])
+            dat.est = Evenness.profile(dat, q, "incidence_freq", "Estimated", E.type)
+            dat.emp = Evenness.profile(dat, q, "incidence_freq", "Empirical", E.type)
+            a = c()
+            for (m in 1:length(E.type)) {
+              for (n in 1:length(Incid.Mat)) {
+                a = c(a, dat.est[[m]][,n], dat.emp[[m]][,n])
+              }
+            }
+            a
+          })
+          , 1, sd, na.rm = TRUE)
+
+        error = lapply(1:length(E.type), function(k)
+          se[ (length(se)/length(E.type)*(k-1)+1) : (length(se)/length(E.type)*k)])
+      }
+    } else {
+      error = 0
+    }
+    out <- lapply(1:length(E.type), function(k) {
+      data.frame(order = rep(q, 2*length(x)), Evenness = dq[[k]], Even.LCL = dq[[k]] - error[[k]],
+                 Even.UCL = dq[[k]] + error[[k]], Site = rep(names(x), each=2*length(q)),
+                 method = rep( rep(c("Estimated", "Empirical"), each=length(q)), length(x))
+      )
+    })
+  }
+
+  names(out) <- paste("E", E.type, sep="")
+  return(out)
 }
 
 
@@ -496,9 +554,9 @@ ggEven <- function(output) {
     fig[[i]] = ggplot(output[[i]], aes(x=order, y=Evenness, colour=Site, lty = method)) +
       geom_line(size=1.2) +
       scale_colour_manual(values = cbPalette) +
-      # geom_ribbon(data = output[[1]] %>% filter(method=="Estimated"),
-      #             aes(ymin=Even.LCL, ymax=Even.UCL, fill=Site),
-      #             alpha=0.2, linetype=0) +
+      geom_ribbon(data = output[[i]] %>% filter(method=="Estimated"),
+                  aes(ymin=Even.LCL, ymax=Even.UCL, fill=Site),
+                  alpha=0.2, linetype=0) +
       scale_fill_manual(values = cbPalette) +
       labs(x="Order q", y="Evenness", title=names(output[i])) +
       theme_bw(base_size = 18) +
@@ -511,7 +569,8 @@ ggEven <- function(output) {
             legend.box.margin = margin(-10,-10,-5,-10),
             text=element_text(size=12),
             plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-            plot.title = element_text(size=20, colour='purple', face="bold.italic",hjust = 0.5))
+            plot.title = element_text(size=20, colour='purple', face="bold.italic",hjust = 0.5))+
+      scale_linetype_manual(values = c(2,1), breaks=c("Estimated", "Empirical"))
   }
   fig[[(length(output)+1)]] = ggarrange(plotlist=fig)
   return(fig)
