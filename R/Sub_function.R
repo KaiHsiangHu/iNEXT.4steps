@@ -159,6 +159,17 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
 # @return a vector of estimated sample completeness with order q
 
 sample_completeness = function(x, q, datatype = c("abundance","incidence_freq")){
+  TYPE <- c("abundance", "incidence", "incidence_freq")
+  if (is.na(pmatch(datatype, TYPE)))
+    stop("invalid datatype")
+  if (pmatch(datatype, TYPE) == -1)
+    stop("ambiguous datatype")
+  datatype <- match.arg(datatype, TYPE)
+  class_x <- class(x)[1]
+  if (datatype == "incidence") {
+    stop("Please try datatype=\"incidence_freq\".")
+  }
+
   if(datatype=="abundance"){
     x = x[x>0]
     n = sum(x)
@@ -192,7 +203,7 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
       }
     }
     est=sapply(q, sc.abund)
-  } else {
+  } else if (datatype == "incidence_freq") {
     t = x[1]
     x = x[-1]; x = x[x>0]
     u = sum(x)
@@ -309,20 +320,7 @@ even = function(q, qD, S, E) {
     tmp = (1-1/qD)/(1-1/S)
   if (E == 5)
     tmp = log(qD)/log(S)
-  if (E == 6) {
-    p = x/sum(x)
-    tmp = sapply(q, function(k) {
-      if(k==0){
-        nu <- abs(p - (1/S))
-        nu <- nu[nu > 0]
-        sub1 <- (sum(log(abs(nu)))/sum(nu>0)-(log(1-1/S)+(1-S)*log(S))/S)
-        1-exp(sub1)
-      }else{
-        1-(sum(abs(p-1/S)^k)/((1-1/S)^k+(S-1)*S^(-k)))^(1/k)
-      }
-    })
-    tmp
-  }
+
   return(tmp)
 }
 
@@ -332,15 +330,16 @@ even = function(q, qD, S, E) {
 #
 # \code{Evenness.profile} Estimation or Empirical of Evenness with order q
 #
-# @param x a data.frame or a list for data.
+# @param x a data.frame, a vector, or a list for data.
 # @param q a integer vector for the order of Hill number.
 # @param datatype a binary choose with 'abundance' or 'incidence_freq'
-# @param method the number of bootstrap resampling times, default is 50
+# @param method a binary calculation method with 'Estimated' or 'Empirical'
 # @param E.type a integer vector between 1 to 6
+# @param Cmax a standardized coverage for calculating diversity
 # @return a list of estimated(empirical) evenness with order q, each list is combined with a matrix
 
 Evenness.profile <- function(x, q, datatype=c("abundance","incidence_freq"),
-                             method=c("Estimated", "Empirical"), E.type) {
+                             method=c("Estimated", "Empirical"), E.type, Cmax=NULL) {
   if (class(x)=="list") {
     y = x
     if (is.null(names(y))) names(y) = paste("Data", 1:length(y), sep="")
@@ -360,11 +359,12 @@ Evenness.profile <- function(x, q, datatype=c("abundance","incidence_freq"),
   x = lapply(y, function(i) i[i>0])
 
   if (method == "Estimated") {
-    estqD = estimateD(x, q, datatype, base="coverage", level=NULL, nboot=0)
-    estS = estimateD(x, 0, datatype, base="coverage", level=NULL, nboot=0)
+    estqD = estimateD(x, q, datatype, base="coverage", level=Cmax, nboot=0)
+    estS = estimateD(x, 0, datatype, base="coverage", level=Cmax, nboot=0)
 
     out = lapply(E.type, function(i) {
       tt = sapply(names(x), function(k) even(q, estqD[estqD$site==k, "qD"], estS[estS$site==k, "qD"], i))
+      if(class(tt) %in% c("numeric","integer")) {tt = t(as.matrix(tt, nrow=1))}
       rownames(tt) = q
       tt
       })
@@ -380,6 +380,7 @@ Evenness.profile <- function(x, q, datatype=c("abundance","incidence_freq"),
 
     out = lapply(E.type, function(i) {
       tt = sapply(names(y), function(k) even(q, empqD[,k], empS[k], i))
+      if(class(tt) %in% c("numeric","integer")) {tt = t(as.matrix(tt, nrow=1))}
       rownames(tt) = q
       tt
     })
@@ -402,6 +403,7 @@ Evenness.profile <- function(x, q, datatype=c("abundance","incidence_freq"),
 # @param x data.frame or matrix of data
 # @param q a integer vector of the order of Hill number
 # @param datatype a binary choose with 'abundance' or 'incidence_freq'
+# @param method a binary calculation method with 'Estimated' or 'Empirical'
 # @param nboot the number of bootstrap resampling times, default is 50
 # @param conf a integer value between 0 to 1 for confidence interval
 # @param E.type a integer vector between 1 to 6
@@ -409,8 +411,8 @@ Evenness.profile <- function(x, q, datatype=c("abundance","incidence_freq"),
 #         Different lists represents different classes of Evenness.
 #         Each list is combined with order.q and sites.
 
-Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
-                      conf = 0.95, E.type = c(1:5))
+Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
+                      nboot = 50, conf = 0.95, E.type = c(1:5))
 {
   TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
   if (is.na(pmatch(datatype, TYPE)))
@@ -422,6 +424,19 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
   if (datatype == "incidence") {
     stop("datatype=\"incidence\" was no longer supported after v2.0.8, \n         please try datatype=\"incidence_freq\".")
   }
+
+  kind <- c("Estimated", "Empirical")
+  if (length(method) > 1)
+    stop("only one calculation method")
+  if (is.na(pmatch(method, kind)))
+    stop("invalid method")
+  if (pmatch(method, kind) == -1)
+    stop("ambiguous method")
+
+  class <- c(1:5)
+  if (sum(E.type %in% class) != length(E.type))
+    stop("invalid E.type")
+
   if (datatype == "incidence_raw") {
     if (class_x == "list") {
       x <- lapply(x, as.incfreq)
@@ -446,88 +461,77 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
 
 
   if (datatype == "abundance") {
-    dqest <- Evenness.profile(x, q, "abundance", "Estimated", E.type)
-    dqemp <- Evenness.profile(x, q, "abundance", "Empirical", E.type)
-    dq <- lapply(1:length(E.type), function(i) as.vector(rbind(dqest[[i]], dqemp[[i]])))
+    qD <- Evenness.profile(x, q, "abundance", method, E.type)
+    qD <- map(qD, as.vector)
 
     if (nboot > 1) {
       Prob.hat <- lapply(1:length(x), function(i) iNEXT:::EstiBootComm.Ind(x[[i]]))
       Abun.Mat <- lapply(1:length(x), function(i) rmultinom(nboot, sum(x[[i]]), Prob.hat[[i]]))
+      Cmax=min(estimateD(x, q=1, datatype="abundance", base="coverage", nboot=0)$SC)
 
       se = qnorm(1-(1-conf)/2)*apply(
         sapply(1:nboot, function(b) {
           dat = lapply(1:length(Abun.Mat),function(j) Abun.Mat[[j]][,b])
-          dat.est = Evenness.profile(dat, q, "abundance", "Estimated", E.type)
-          dat.emp = Evenness.profile(dat, q, "abundance", "Empirical", E.type)
-          a = c()
-          for (m in 1:length(E.type)) {
-            for (n in 1:length(Abun.Mat)) {
-              a = c(a, dat.est[[m]][,n], dat.emp[[m]][,n])
-            }
-          }
-          a
+          dat.qD = Evenness.profile(dat, q, "abundance", method, E.type, Cmax)
+          unlist(dat.qD)
         })
         , 1, sd, na.rm = TRUE)
 
-      error = lapply(1:length(E.type), function(k)
-        se[ (length(se)/length(E.type)*(k-1)+1) : (length(se)/length(E.type)*k)])
+      se = matrix(se, ncol=length(E.type))
+      error = split(se, col(se))
 
     } else {
-      error = 0
+      error = as.list(rep(0, length(E.type)))
     }
+
     out <- lapply(1:length(E.type), function(k) {
-      data.frame(order = rep(q, 2*length(x)), Evenness = dq[[k]], Even.LCL = dq[[k]] - error[[k]],
-                 Even.UCL = dq[[k]] + error[[k]], Site = rep(names(x), each=2*length(q)),
-                 method = rep( rep(c("Estimated", "Empirical"), each=length(q)), length(x))
+      data.frame(order = rep(q, length(x)), Evenness = qD[[k]], Even.LCL = qD[[k]] - error[[k]],
+                 Even.UCL = qD[[k]] + error[[k]], Site = rep(names(x), each=length(q)),
+                 method = rep( method, length(q)*length(x))
                  )
     })
 
   } else if (datatype == "incidence") {
-    dqest <- Evenness.profile(x, q, "incidence_freq", "Estimated", E.type)
-    dqemp <- Evenness.profile(x, q, "incidence_freq", "Empirical", E.type)
-    dq <- lapply(1:length(E.type), function(i) as.vector(rbind(dqest[[i]], dqemp[[i]])))
+    qD <- Evenness.profile(x, q, "incidence_freq", method, E.type)
+    qD <- map(qD, as.vector)
 
     if (nboot > 1) {
       nT <- lapply(1:length(x), function(i) x[[i]][1])
       Prob.hat <- lapply(1:length(x), function(i) iNEXT:::EstiBootComm.Sam(x[[i]]))
       Incid.Mat <- lapply(1:length(x), function(i) t(sapply(Prob.hat[[i]], function(p) rbinom(nboot, nT[[i]], p))))
       Incid.Mat <- lapply(1:length(x), function(i) matrix(c(rbind(nT[[i]], Incid.Mat[[i]])), ncol = nboot))
+      Cmax=min(estimateD(x, q=1, datatype="incidence_freq", base="coverage", nboot=0)$SC)
 
       for (i in 1:length(Incid.Mat)) {
-        tmp = which(colSums(Incid.Mat[[i]]) == nT[[i]])
+        tmp = which(colSums(Incid.Mat[[i]][-1,]) == nT[[i]])
         if (length(tmp) > 0)
           Incid.Mat <- lapply(Incid.Mat, function(k) k[, -tmp])
       }
 
       if (ncol(Incid.Mat[[1]]) == 0) {
-        error = 0
+        error = as.list(rep(0, length(E.type)))
         warning("Insufficient data to compute bootstrap s.e.")
       } else {
         se = qnorm(1-(1-conf)/2)*apply(
           sapply(1:nboot, function(b) {
             dat = lapply(1:length(Incid.Mat),function(j) Incid.Mat[[j]][,b])
-            dat.est = Evenness.profile(dat, q, "incidence_freq", "Estimated", E.type)
-            dat.emp = Evenness.profile(dat, q, "incidence_freq", "Empirical", E.type)
-            a = c()
-            for (m in 1:length(E.type)) {
-              for (n in 1:length(Incid.Mat)) {
-                a = c(a, dat.est[[m]][,n], dat.emp[[m]][,n])
-              }
-            }
-            a
+            dat.qD = Evenness.profile(dat, q, "incidence_freq", method, E.type, Cmax)
+            unlist(dat.qD)
           })
           , 1, sd, na.rm = TRUE)
 
-        error = lapply(1:length(E.type), function(k)
-          se[ (length(se)/length(E.type)*(k-1)+1) : (length(se)/length(E.type)*k)])
+        se = matrix(se, ncol=length(E.type))
+        error = split(se, col(se))
       }
+
     } else {
-      error = 0
+      error = as.list(rep(0, length(E.type)))
     }
+
     out <- lapply(1:length(E.type), function(k) {
-      data.frame(order = rep(q, 2*length(x)), Evenness = dq[[k]], Even.LCL = dq[[k]] - error[[k]],
-                 Even.UCL = dq[[k]] + error[[k]], Site = rep(names(x), each=2*length(q)),
-                 method = rep( rep(c("Estimated", "Empirical"), each=length(q)), length(x))
+      data.frame(order = rep(q, length(x)), Evenness = qD[[k]], Even.LCL = qD[[k]] - error[[k]],
+                 Even.UCL = qD[[k]] + error[[k]], Site = rep(names(x), each=length(q)),
+                 method = rep(method, length(q)*length(x))
       )
     })
   }
@@ -557,6 +561,9 @@ ggEven <- function(output) {
       geom_ribbon(data = output[[i]] %>% filter(method=="Estimated"),
                   aes(ymin=Even.LCL, ymax=Even.UCL, fill=Site),
                   alpha=0.2, linetype=0) +
+      geom_ribbon(data = output[[i]] %>% filter(method=="Empirical"),
+                  aes(ymin=Even.LCL, ymax=Even.UCL, fill=Site),
+                  alpha=0.2, linetype=0) +
       scale_fill_manual(values = cbPalette) +
       labs(x="Order q", y="Evenness", title=names(output[i])) +
       theme_bw(base_size = 18) +
@@ -569,8 +576,8 @@ ggEven <- function(output) {
             legend.box.margin = margin(-10,-10,-5,-10),
             text=element_text(size=12),
             plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-            plot.title = element_text(size=20, colour='purple', face="bold.italic",hjust = 0.5))+
-      scale_linetype_manual(values = c(2,1), breaks=c("Estimated", "Empirical"))
+            plot.title = element_text(size=20, colour='purple', face="bold.italic",hjust = 0.5))
+      # scale_linetype_manual(values = c(2,1), breaks=c("Estimated", "Empirical"))
   }
   fig[[(length(output)+1)]] = ggarrange(plotlist=fig)
   return(fig)

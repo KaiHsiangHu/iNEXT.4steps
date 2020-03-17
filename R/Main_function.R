@@ -80,7 +80,7 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
   SC.table <- SC(data, q=seq(0, 2, 0.2), datatype, nboot, conf)
   RE.table <- iNEXT(data, q=c(0, 1, 2), datatype, size, endpoint, knots, se, conf, nboot)
   asy.table <- iNEXT:::AsymDiv(data, q=seq(0, 2, 0.2), datatype, nboot, conf)
-  even.table <- Evenness(data, q=seq(0, 2, 0.2), datatype, nboot, conf, E.type=3)
+  even.table <- Evenness(data, q=seq(0, 2, 0.2), datatype, "Estimated", nboot, conf, E.type=3)
 
   level = levels(RE.table$DataInfo$site)
   SC.table$Site = factor(SC.table$Site, level)
