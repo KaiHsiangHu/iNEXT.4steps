@@ -105,7 +105,7 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
       else {
         error = 0
       }
-      out <- data.frame(order = q, SC = dq, SC.LCL = dq-error, SC.UCL = dq+error, Site = names(x)[i],
+      out <- data.frame(Order.q = q, Estimate.SC = dq, SC.LCL = dq-error, SC.UCL = dq+error, Community = names(x)[i],
                         method = rep("Estimated", length(q)))
       out$SC.LCL[out$SC.LCL < 0] <- 0
       out$SC.UCL[out$SC.UCL > 1] <- 1
@@ -137,7 +137,7 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
       else {
         error = 0
       }
-      out <- data.frame(order = q, SC = dq, SC.LCL = dq-error, SC.UCL = dq+error, Site = names(x)[i],
+      out <- data.frame(Order.q = q, Estimate.SC = dq, SC.LCL = dq-error, SC.UCL = dq+error, Community = names(x)[i],
                         method = rep("Estimated", length(q)))
       out$SC.LCL[out$SC.LCL < 0] <- 0
       out$SC.UCL[out$SC.UCL > 1] <- 1
@@ -253,10 +253,10 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 ggSC <- function(output) {
   cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
                      "#330066", "#CC79A7", "#0072B2", "#D55E00"))
-  ggplot(output, aes(x=order, y=SC, colour=Site))+
+  ggplot(output, aes(x=Order.q, y=Estimate.SC, colour=Community))+
     geom_line(size=1.2) +
     scale_colour_manual(values = cbPalette) +
-    geom_ribbon(aes(ymin=SC.LCL, ymax=SC.UCL, fill=Site, colour=NULL), alpha=0.2) +
+    geom_ribbon(aes(ymin=SC.LCL, ymax=SC.UCL, fill=Community, colour=NULL), alpha=0.2) +
     scale_fill_manual(values = cbPalette) +
     labs(x="Order q", y="Sample completeness") +
     theme_bw(base_size = 18) +
