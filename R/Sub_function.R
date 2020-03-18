@@ -10,8 +10,8 @@
 
 summary.deal <- function(table, step, Pielou=NULL) {
   if (step==1) {
-    tmp = (table %>% filter(order %in% c(0,1,2)))[,c("order","SC","Site")]
-    out = acast(tmp, Site~order, value.var="SC")
+    tmp = (table %>% filter(Order.q %in% c(0,1,2)))[,c("Order.q","Estimate.SC","Community")]
+    out = acast(tmp, Community~Order.q, value.var="Estimate.SC")
     colnames(out) = paste("q=", c(0,1,2), sep="")
   }
   if (step==2){
@@ -33,8 +33,8 @@ summary.deal <- function(table, step, Pielou=NULL) {
   }
   if (step==4){
     tmp = (table[[1]] %>%
-             filter( (order %in% c(0,1,2)) & method %in% "Estimated") )[,c("order","Evenness","Site")]
-    out = acast(tmp, Site~order, value.var="Evenness")
+             filter(Order.q %in% c(0,1,2)))[,c("Order.q","Evenness","Community")]
+    out = acast(tmp, Community~Order.q, value.var="Evenness")
 
     D = (Pielou %>% filter(order == 1))[,c("site","qD")]
     S = (Pielou %>% filter(order == 0))[,c("site","qD")]
@@ -296,8 +296,6 @@ ggAsymDiv <- function(output){
           legend.title=element_blank(),
           legend.margin=margin(0,0,0,0),
           legend.box.margin = margin(-10,-10,-5,-10))
-    # scale_linetype_manual(values = c(2,1), breaks=c("Estimated", "Empirical"),
-    #                       labels=c("Asymptotic", "Empirical"))
 }
 
 #
@@ -579,7 +577,6 @@ ggEven <- function(output) {
             text=element_text(size=12),
             plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
             plot.title = element_text(size=20, colour='purple', face="bold.italic",hjust = 0.5))
-      # scale_linetype_manual(values = c(2,1), breaks=c("Estimated", "Empirical"))
   }
   fig[[(length(output)+1)]] = ggarrange(plotlist=fig)
   return(fig)

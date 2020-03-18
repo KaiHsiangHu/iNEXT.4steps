@@ -86,7 +86,7 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
   level = levels(RE.table$DataInfo$site)
   SC.table$Site = factor(SC.table$Site, level)
   asy.table$Site = factor(asy.table$Site, level)
-  even.table[[1]]$Site = factor(even.table[[1]]$Site, level)
+  even.table[[1]]$Community = factor(even.table[[1]]$Community, level)
 
   ## 5 figures ##
   SC.plot <- ggSC(SC.table) +
@@ -108,7 +108,9 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
     labs(title=plot.names[3]) +
     theme(text=element_text(size=10),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-          plot.title = element_text(size=12, colour='blue', face="bold",hjust=0))
+          plot.title = element_text(size=12, colour='blue', face="bold",hjust=0)) +
+    scale_linetype_manual(values = c(2,1), breaks=c("Estimated", "Empirical"),
+                          labels=c("Asymptotic", "Empirical"))
   even.plot <- ggEven(even.table)[[1]] +
     labs(title=plot.names[5]) +
     theme(text=element_text(size=10),
