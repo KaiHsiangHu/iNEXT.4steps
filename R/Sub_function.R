@@ -284,6 +284,8 @@ ggAsymDiv <- function(output){
     scale_colour_manual(values = cbPalette) +
     geom_ribbon(data = output %>% filter(method=="Estimated"),
                 aes(ymin=qD.LCL, ymax=qD.UCL, fill=Site), alpha=0.2, linetype=0) +
+    geom_ribbon(data = output %>% filter(method=="Empirical"),
+                aes(ymin=qD.LCL, ymax=qD.UCL, fill=Site), alpha=0.2, linetype=0) +
     scale_fill_manual(values = cbPalette) +
     labs(x="Order q", y="Species diversity") +
     theme_bw(base_size = 18) +
