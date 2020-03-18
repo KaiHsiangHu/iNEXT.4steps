@@ -22,7 +22,8 @@ Imports: devtools,
         reshape2,
         dplyr,
         stats,
-        ggpubr
+        ggpubr,
+        purrr
 Remotes: YanHanChen/iNEXT
 Encoding: UTF-8
 BugReports: https://github.com/KaiHsiangHu/iNEXT.4steps/issues

@@ -71,8 +71,8 @@ Step4: Evenness.\cr
 \dontrun{
 ## Type (1) example for abundance based data (data.frame)
 ## Ex.1
-data(spider)
-out1 <- iNEXT.4steps(data = spider, datatype = "abundance")
+data(Spider)
+out1 <- iNEXT.4steps(data = Spider, datatype = "abundance")
 out1
 ## Type (2) example for incidence based data (list of data.frame)
 ## Ex.2

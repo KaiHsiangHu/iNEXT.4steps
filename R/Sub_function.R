@@ -487,8 +487,8 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
     }
 
     out <- lapply(1:length(E.type), function(k) {
-      data.frame(order = rep(q, length(x)), Evenness = qD[[k]], Even.LCL = qD[[k]] - error[[k]],
-                 Even.UCL = qD[[k]] + error[[k]], Site = rep(names(x), each=length(q)),
+      data.frame(Order.q = rep(q, length(x)), Evenness = qD[[k]], Even.LCL = qD[[k]] - error[[k]],
+                 Even.UCL = qD[[k]] + error[[k]], Community = rep(names(x), each=length(q)),
                  method = rep( method, length(q)*length(x))
                  )
     })
@@ -531,8 +531,8 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
     }
 
     out <- lapply(1:length(E.type), function(k) {
-      data.frame(order = rep(q, length(x)), Evenness = qD[[k]], Even.LCL = qD[[k]] - error[[k]],
-                 Even.UCL = qD[[k]] + error[[k]], Site = rep(names(x), each=length(q)),
+      data.frame(Order.q = rep(q, length(x)), Evenness = qD[[k]], Even.LCL = qD[[k]] - error[[k]],
+                 Even.UCL = qD[[k]] + error[[k]], Community = rep(names(x), each=length(q)),
                  method = rep(method, length(q)*length(x))
       )
     })
@@ -557,14 +557,14 @@ ggEven <- function(output) {
                      "#330066", "#CC79A7", "#0072B2", "#D55E00"))
   fig <- list()
   for (i in 1:length(output)) {
-    fig[[i]] = ggplot(output[[i]], aes(x=order, y=Evenness, colour=Site, lty = method)) +
+    fig[[i]] = ggplot(output[[i]], aes(x=Order.q, y=Evenness, colour=Community, lty = method)) +
       geom_line(size=1.2) +
       scale_colour_manual(values = cbPalette) +
       geom_ribbon(data = output[[i]] %>% filter(method=="Estimated"),
-                  aes(ymin=Even.LCL, ymax=Even.UCL, fill=Site),
+                  aes(ymin=Even.LCL, ymax=Even.UCL, fill=Community),
                   alpha=0.2, linetype=0) +
       geom_ribbon(data = output[[i]] %>% filter(method=="Empirical"),
-                  aes(ymin=Even.LCL, ymax=Even.UCL, fill=Site),
+                  aes(ymin=Even.LCL, ymax=Even.UCL, fill=Community),
                   alpha=0.2, linetype=0) +
       scale_fill_manual(values = cbPalette) +
       labs(x="Order q", y="Evenness", title=names(output[i])) +

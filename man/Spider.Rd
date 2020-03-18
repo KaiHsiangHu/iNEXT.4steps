@@ -1,5 +1,5 @@
-\name{spider}
-\alias{spider}
+\name{Spider}
+\alias{Spider}
 \docType{data}
 \title{
 Spider abundance-based data
@@ -7,7 +7,7 @@ Spider abundance-based data
 \description{
 This data set is combined with two sites. Each column means a generation. Each row is a species.
 }
-\usage{data("spider")}
+\usage{data("Spider")}
 \format{
   A data frame with 85 observations on the following 2 variables.
   \describe{
@@ -16,10 +16,10 @@ This data set is combined with two sites. Each column means a generation. Each r
   }
 }
 \examples{
-data(spider)
+data(Spider)
 \dontrun{
-spider.out <- iNEXT.4steps(data = spider, datatype = "abundance")
-spider.out
+Spider.out <- iNEXT.4steps(data = Spider, datatype = "abundance")
+Spider.out
 }
 }
 \keyword{datasets}
