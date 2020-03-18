@@ -293,9 +293,9 @@ ggAsymDiv <- function(output){
           # plot.margin = unit(c(1.5,0.3,1.2,0.3), "lines"),
           legend.title=element_blank(),
           legend.margin=margin(0,0,0,0),
-          legend.box.margin = margin(-10,-10,-5,-10)) +
-    scale_linetype_manual(values = c(2,1), breaks=c("Estimated", "Empirical"),
-                          labels=c("Asymptotic", "Empirical"))
+          legend.box.margin = margin(-10,-10,-5,-10))
+    # scale_linetype_manual(values = c(2,1), breaks=c("Estimated", "Empirical"),
+    #                       labels=c("Asymptotic", "Empirical"))
 }
 
 #
@@ -545,7 +545,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
 ####
 # ggplot for Evenness
 #
-# \code{ggAsymDiv} The figure for estimation of Evenness with order q
+# \code{ggEven} The figure for estimation of Evenness with order q
 #
 # @param output a table generated from Evenness function
 # @return a figure of estimated sample completeness with order q
