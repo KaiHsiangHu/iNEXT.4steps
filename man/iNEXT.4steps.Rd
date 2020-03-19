@@ -17,7 +17,7 @@ iNEXT.4steps(
 )
 }
 \arguments{
-\item{data}{a matrix/data.frame of species abundances/incidences data.\cr
+\item{data}{a matrix/data.frame/list/vector of abundances-based/incidences-based species data.\cr
 Type (1) abundance data:\cr
 When there are N assemblages, the
 observed species abundances should be arranged as a species (in rows) by assemblage (in columns) matrix. The first row
@@ -44,11 +44,9 @@ reference sample size. It will be ignored if \code{size} is given. \cr
 \item{se}{a logical variable to calculate the bootstrap standard error and confidence interval of a level specified by conf, default is \code{TRUE}.\cr
 (setting only for \code{step2}).\cr}
 
-\item{conf}{a positive number < 1 specifying the level of confidence interval, default is 0.95.\cr
-(setting only for \code{step2}).\cr}
+\item{conf}{a positive number < 1 specifying the level of confidence interval, default is 0.95.\cr}
 
-\item{nboot}{an integer specifying the number of bootstrap replications, default is 30.\cr
-(setting only for \code{step2}).\cr}
+\item{nboot}{an integer specifying the number of bootstrap replications, default is 30.\cr}
 
 \item{details}{a logical variable to determine whether do you want to print out the detailed value of 4 plots, default is \code{FALSE}.\cr}
 }
@@ -57,7 +55,7 @@ a list of two of objects: \cr\cr
 \code{$summary} individual summary of 4 steps of data. \cr\cr
 \code{$figure} 5 figures of analysis process. \cr\cr
 \code{$details} the information for generating \code{figure}. \cr
-if you nees it, you should key in \code{details = TRUE}. \cr\cr
+If you nees it, you should key in \code{details = TRUE}. \cr\cr
 }
 \description{
 \code{iNEXT.4steps}:\cr
