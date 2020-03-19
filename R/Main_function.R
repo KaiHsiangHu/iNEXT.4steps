@@ -82,7 +82,7 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
   even.table <- Evenness(data, q=seq(0, 2, 0.2), datatype, "Estimated", nboot, conf, E.type=3)
 
   level = levels(RE.table$DataInfo$site)
-  SC.table$Site = factor(SC.table$Site, level)
+  SC.table$Community = factor(SC.table$Community, level)
   asy.table$Site = factor(asy.table$Site, level)
   even.table[[1]]$Community = factor(even.table[[1]]$Community, level)
 
