@@ -81,10 +81,12 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
   asy.table <- iNEXT:::AsymDiv(data, q=seq(0, 2, 0.2), datatype, nboot, conf)
   even.table <- Evenness(data, q=seq(0, 2, 0.2), datatype, "Estimated", nboot, conf, E.type=3)
 
-  level = levels(RE.table$DataInfo$site)
-  SC.table$Community = factor(SC.table$Community, level)
-  asy.table$Site = factor(asy.table$Site, level)
-  even.table[[1]]$Community = factor(even.table[[1]]$Community, level)
+  if (length(RE.table$DataInfo$site) > 1) {
+    level = levels(RE.table$DataInfo$site)
+    SC.table$Community = factor(SC.table$Community, level)
+    asy.table$Site = factor(asy.table$Site, level)
+    even.table[[1]]$Community = factor(even.table[[1]]$Community, level)
+  }
 
   ## 5 figures ##
   SC.plot <- ggSC(SC.table) +

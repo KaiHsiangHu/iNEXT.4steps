@@ -259,7 +259,7 @@ ggSC <- function(output) {
     geom_ribbon(aes(ymin=SC.LCL, ymax=SC.UCL, fill=Community, colour=NULL), alpha=0.2) +
     scale_fill_manual(values = cbPalette) +
     labs(x="Order q", y="Sample completeness") +
-    theme_bw(base_size = 18) +
+    # theme_bw(base_size = 18) +
     theme(text=element_text(size=18)) +
     theme(legend.position="bottom", legend.box = "vertical",
           legend.key.width = unit(1.2,"cm"),
@@ -288,7 +288,7 @@ ggAsymDiv <- function(output){
                 aes(ymin=qD.LCL, ymax=qD.UCL, fill=Site), alpha=0.2, linetype=0) +
     scale_fill_manual(values = cbPalette) +
     labs(x="Order q", y="Species diversity") +
-    theme_bw(base_size = 18) +
+    # theme_bw(base_size = 18) +
     theme(text=element_text(size=18)) +
     theme(legend.position="bottom", legend.box = "vertical",
           legend.key.width = unit(1.2,"cm"),
@@ -566,7 +566,7 @@ ggEven <- function(output) {
                   alpha=0.2, linetype=0) +
       scale_fill_manual(values = cbPalette) +
       labs(x="Order q", y="Evenness", title=names(output[i])) +
-      theme_bw(base_size = 18) +
+      # theme_bw(base_size = 18) +
       theme(text=element_text(size=18)) +
       theme(legend.position="bottom", legend.box = "vertical",
             legend.key.width = unit(1.2,"cm"),
