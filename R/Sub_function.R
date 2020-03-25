@@ -484,8 +484,8 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
     }
 
     out <- lapply(1:length(E.type), function(k) {
-      data.frame(Order.q = rep(q, length(x)), Evenness = qD[[k]], s.e. = se[[k]],
-                 Even.LCL = qD[[k]] - qnorm(1-(1-conf)/2)*se[[k]], Even.UCL = qD[[k]] + qnorm(1-(1-conf)/2)*se[[k]],
+      data.frame(Order.q = rep(q, length(x)), Evenness = as.vector(qD[[k]]), s.e. = as.vector(se[[k]]),
+                 Even.LCL = as.vector(qD[[k]] - qnorm(1-(1-conf)/2)*se[[k]]), Even.UCL = as.vector(qD[[k]] + qnorm(1-(1-conf)/2)*se[[k]]),
                  Community = rep(names(x), each=length(q)), method = rep( method, length(q)*length(x))
                  )
     })
@@ -528,8 +528,8 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
     }
 
     out <- lapply(1:length(E.type), function(k) {
-      data.frame(Order.q = rep(q, length(x)), Evenness = qD[[k]], s.e. = se[[k]],
-                 Even.LCL = qD[[k]] - qnorm(1-(1-conf)/2)*se[[k]], Even.UCL = qD[[k]] + qnorm(1-(1-conf)/2)*se[[k]],
+      data.frame(Order.q = rep(q, length(x)), Evenness = as.vector(qD[[k]]), s.e. = as.vector(se[[k]]),
+                 Even.LCL = as.vector(qD[[k]] - qnorm(1-(1-conf)/2)*se[[k]]), Even.UCL = as.vector(qD[[k]] + qnorm(1-(1-conf)/2)*se[[k]]),
                  Community = rep(names(x), each=length(q)), method = rep(method, length(q)*length(x))
       )
     })
