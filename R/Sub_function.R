@@ -489,7 +489,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
                  Community = rep(names(x), each=length(q)), method = rep( method, length(q)*length(x))
                  )
     })
-    out <- append(Cmax, out)
+    if (method=="Estimated") {out <- append(Cmax, out)}
 
   } else if (datatype == "incidence") {
     qD <- Evenness.profile(x, q, "incidence_freq", method, E.type)
@@ -533,10 +533,13 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
                  Community = rep(names(x), each=length(q)), method = rep(method, length(q)*length(x))
       )
     })
-    out <- append(Cmax, out)
+    if (method=="Estimated") {out <- append(Cmax, out)}
   }
 
-  names(out)=c("Cmax", paste("E", E.type, sep = ""))
+  if (method=="Estimated") {
+    names(out)=c("Cmax", paste("E", E.type, sep = ""))
+  } else if (method=="Empirical") {names(out)=paste("E", E.type, sep = "")}
+
   return(out)
 }
 
