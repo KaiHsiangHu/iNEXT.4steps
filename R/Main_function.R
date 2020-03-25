@@ -78,10 +78,10 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
   ## 4 Details ##
   SC.table <- SC(data, q=seq(0, 2, 0.2), datatype, nboot, conf)
   RE.table <- iNEXT(data, q=c(0, 1, 2), datatype, size, endpoint, knots, se, conf, nboot)
-  asy.table <- iNEXT:::AsymDiv(data, q=seq(0, 2, 0.2), datatype, nboot, conf)
-  even.table <- Evenness(data, q=seq(0, 2, 0.2), datatype, "Estimated", nboot, conf, E.type=3)
+  asy.table <- iNEXT:::AsymDiv(data, q=seq(0, 2, 0.2), datatype, nboot, conf, method="Both")
+  even.table <- Evenness(data, q=seq(0, 2, 0.2), datatype, "Estimated", nboot, conf, E.type=3)[-1]
 
-  if (length(RE.table$DataInfo$site) > 1) {
+  if (length(RE.table$DataInfo$site)>1) {
     level = levels(RE.table$DataInfo$site)
     SC.table$Community = factor(SC.table$Community, level)
     asy.table$Site = factor(asy.table$Site, level)

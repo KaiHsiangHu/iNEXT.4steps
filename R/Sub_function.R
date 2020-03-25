@@ -98,15 +98,15 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
       if (nboot > 1) {
         Prob.hat <- iNEXT:::EstiBootComm.Ind(x[[i]])
         Abun.Mat <- rmultinom(nboot, sum(x[[i]]), Prob.hat)
-        error <- qnorm(1-(1-conf)/2)*
-          apply(apply(Abun.Mat,  2, function(xb) sample_completeness(xb, q, "abundance")),
+        se <- apply(apply(Abun.Mat,  2, function(xb) sample_completeness(xb, q, "abundance")),
                 1, sd, na.rm = TRUE)
       }
       else {
-        error = 0
+        se = 0
       }
-      out <- data.frame(Order.q = q, Estimate.SC = dq, SC.LCL = dq-error, SC.UCL = dq+error, Community = names(x)[i],
-                        method = rep("Estimated", length(q)))
+      out <- data.frame(Order.q = q, Estimate.SC = dq, s.e. = se,
+                        SC.LCL = dq-qnorm(1-(1-conf)/2)*se, SC.UCL = dq+qnorm(1-(1-conf)/2)*se,
+                        Community = names(x)[i], method = rep("Estimated", length(q)))
       out$SC.LCL[out$SC.LCL < 0] <- 0
       out$SC.UCL[out$SC.UCL > 1] <- 1
       out
@@ -125,20 +125,20 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
         if (length(tmp) > 0)
           Incid.Mat <- Incid.Mat[, -tmp]
         if (ncol(Incid.Mat) == 0) {
-          error = 0
+          se = 0
           warning("Insufficient data to compute bootstrap s.e.")
         }
         else {
-          error <- qnorm(1-(1-conf)/2)*
-            apply( apply(Incid.Mat, 2, function(yb) sample_completeness(yb, q, "incidence_freq")),
+          se <- apply( apply(Incid.Mat, 2, function(yb) sample_completeness(yb, q, "incidence_freq")),
                    1, sd, na.rm = TRUE)
         }
       }
       else {
-        error = 0
+        se = 0
       }
-      out <- data.frame(Order.q = q, Estimate.SC = dq, SC.LCL = dq-error, SC.UCL = dq+error, Community = names(x)[i],
-                        method = rep("Estimated", length(q)))
+      out <- data.frame(Order.q = q, Estimate.SC = dq, s.e. = se,
+                        SC.LCL = dq-qnorm(1-(1-conf)/2)*se, SC.UCL = dq+qnorm(1-(1-conf)/2)*se,
+                        Community = names(x)[i], method = rep("Estimated", length(q)))
       out$SC.LCL[out$SC.LCL < 0] <- 0
       out$SC.UCL[out$SC.UCL > 1] <- 1
       out
@@ -463,44 +463,44 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
   if (datatype == "abundance") {
     qD <- Evenness.profile(x, q, "abundance", method, E.type)
     qD <- map(qD, as.vector)
+    Cmax=min(estimateD(x, q=1, datatype="abundance", base="coverage", nboot=0)$SC)
 
     if (nboot > 1) {
       Prob.hat <- lapply(1:length(x), function(i) iNEXT:::EstiBootComm.Ind(x[[i]]))
       Abun.Mat <- lapply(1:length(x), function(i) rmultinom(nboot, sum(x[[i]]), Prob.hat[[i]]))
-      Cmax=min(estimateD(x, q=1, datatype="abundance", base="coverage", nboot=0)$SC)
 
-      se = qnorm(1-(1-conf)/2)*apply(
-        sapply(1:nboot, function(b) {
+      error = apply(sapply(1:nboot, function(b) {
           dat = lapply(1:length(Abun.Mat),function(j) Abun.Mat[[j]][,b])
           dat.qD = Evenness.profile(dat, q, "abundance", method, E.type, Cmax)
           unlist(dat.qD)
         })
         , 1, sd, na.rm = TRUE)
 
-      se = matrix(se, ncol=length(E.type))
-      error = split(se, col(se))
+      error = matrix(error, ncol=length(E.type))
+      se = split(error, col(error))
 
     } else {
-      error = as.list(rep(0, length(E.type)))
+      se = as.list(rep(0, length(E.type)))
     }
 
     out <- lapply(1:length(E.type), function(k) {
-      data.frame(Order.q = rep(q, length(x)), Evenness = qD[[k]], Even.LCL = qD[[k]] - error[[k]],
-                 Even.UCL = qD[[k]] + error[[k]], Community = rep(names(x), each=length(q)),
-                 method = rep( method, length(q)*length(x))
+      data.frame(Order.q = rep(q, length(x)), Evenness = qD[[k]], s.e. = se[[k]],
+                 Even.LCL = qD[[k]] - qnorm(1-(1-conf)/2)*se[[k]], Even.UCL = qD[[k]] + qnorm(1-(1-conf)/2)*se[[k]],
+                 Community = rep(names(x), each=length(q)), method = rep( method, length(q)*length(x))
                  )
     })
+    out <- list(Cmax=Cmax, out[[1:length(E.type)]])
 
   } else if (datatype == "incidence") {
     qD <- Evenness.profile(x, q, "incidence_freq", method, E.type)
     qD <- map(qD, as.vector)
+    Cmax=min(estimateD(x, q=1, datatype="incidence_freq", base="coverage", nboot=0)$SC)
 
     if (nboot > 1) {
       nT <- lapply(1:length(x), function(i) x[[i]][1])
       Prob.hat <- lapply(1:length(x), function(i) iNEXT:::EstiBootComm.Sam(x[[i]]))
       Incid.Mat <- lapply(1:length(x), function(i) t(sapply(Prob.hat[[i]], function(p) rbinom(nboot, nT[[i]], p))))
       Incid.Mat <- lapply(1:length(x), function(i) matrix(c(rbind(nT[[i]], Incid.Mat[[i]])), ncol = nboot))
-      Cmax=min(estimateD(x, q=1, datatype="incidence_freq", base="coverage", nboot=0)$SC)
 
       for (i in 1:length(Incid.Mat)) {
         tmp = which(colSums(Incid.Mat[[i]][-1,]) == nT[[i]])
@@ -512,31 +512,31 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
         error = as.list(rep(0, length(E.type)))
         warning("Insufficient data to compute bootstrap s.e.")
       } else {
-        se = qnorm(1-(1-conf)/2)*apply(
-          sapply(1:nboot, function(b) {
+        error = apply(sapply(1:nboot, function(b) {
             dat = lapply(1:length(Incid.Mat),function(j) Incid.Mat[[j]][,b])
             dat.qD = Evenness.profile(dat, q, "incidence_freq", method, E.type, Cmax)
             unlist(dat.qD)
           })
           , 1, sd, na.rm = TRUE)
 
-        se = matrix(se, ncol=length(E.type))
-        error = split(se, col(se))
+        error = matrix(error, ncol=length(E.type))
+        se = split(error, col(error))
       }
 
     } else {
-      error = as.list(rep(0, length(E.type)))
+      se = as.list(rep(0, length(E.type)))
     }
 
     out <- lapply(1:length(E.type), function(k) {
-      data.frame(Order.q = rep(q, length(x)), Evenness = qD[[k]], Even.LCL = qD[[k]] - error[[k]],
-                 Even.UCL = qD[[k]] + error[[k]], Community = rep(names(x), each=length(q)),
-                 method = rep(method, length(q)*length(x))
+      data.frame(Order.q = rep(q, length(x)), Evenness = qD[[k]], s.e. = se[[k]],
+                 Even.LCL = qD[[k]] - qnorm(1-(1-conf)/2)*se[[k]], Even.UCL = qD[[k]] + qnorm(1-(1-conf)/2)*se[[k]],
+                 Community = rep(names(x), each=length(q)), method = rep(method, length(q)*length(x))
       )
     })
+    out <- list(Cmax=Cmax, out[[1:length(E.type)]])
   }
 
-  names(out) <- paste("E", E.type, sep="")
+  names(out)[-1] <- paste("E", E.type, sep="")
   return(out)
 }
 
