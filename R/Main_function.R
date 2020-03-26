@@ -78,7 +78,9 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
   ## 4 Details ##
   SC.table <- SC(data, q=seq(0, 2, 0.2), datatype, nboot, conf)
   RE.table <- iNEXT(data, q=c(0, 1, 2), datatype, size, endpoint, knots, se, conf, nboot)
-  asy.table <- iNEXT:::AsymDiv(data, q=seq(0, 2, 0.2), datatype, nboot, conf, method="Both")
+  asy.table <- rbind(iNEXT:::AsymDiv(data, q=seq(0, 2, 0.2), datatype, nboot, conf, method="Estimated"),
+                     iNEXT:::AsymDiv(data, q=seq(0, 2, 0.2), datatype, nboot, conf, method="Empirical"))
+  asy.table = mutate(asy.table, s.e.=(qD.UCL-qD)/qnorm(1-(1-conf)/2))
   even.table <- Evenness(data, q=seq(0, 2, 0.2), datatype, "Estimated", nboot, conf, E.type=3)[-1]
 
   if (length(RE.table$DataInfo$site)>1) {
@@ -108,16 +110,15 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
     labs(title=plot.names[3]) +
     theme(text=element_text(size=10),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-          plot.title = element_text(size=12, colour='blue', face="bold",hjust=0)) +
-    scale_linetype_manual(values = c(2,1), breaks=c("Estimated", "Empirical"),
-                          labels=c("Asymptotic", "Empirical"))
+          plot.title = element_text(size=12, colour='blue', face="bold",hjust=0))
   even.plot <- ggEven(even.table)[[1]] +
     labs(title=plot.names[5]) +
     theme(text=element_text(size=10),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
           plot.title = element_text(size=12, colour='blue', face="bold",hjust=0))
 
-  estD = estimateD(data, q=c(0,1,2), datatype, base="coverage", level=NULL, nboot=0)
+  estD = estimateD(data, q=c(0,1,2), datatype, base="coverage", level=NULL, nboot)
+  estD = mutate(estD, s.e.=(qD.UCL-qD)/qnorm(1-(1-conf)/2))
   ##  Outpue_summary ##
   summary = list(summary.deal(SC.table, 1),
                  summary.deal(asy.table, 2),
@@ -136,7 +137,7 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
     ans <- list(summary = summary,
                 figure = list(SC.plot, size.RE.plot, asy.plot,
                               cover.RE.plot, even.plot, steps.plot))
-  } else {
+  } else if (details==TRUE) {
     tab = list("Sample Completeness" = SC.table, "iNEXT" = RE.table,
                "Asymptotic Diversity" = asy.table, "Evenness" = even.table)
     ans <- list(summary = summary,

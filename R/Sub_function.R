@@ -10,30 +10,33 @@
 
 summary.deal <- function(table, step, Pielou=NULL) {
   if (step==1) {
-    tmp = (table %>% filter(Order.q %in% c(0,1,2)))[,c("Order.q","Estimate.SC","Community")]
-    out = acast(tmp, Community~Order.q, value.var="Estimate.SC")
+    tmp = (table %>% filter(Order.q %in% c(0,1,2)))[,c("Order.q","Estimate.SC","s.e.","Community")]
+    tmp1 = melt(tmp, id=c("Community","Order.q"))
+    out = acast(tmp1, Community+variable~Order.q, value.var = "value")
     colnames(out) = paste("q=", c(0,1,2), sep="")
   }
   if (step==2){
-    tmp = (table %>% filter(order %in% c(0,1,2)))[,c("order","qD","Site","method")]
-    out = sapply(unique(tmp$Site), function(k) {
-      tmp = tmp %>% filter(Site==k)
-      tmp2 = acast(tmp,  method~order, value.var="qD")
+    tmp = (table %>% filter(order %in% c(0,1,2)))[,c("order","qD","Site","method","s.e.")]
+    tmp1 = melt(tmp, id=c("Site","order","method"))
+    out = sapply(unique(tmp1$Site), function(k) {
+      tmp1 = tmp1 %>% filter(Site==k)
+      tmp2 = acast(tmp1, method+variable~order, value.var = "value")
       colnames(tmp2) = paste("q=", c(0,1,2), sep="")
-      tmp2 = rbind(tmp2, "Undetected"=tmp2[2,]-tmp2[1,])
+      tmp2 = rbind(tmp2, "Undetected"=tmp2[1,]-tmp2[3,])
     }, simplify = "array")
     dimnames(out)[[3]] = unique(tmp$Site)
   }
   if (step==3){
-    tmp = table[,c("order","qD","site")]
+    tmp = table[,c("order","qD","site","s.e.")]
     Cmax = round(min(table$SC), 3)
-    out = dcast(tmp, site~order, value.var="qD")
-    colnames(out) = c(paste("maxC=", Cmax, sep=""),
-                      paste("q=", c(0,1,2), sep=""))
+    tmp1 = melt(tmp, id=c("site","order"))
+    out = dcast(tmp1, site+variable~order, value.var="value")
+    colnames(out)[-1] = c(paste("maxC=", Cmax, sep=""),
+                          paste("q=", c(0,1,2), sep=""))
   }
   if (step==4){
     tmp = (table[[1]] %>%
-             filter(Order.q %in% c(0,1,2)))[,c("Order.q","Evenness","Community")]
+             filter(Order.q %in% c(0,1,2)))[,c("Order.q","Evenness","Community","s.e.")]
     out = acast(tmp, Community~Order.q, value.var="Evenness")
 
     D = (Pielou %>% filter(order == 1))[,c("site","qD")]
