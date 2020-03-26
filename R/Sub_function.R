@@ -12,8 +12,8 @@ summary.deal <- function(table, step, Pielou=NULL) {
   if (step==1) {
     tmp = (table %>% filter(Order.q %in% c(0,1,2)))[,c("Order.q","Estimate.SC","s.e.","Community")]
     tmp1 = melt(tmp, id=c("Community","Order.q"))
-    out = acast(tmp1, Community+variable~Order.q, value.var = "value")
-    colnames(out) = paste("q=", c(0,1,2), sep="")
+    out = dcast(tmp1, Community+variable~Order.q, value.var = "value")
+    colnames(out)[-1] = c("Term", paste("q=", c(0,1,2), sep=""))
   }
   if (step==2){
     tmp = (table %>% filter(order %in% c(0,1,2)))[,c("order","qD","Site","method","s.e.")]
@@ -31,8 +31,8 @@ summary.deal <- function(table, step, Pielou=NULL) {
     Cmax = round(min(table$SC), 3)
     tmp1 = melt(tmp, id=c("site","order"))
     out = dcast(tmp1, site+variable~order, value.var="value")
-    colnames(out)[-1] = c(paste("maxC=", Cmax, sep=""),
-                          paste("q=", c(0,1,2), sep=""))
+    colnames(out) = c(paste("maxC=", Cmax, sep=""), "Term",
+                      paste("q=", c(0,1,2), sep=""))
   }
   if (step==4){
     tmp = (table[[1]] %>%
