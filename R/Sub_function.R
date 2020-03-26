@@ -28,7 +28,7 @@ summary.deal <- function(table, step, Pielou=NULL) {
     tmp = table[,c("order","qD","site")]
     Cmax = round(min(table$SC), 3)
     out = dcast(tmp, site~order, value.var="qD")
-    colnames(out) = c(paste("'maxC=", Cmax, "'", sep=""),
+    colnames(out) = c(paste("maxC=", Cmax, sep=""),
                       paste("q=", c(0,1,2), sep=""))
   }
   if (step==4){
