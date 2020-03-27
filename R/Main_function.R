@@ -80,7 +80,8 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
   RE.table <- iNEXT(data, q=c(0, 1, 2), datatype, size, endpoint, knots, se, conf, nboot)
   asy.table <- rbind(iNEXT:::AsymDiv(data, q=seq(0, 2, 0.2), datatype, nboot, conf, method="Estimated"),
                      iNEXT:::AsymDiv(data, q=seq(0, 2, 0.2), datatype, nboot, conf, method="Empirical"))
-  asy.table = asy.table %>% mutate(s.e.=(asy.table$qD.UCL-asy.table$qD)/qnorm(1-(1-conf)/2))
+  s.e.=(asy.table$qD.UCL-asy.table$qD)/qnorm(1-(1-conf)/2)
+  asy.table = cbind(asy.table, s.e.)
   even.table <- Evenness(data, q=seq(0, 2, 0.2), datatype, "Estimated", nboot, conf, E.type=3)[-1]
 
   if (length(RE.table$DataInfo$site)>1) {
@@ -118,7 +119,8 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
           plot.title = element_text(size=12, colour='blue', face="bold",hjust=0))
 
   estD = estimateD(data, q=c(0,1,2), datatype, base="coverage", level=NULL, nboot)
-  estD = estD %>% mutate(s.e.=(estD$qD.UCL-estD$qD)/qnorm(1-(1-conf)/2))
+  s.e.=(estD$qD.UCL-estD$qD)/qnorm(1-(1-conf)/2)
+  estD = cbind(estD, s.e.)
   ##  Outpue_summary ##
   summary = list(summary.deal(SC.table, 1),
                  summary.deal(asy.table, 2),
