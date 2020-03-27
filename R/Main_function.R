@@ -80,7 +80,7 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
   RE.table <- iNEXT(data, q=c(0, 1, 2), datatype, size, endpoint, knots, se, conf, nboot)
   asy.table <- rbind(iNEXT:::AsymDiv(data, q=seq(0, 2, 0.2), datatype, nboot, conf, method="Estimated"),
                      iNEXT:::AsymDiv(data, q=seq(0, 2, 0.2), datatype, nboot, conf, method="Empirical"))
-  asy.table = asy.table %>% mutate(s.e.=(estD$qD.UCL-estD$qD)/qnorm(1-(1-conf)/2))
+  asy.table = asy.table %>% mutate(s.e.=(asy.table$qD.UCL-asy.table$qD)/qnorm(1-(1-conf)/2))
   even.table <- Evenness(data, q=seq(0, 2, 0.2), datatype, "Estimated", nboot, conf, E.type=3)[-1]
 
   if (length(RE.table$DataInfo$site)>1) {
