@@ -20,10 +20,9 @@ summary.deal <- function(table, step, Pielou=NULL) {
     tmp1 = melt(tmp, id=c("Site","order","method"))
     out = sapply(unique(tmp1$Site), function(k) {
       tmp1 = tmp1 %>% filter(Site==k)
-      tmp2 = dcast(tmp1, method+variable~order, value.var = "value")
-      colnames(tmp2)[-1] = c("Term", paste("q=", c(0,1,2), sep=""))
-      tmp2$method = as.character(tmp2$method)
-      tmp2 = rbind(tmp2, c("Undetected", "qD", as.numeric(tmp2[1,3:5])-as.numeric(tmp2[3,3:5])))
+      tmp2 = acast(tmp1, method+variable~order, value.var = "value")
+      colnames(tmp2) = paste("q=", c(0,1,2), sep="")
+      tmp2 = rbind(tmp2, "Undetected"=tmp2[1,]-tmp2[3,])
     }, simplify = "array")
     dimnames(out)[[3]] = unique(tmp$Site)
   }
