@@ -118,6 +118,7 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
           plot.title = element_text(size=12, colour='blue', face="bold",hjust=0))
 
   estD = estimateD(data, q=c(0,1,2), datatype, base="coverage", level=NULL, nboot)
+  if (nboot == 0) {estD$qD.UCL = estD$qD}
   estD$s.e. = (estD$qD.UCL-estD$qD)/qnorm(1-(1-conf)/2)
   ##  Outpue_summary ##
   summary = list(summary.deal(SC.table, 1),
