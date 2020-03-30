@@ -88,13 +88,13 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
                      iNEXT:::AsymDiv(data, q=seq(0, 2, 0.2), datatype, 0, conf, method="Empirical"))
   asy.table$s.e. = (asy.table$qD.UCL-asy.table$qD)/qnorm(1-(1-conf)/2)
   even.table <- Evenness(data, q=seq(0, 2, 0.2), datatype, "Estimated", nboot, conf, E.type=3)
-  Cmax = even.table[1]; even.table = even.table[-1]
+  Cmax = even.table[1]
 
   if (length(RE.table$DataInfo$site)>1) {
     level = levels(RE.table$DataInfo$site)
     SC.table$Community = factor(SC.table$Community, level)
     asy.table$Site = factor(asy.table$Site, level)
-    even.table[[1]]$Community = factor(even.table[[1]]$Community, level)
+    even.table[[2]]$Community = factor(even.table[[2]]$Community, level)
   }
 
   ## 5 figures ##
@@ -102,13 +102,13 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
     labs(title=plot.names[1]) +
     theme(text=element_text(size=10),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-          plot.title = element_text(size=12, colour='blue', face="bold",hjust=0))
+          plot.title = element_text(size=12, colour='blue', face="bold", hjust=0))
 
   size.RE.plot <- ggiNEXT(RE.table, type=1, facet.var="order", color.var="order") +
     labs(title=plot.names[2]) +
     theme(text=element_text(size=10),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-          plot.title = element_text(size=12, colour='blue', face="bold",hjust=0))
+          plot.title = element_text(size=12, colour='blue', face="bold", hjust=0))
   size.plot <- ggplot_build(size.RE.plot)
   size.plot$data[[1]]$size <- 3
   size.plot <- ggplot_gtable(size.plot)
@@ -117,7 +117,7 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
     labs(title=plot.names[4]) +
     theme(text=element_text(size=10),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-          plot.title = element_text(size=12, colour='blue', face="bold",hjust=0))
+          plot.title = element_text(size=12, colour='blue', face="bold", hjust=0))
   cover.plot <- ggplot_build(cover.RE.plot)
   cover.plot$data[[1]]$size <- 3
   cover.plot <- ggplot_gtable(cover.plot)
@@ -126,13 +126,13 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
     labs(title=plot.names[3]) +
     theme(text=element_text(size=10),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-          plot.title = element_text(size=12, colour='blue', face="bold",hjust=0))
+          plot.title = element_text(size=12, colour='blue', face="bold", hjust=0))
 
   even.plot <- ggEven(even.table)[[1]] +
     labs(title=plot.names[5]) +
     theme(text=element_text(size=10),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-          plot.title = element_text(size=12, colour='blue', face="bold",hjust=0))
+          plot.title = element_text(size=12, colour='blue', face="bold", hjust=0))
 
   estD = estimateD(data, q=c(0,1,2), datatype, base="coverage", level=NULL, nboot=0)
   ##  Outpue_summary ##

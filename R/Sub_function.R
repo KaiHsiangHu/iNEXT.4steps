@@ -30,6 +30,7 @@ summary.deal <- function(table, step, Pielou=NULL) {
                       paste("q=", c(0,1,2), sep=""))
   }
   if (step==4){
+    if (names(table[1]) == "Cmax")  table = table[-1]
     tmp = (table[[1]] %>%
              filter(Order.q %in% c(0,1,2)))[,c("Order.q","Evenness","Community")]
     out = acast(tmp, Community~Order.q, value.var="Evenness")
@@ -55,6 +56,7 @@ summary.deal <- function(table, step, Pielou=NULL) {
 # @param nboot the number of bootstrap resampling times, default is 50
 # @param conf a integer value between 0 to 1 for confidence interval
 # @return a matrix of estimated sample completeness with order q
+#' @export
 
 SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
                 conf = 0.95)
@@ -248,6 +250,7 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 #
 # @param output a table generated from SC function
 # @return a figure of estimated sample completeness with order q
+#' @export
 
 ggSC <- function(output) {
   cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
@@ -274,6 +277,7 @@ ggSC <- function(output) {
 #
 # @param output a table generated from AsymDiv function
 # @return a figure of estimated sample completeness with order q
+#' @export
 
 ggAsymDiv <- function(output){
   cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
@@ -412,6 +416,7 @@ Evenness.profile <- function(x, q, datatype=c("abundance","incidence_freq"),
 # @return A list of estimated(empirical) evenness with order q.
 #         Different lists represents different classes of Evenness.
 #         Each list is combined with order.q and sites.
+#' @export
 
 Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
                       nboot = 50, conf = 0.95, E.type = c(1:5))
@@ -474,7 +479,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
       error = apply( matrix(sapply(1:nboot, function(b) {
                     dat = lapply(1:length(Abun.Mat),function(j) Abun.Mat[[j]][,b])
                     dat.qD = Evenness.profile(dat, q, "abundance", method, E.type, Cmax)
-                    unlist(dat.qD)  }), nrow=length(q)*length(E.type))
+                    unlist(dat.qD)  }), nrow=length(q)*length(E.type)*length(Abun.Mat))
         , 1, sd, na.rm = TRUE)
 
       error = matrix(error, ncol=length(E.type))
@@ -518,7 +523,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
         error = apply(  matrix(sapply(1:nboot, function(b) {
           dat = lapply(1:length(Incid.Mat),function(j) Incid.Mat[[j]][,b])
           dat.qD = Evenness.profile(dat, q, "incidence_freq", method, E.type, Cmax)
-          unlist(dat.qD)  }), nrow=length(q)*length(E.type))
+          unlist(dat.qD)  }), nrow=length(q)*length(E.type)*length(Incid.Mat))
           , 1, sd, na.rm = TRUE)
 
         error = matrix(error, ncol=length(E.type))
@@ -556,36 +561,51 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
 #
 # @param output a table generated from Evenness function
 # @return a figure of estimated sample completeness with order q
+#' @export
 
 ggEven <- function(output) {
+  if (names(output[1]) == "Cmax")  output = output[-1]
   cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
                      "#330066", "#CC79A7", "#0072B2", "#D55E00"))
-  fig <- list()
-  for (i in 1:length(output)) {
-    fig[[i]] = ggplot(output[[i]], aes(x=Order.q, y=Evenness, colour=Community, lty = method)) +
+  classdata = cbind(do.call(rbind, output),
+                    class = rep(names(output), each=nrow(output[[1]])))
+
+  evengp <- function(out) {
+    ggplot(out, aes(x=Order.q, y=Evenness, colour=Community, lty = method)) +
       geom_line(size=1.2) +
       scale_colour_manual(values = cbPalette) +
-      geom_ribbon(data = output[[i]] %>% filter(method=="Estimated"),
+      geom_ribbon(data = out %>% filter(method=="Estimated"),
                   aes(ymin=Even.LCL, ymax=Even.UCL, fill=Community),
                   alpha=0.2, linetype=0) +
-      geom_ribbon(data = output[[i]] %>% filter(method=="Empirical"),
+      geom_ribbon(data = out %>% filter(method=="Empirical"),
                   aes(ymin=Even.LCL, ymax=Even.UCL, fill=Community),
                   alpha=0.2, linetype=0) +
       scale_fill_manual(values = cbPalette) +
-      labs(x="Order q", y="Evenness", title=names(output[i])) +
+      labs(x="Order q", y="Evenness") +
       # theme_bw(base_size = 18) +
       theme(text=element_text(size=18)) +
-      theme(legend.position="bottom", legend.box = "vertical",
+      theme(legend.position = "bottom", legend.box = "vertical",
             legend.key.width = unit(1.2,"cm"),
             # plot.margin = unit(c(1.5,0.3,1.2,0.3), "lines"),
-            legend.title=element_blank(),
-            legend.margin=margin(0,0,0,0),
+            legend.title = element_blank(),
+            legend.margin = margin(0,0,0,0),
             legend.box.margin = margin(-10,-10,-5,-10),
-            text=element_text(size=12),
-            plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-            plot.title = element_text(size=20, colour='purple', face="bold.italic",hjust = 0.5))
+            text = element_text(size=12),
+            plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt")
+      )
   }
-  fig[[(length(output)+1)]] = ggarrange(plotlist=fig)
+
+  fig <- list()
+  for (i in 1:length(output)) {
+    fig[[i]] = evengp(output[[i]]) +
+      labs(title=names(output[i])) +
+      theme(plot.title = element_text(size=20, colour='purple', face="bold", hjust = 0.5))
+    }
+
+  fig[[length(output)+1]] = evengp(classdata) +
+    facet_wrap(~class) +
+    theme(strip.text.x = element_text(size=12, colour = "purple", face="bold"))
+
   return(fig)
 }
 
