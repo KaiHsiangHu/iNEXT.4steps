@@ -56,7 +56,6 @@ summary.deal <- function(table, step, Pielou=NULL) {
 # @param nboot the number of bootstrap resampling times, default is 50
 # @param conf a integer value between 0 to 1 for confidence interval
 # @return a matrix of estimated sample completeness with order q
-#' @export
 
 SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
                 conf = 0.95)
@@ -250,7 +249,6 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 #
 # @param output a table generated from SC function
 # @return a figure of estimated sample completeness with order q
-#' @export
 
 ggSC <- function(output) {
   cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
@@ -277,7 +275,6 @@ ggSC <- function(output) {
 #
 # @param output a table generated from AsymDiv function
 # @return a figure of estimated sample completeness with order q
-#' @export
 
 ggAsymDiv <- function(output){
   cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
@@ -416,7 +413,6 @@ Evenness.profile <- function(x, q, datatype=c("abundance","incidence_freq"),
 # @return A list of estimated(empirical) evenness with order q.
 #         Different lists represents different classes of Evenness.
 #         Each list is combined with order.q and sites.
-#' @export
 
 Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
                       nboot = 50, conf = 0.95, E.type = c(1:5))
@@ -561,7 +557,6 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
 #
 # @param output a table generated from Evenness function
 # @return a figure of estimated sample completeness with order q
-#' @export
 
 ggEven <- function(output) {
   if (names(output[1]) == "Cmax")  output = output[-1]
