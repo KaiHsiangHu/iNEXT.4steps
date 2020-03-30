@@ -100,13 +100,13 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
   ## 5 figures ##
   SC.plot <- ggSC(SC.table) +
     labs(title=plot.names[1]) +
-    theme(text=element_text(size=10),
+    theme(text=element_text(size=12),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
           plot.title = element_text(size=12, colour='blue', face="bold", hjust=0))
 
   size.RE.plot <- ggiNEXT(RE.table, type=1, facet.var="order", color.var="order") +
     labs(title=plot.names[2]) +
-    theme(text=element_text(size=10),
+    theme(text=element_text(size=12),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
           plot.title = element_text(size=12, colour='blue', face="bold", hjust=0))
   size.plot <- ggplot_build(size.RE.plot)
@@ -115,7 +115,7 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
 
   cover.RE.plot <- ggiNEXT(RE.table, type=3, facet.var="order", color.var="order") +
     labs(title=plot.names[4]) +
-    theme(text=element_text(size=10),
+    theme(text=element_text(size=12),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
           plot.title = element_text(size=12, colour='blue', face="bold", hjust=0))
   cover.plot <- ggplot_build(cover.RE.plot)
@@ -124,13 +124,13 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
 
   asy.plot <- ggAsymDiv(asy.table) +
     labs(title=plot.names[3]) +
-    theme(text=element_text(size=10),
+    theme(text=element_text(size=12),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
           plot.title = element_text(size=12, colour='blue', face="bold", hjust=0))
 
   even.plot <- ggEven(even.table)[[1]] +
     labs(title=plot.names[5]) +
-    theme(text=element_text(size=10),
+    theme(text=element_text(size=12),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
           plot.title = element_text(size=12, colour='blue', face="bold", hjust=0))
 
