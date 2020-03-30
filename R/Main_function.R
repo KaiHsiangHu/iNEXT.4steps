@@ -72,15 +72,15 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
   if (pmatch(details, logic) == -1)
     stop("ambiguous details setting")
 
-  plot.names = c("(a)Sample completeness profiles",
-                 "(b)Size-based rarefaction/extrapolation",
-                 "(c)Asymptotic and empirical diversity profiles",
-                 "(d)Coverage-based rarefaction/extrapolation",
-                 "(e)Evenness profiles")
-  table.names = c("STEP1.Sample completeness profiles",
-                  "STEP2.Asymptotic analysis",
-                  "STEP3.Non-asymptotic coverage-based rarefaction and extrapolation analysis",
-                  "STEP4:Evenness among species abundances")
+  plot.names = c("(a) Sample completeness profiles",
+                 "(b) Size-based rarefaction/extrapolation",
+                 "(c) Asymptotic and empirical diversity profiles",
+                 "(d) Coverage-based rarefaction/extrapolation",
+                 "(e) Evenness profiles")
+  table.names = c("STEP1. Sample completeness profiles",
+                  "STEP2. Asymptotic analysis",
+                  "STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis",
+                  "STEP4. Evenness among species abundances")
   ## 4 Details ##
   SC.table <- SC(data, q=seq(0, 2, 0.2), datatype, nboot, conf)
   RE.table <- iNEXT(data, q=c(0, 1, 2), datatype, size, endpoint, knots, se, conf, nboot)
@@ -102,13 +102,13 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
     labs(title=plot.names[1]) +
     theme(text=element_text(size=12),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-          plot.title = element_text(size=12, colour='blue', face="bold", hjust=0))
+          plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
 
   size.RE.plot <- ggiNEXT(RE.table, type=1, facet.var="order", color.var="order") +
     labs(title=plot.names[2]) +
     theme(text=element_text(size=12),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-          plot.title = element_text(size=12, colour='blue', face="bold", hjust=0))
+          plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
   size.plot <- ggplot_build(size.RE.plot)
   size.plot$data[[1]]$size <- 3
   size.plot <- ggplot_gtable(size.plot)
@@ -117,7 +117,7 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
     labs(title=plot.names[4]) +
     theme(text=element_text(size=12),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-          plot.title = element_text(size=12, colour='blue', face="bold", hjust=0))
+          plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
   cover.plot <- ggplot_build(cover.RE.plot)
   cover.plot$data[[1]]$size <- 3
   cover.plot <- ggplot_gtable(cover.plot)
@@ -126,13 +126,13 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
     labs(title=plot.names[3]) +
     theme(text=element_text(size=12),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-          plot.title = element_text(size=12, colour='blue', face="bold", hjust=0))
+          plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
 
   even.plot <- ggEven(even.table)[[1]] +
     labs(title=plot.names[5]) +
     theme(text=element_text(size=12),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-          plot.title = element_text(size=12, colour='blue', face="bold", hjust=0))
+          plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
 
   estD = estimateD(data, q=c(0,1,2), datatype, base="coverage", level=NULL, nboot=0)
   ##  Outpue_summary ##
