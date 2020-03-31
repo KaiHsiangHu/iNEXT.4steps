@@ -9,7 +9,7 @@ Shin et al.(2019) investigated species richness patterns in Neogene fossil marin
 In their data, a total of 171 species were identified from 9 sediment samples from three different geological ages:
 "Middle Miocene" (1 sample), "Late Miocene" (3 samples) and "Pliocene" (5 samples).
 They concluded that there was a significance increase in species richness from the Late Miocene to the Pliocene.
-For illustration purposes, we pool the data of Middle Miocene and Late Miocene and compare the pooled data (referred to as “Miocene”, 4 samples pooled) with those of the Pliocene (5 samples).
+For illustration purposes, we pool the data of Middle Miocene and Late Miocene and compare the pooled data (referred to as "Miocene", 4 samples pooled) with those of the Pliocene (5 samples).
 
 }
 \usage{data("fossil")}

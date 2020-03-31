@@ -5,8 +5,8 @@
 Woody incidence-based data
 }
 \description{
-The datasets considered here are a subset of The National Vegetation Database of Taiwan (AS-TW-001), sampled between 20032007 within the first national vegetation inventory project (Chiou et al. 2009).
-Over 3600 vegetation plots, each 20×20-m in area, were set up in various locations in Taiwan, and all woody plant individuals taller than 2 meters were recorded in each plot.
+The datasets considered here are a subset of The National Vegetation Database of Taiwan (AS-TW-001), sampled between 2003 and 2007 within the first national vegetation inventory project (Chiou et al. 2009).
+Over 3600 vegetation plots, each 20x20-m in area, were set up in various locations in Taiwan, and all woody plant individuals taller than 2 meters were recorded in each plot.
 For illustration here, we selected only plots belonging to two vegetation types (according to Li et al. 2013): Pyrenaria-Machilus subtropical winter monsoon forest and Chamaecyparis montane mixed cloud forest, sampled in the northern part of Taiwan (in ecoregions 7 and 8 according to Su 1985).
 
 }
