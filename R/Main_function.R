@@ -108,6 +108,7 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
     labs(title=plot.names[2]) +
     theme(text=element_text(size=12),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
+          legend.margin = margin(0, 0, 0, 0),
           plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
   size.plot <- ggplot_build(size.RE.plot)
   size.plot$data[[1]]$size <- 3
@@ -117,6 +118,7 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
     labs(title=plot.names[4]) +
     theme(text=element_text(size=12),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
+          legend.margin = margin(0, 0, 0, 0),
           plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
   cover.plot <- ggplot_build(cover.RE.plot)
   cover.plot$data[[1]]$size <- 3
@@ -132,7 +134,8 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
     labs(title=plot.names[5]) +
     theme(text=element_text(size=12),
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-          plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
+          plot.title = element_text(size=11, colour='blue', face="bold", hjust=0)) +
+    guides(linetype = FALSE)
 
   estD = estimateD(data, q=c(0,1,2), datatype, base="coverage", level=NULL, nboot=0)
   ##  Outpue_summary ##
@@ -163,3 +166,4 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
   }
   return(ans)
 }
+
