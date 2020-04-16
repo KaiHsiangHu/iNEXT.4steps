@@ -28,4 +28,4 @@ Remotes: YanHanChen/iNEXT
 Encoding: UTF-8
 BugReports: https://github.com/KaiHsiangHu/iNEXT.4steps/issues
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0

@@ -110,7 +110,7 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
           legend.margin = margin(0, 0, 0, 0),
           plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
-  size.plot <- ggplot_build(size.RE.plot)
+  size.plot <- ggplot_build(size.RE.plot + guides(color=FALSE, fill=FALSE, shape=FALSE))
   size.plot$data[[1]]$size <- 3
   size.plot <- ggplot_gtable(size.plot)
 
@@ -120,7 +120,7 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
           plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
           legend.margin = margin(0, 0, 0, 0),
           plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
-  cover.plot <- ggplot_build(cover.RE.plot)
+  cover.plot <- ggplot_build(cover.RE.plot + guides(color=FALSE, fill=FALSE, shape=FALSE))
   cover.plot$data[[1]]$size <- 3
   cover.plot <- ggplot_gtable(cover.plot)
 
@@ -147,10 +147,13 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
   names(summary) = table.names
 
   ##  Output_figures ##
-  # steps.plot = grid.arrange(SC.plot, size.RE.plot, asy.plot,
-  #                          cover.RE.plot, even.plot, nrow=2)
-  steps.plot = ggarrange(SC.plot, size.plot, asy.plot,
-                         cover.plot, even.plot
+  legend.p = get_legend(SC.plot + theme(legend.direction = "vertical"))
+  steps.plot = ggarrange(SC.plot + guides(color=FALSE, fill=FALSE),
+                         size.plot,
+                         asy.plot + guides(color=FALSE, fill=FALSE),
+                         cover.plot,
+                         even.plot + guides(color=FALSE, fill=FALSE),
+                         legend.p
   )
   if (details==FALSE) {
     ans <- list(summary = summary,
