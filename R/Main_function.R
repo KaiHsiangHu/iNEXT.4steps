@@ -66,11 +66,15 @@
 
 iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
                          knots=30, se=TRUE, conf=0.95, nboot=30, details=FALSE) {
+  if ((length(data)==1) & (class(data) %in% c("numeric", "integer")))
+    stop("Your data cannot ")
   logic = c("TRUE", "FALSE")
   if (is.na(pmatch(details, logic)))
     stop("invalid details setting")
   if (pmatch(details, logic) == -1)
     stop("ambiguous details setting")
+  if (length(unique(names(data))) != length(data))
+    stop("Your data has repeat group names.")
 
   plot.names = c("(a) Sample completeness profiles",
                  "(b) Size-based rarefaction/extrapolation",
@@ -90,7 +94,7 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
   even.table <- Evenness(data, q=seq(0, 2, 0.2), datatype, "Estimated", nboot, conf, E.type=3)
   Cmax = even.table[1]
 
-  if (length(RE.table$DataInfo$site)>1) {
+  if (length(SC.table$Community)>1) {
     level = levels(RE.table$DataInfo$site)
     SC.table$Community = factor(SC.table$Community, level)
     asy.table$Site = factor(asy.table$Site, level)
@@ -98,44 +102,56 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
   }
 
   ## 5 figures ##
-  SC.plot <- ggSC(SC.table) +
-    labs(title=plot.names[1]) +
-    theme(text=element_text(size=12),
-          plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-          plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
+  if (length(unique(SC.table$Community)) <= 8) {
 
-  size.RE.plot <- ggiNEXT(RE.table, type=1, facet.var="order", color.var="order") +
-    labs(title=plot.names[2]) +
-    theme(text=element_text(size=12),
-          plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-          legend.margin = margin(0, 0, 0, 0),
-          plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
-  size.plot <- ggplot_build(size.RE.plot + guides(color=FALSE, fill=FALSE, shape=FALSE))
-  size.plot$data[[1]]$size <- 3
-  size.plot <- ggplot_gtable(size.plot)
+    SC.plot <- ggSC(SC.table) +
+      labs(title=plot.names[1]) +
+      theme(text=element_text(size=12),
+            plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
+            plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
 
-  cover.RE.plot <- ggiNEXT(RE.table, type=3, facet.var="order", color.var="order") +
-    labs(title=plot.names[4]) +
-    theme(text=element_text(size=12),
-          plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-          legend.margin = margin(0, 0, 0, 0),
-          plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
-  cover.plot <- ggplot_build(cover.RE.plot + guides(color=FALSE, fill=FALSE, shape=FALSE))
-  cover.plot$data[[1]]$size <- 3
-  cover.plot <- ggplot_gtable(cover.plot)
+    size.RE.plot <- ggiNEXT(RE.table, type=1, facet.var="order", color.var="order") +
+      labs(title=plot.names[2]) +
+      theme(text=element_text(size=12),
+            plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
+            legend.margin = margin(0, 0, 0, 0),
+            plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
+    size.plot <- ggplot_build(size.RE.plot + guides(color=FALSE, fill=FALSE, shape=FALSE))
+    size.plot$data[[1]]$size <- 3
+    size.plot <- ggplot_gtable(size.plot)
 
-  asy.plot <- ggAsymDiv(asy.table) +
-    labs(title=plot.names[3]) +
-    theme(text=element_text(size=12),
-          plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-          plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
+    cover.RE.plot <- ggiNEXT(RE.table, type=3, facet.var="order", color.var="order") +
+      labs(title=plot.names[4]) +
+      theme(text=element_text(size=12),
+            plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
+            legend.margin = margin(0, 0, 0, 0),
+            plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
+    cover.plot <- ggplot_build(cover.RE.plot + guides(color=FALSE, fill=FALSE, shape=FALSE))
+    cover.plot$data[[1]]$size <- 3
+    cover.plot <- ggplot_gtable(cover.plot)
 
-  even.plot <- ggEven(even.table)[[1]] +
-    labs(title=plot.names[5]) +
-    theme(text=element_text(size=12),
-          plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-          plot.title = element_text(size=11, colour='blue', face="bold", hjust=0)) +
-    guides(linetype = FALSE)
+    asy.plot <- ggAsymDiv(asy.table) +
+      labs(title=plot.names[3]) +
+      theme(text=element_text(size=12),
+            plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
+            plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
+
+    even.plot <- ggEven(even.table)[[1]] +
+      labs(title=plot.names[5]) +
+      theme(text=element_text(size=12),
+            plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
+            plot.title = element_text(size=11, colour='blue', face="bold", hjust=0)) +
+      guides(linetype = FALSE)
+
+    legend.p = get_legend(SC.plot + theme(legend.direction = "vertical"))
+    steps.plot = ggarrange(SC.plot + guides(color=FALSE, fill=FALSE),
+                           size.plot,
+                           asy.plot + guides(color=FALSE, fill=FALSE),
+                           cover.plot,
+                           even.plot + guides(color=FALSE, fill=FALSE),
+                           legend.p
+    )
+  } else { warning("The number of communities exceed eight. We don't show the figures.") }
 
   estD = estimateD(data, q=c(0,1,2), datatype, base="coverage", level=NULL, nboot=0)
   ##  Outpue_summary ##
@@ -146,26 +162,27 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
   )
   names(summary) = table.names
 
-  ##  Output_figures ##
-  legend.p = get_legend(SC.plot + theme(legend.direction = "vertical"))
-  steps.plot = ggarrange(SC.plot + guides(color=FALSE, fill=FALSE),
-                         size.plot,
-                         asy.plot + guides(color=FALSE, fill=FALSE),
-                         cover.plot,
-                         even.plot + guides(color=FALSE, fill=FALSE),
-                         legend.p
-  )
+  ##  Output ##
+
   if (details==FALSE) {
-    ans <- list(summary = summary,
-                figure = list(SC.plot, size.RE.plot, asy.plot,
-                              cover.RE.plot, even.plot, steps.plot))
+
+    if (length(unique(SC.table$Community)) <= 8) {
+      ans <- list(summary = summary,
+                  figure = list(SC.plot, size.RE.plot, asy.plot,
+                                cover.RE.plot, even.plot, steps.plot))
+    } else { ans <- list(summary = summary) }
+
   } else if (details==TRUE) {
-    tab = list("Sample Completeness" = SC.table, "iNEXT" = RE.table,
-               "Asymptotic Diversity" = asy.table, "Evenness" = even.table)
-    ans <- list(summary = summary,
-                figure = list(SC.plot, size.RE.plot, asy.plot,
-                              cover.RE.plot, even.plot, steps.plot),
-                details = tab)
+
+    if (length(SC.table$Community) <= 8) {
+      tab = list("Sample Completeness" = SC.table, "iNEXT" = RE.table,
+                 "Asymptotic Diversity" = asy.table, "Evenness" = even.table)
+      ans <- list(summary = summary,
+                  figure = list(SC.plot, size.RE.plot, asy.plot,
+                                cover.RE.plot, even.plot, steps.plot),
+                  details = tab)
+    } else { ans <- list(summary = summary, details = tab)}
+
   }
   return(ans)
 }
