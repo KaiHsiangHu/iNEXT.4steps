@@ -73,8 +73,8 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
     stop("invalid details setting")
   if (pmatch(details, logic) == -1)
     stop("ambiguous details setting")
-  if (length(unique(names(data))) != length(data))
-    stop("Your data has repeat group names.")
+  # if (length(unique(names(data))) != length(data))
+  #   stop("Your data has repeat group names.")
 
   plot.names = c("(a) Sample completeness profiles",
                  "(b) Size-based rarefaction/extrapolation",
