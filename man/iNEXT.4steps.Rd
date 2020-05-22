@@ -80,6 +80,6 @@ out2
 }
 }
 \references{
-Chao,A., Y.Kubota, D.Zeleny, C.-H.Chiu, C.-F.Li, B.Kusumoto, M.Yasuhara, S.Thorn, C.-L.Wei, M.J.Costello, and R.K.olwell(2020).
+Chao,A., Y.Kubota, D.Zeleny, C.-H.Chiu.
 Quantifying sample completeness and comparing diversities among assemblages. Ecological Research.
 }

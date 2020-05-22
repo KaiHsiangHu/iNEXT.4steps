@@ -46,19 +46,37 @@ summary.deal <- function(table, step, Pielou=NULL) {
 
 #
 ####
-# Sample Completeness main function
-#
-# \code{SC} Estimation of Sample Completeness with order q
-#
-# @param x data.frame or matrix of data
-# @param q a integer vector of the order of Hill number
-# @param datatype a binary choose with 'abundance' or 'incidence_freq'
-# @param nboot the number of bootstrap resampling times, default is 50
-# @param conf a integer value between 0 to 1 for confidence interval
-# @return a matrix of estimated sample completeness with order q
+#' Sample Completeness main function
+#'
+#' \code{SC} Estimation of Sample Completeness with order q
+#'
+#' @param x a matrix/data.frame/list/vector of abundances-based/incidences-based species data.\cr
+#' @param q a integer vector for the order of Hill number\cr
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
+#' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
+#' @param nboot an integer specifying the number of bootstrap replications, default is 30.\cr
+#' @param conf  positive number < 1 specifying the level of confidence interval, default is 0.95.\cr\cr
+#' @return a matrix of estimated sample completeness with order q: \cr\cr
+#' @examples
+#' \dontrun{
+#' ## Type (1) example for abundance based data (data.frame)
+#' ## Ex.1
+#' data(Spider)
+#' out1 <- SC(x = Spider, datatype = "abundance")
+#' out1
+#'
+#' ## Type (2) example for incidence based data (list of data.frame)
+#' ## Ex.2
+#' data(woody_incid)
+#' out2 <- SC(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' out2
+#' }
+#' @references
+#' Chao,A.,Y.Kubota,D.Zelený,C.-H.Chiu.
+#' Quantifying sample completeness and comparing diversities among assemblages.
 #' @export
 
-SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
+SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
                 conf = 0.95)
 {
   TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
@@ -244,12 +262,29 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 
 #
 ####
-# ggplot for Sample Completeness
-#
-# \code{SC} The figure for estimation of Sample Completeness with order q
-#
-# @param output a table generated from SC function
-# @return a figure of estimated sample completeness with order q
+#' ggplot for Sample Completeness
+#'
+#' \code{SC} The figure for estimation of Sample Completeness with order q
+#'
+#' @param output a table generated from SC function
+#' @return a figure of estimated sample completeness with order q
+#' @examples
+#' \dontrun{
+#' ## Type (1) example for abundance based data (data.frame)
+#' ## Ex.1
+#' data(Spider)
+#' out1 <- SC(data = Spider, datatype = "abundance")
+#' ggSC(out1)
+#'
+#' ## Type (2) example for incidence based data (list of data.frame)
+#' ## Ex.2
+#' data(woody_incid)
+#' out2 <- SC(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' ggSC(out2)
+#' }
+#' @references
+#' Chao,A.,Y.Kubota,D.Zelený,C.-H.Chiu.
+#' Quantifying sample completeness and comparing diversities among assemblages.
 #' @export
 
 ggSC <- function(output) {
@@ -269,14 +304,69 @@ ggSC <- function(output) {
           legend.title=element_blank())
 }
 
+
 #
 ####
-# ggplot for Asymptotic diversity
+#' Asymptotic Diversity main function
+#'
+#' \code{AsymDiv} Estimation of Asymptotic Diversity with order q
+#'
+#' @param x a matrix/data.frame/list/vector of abundances-based/incidences-based species data.\cr
+#' @param q a integer vector for the order of Hill number\cr
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
+#' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
+#' @param nboot an integer specifying the number of bootstrap replications, default is 30.\cr
+#' @param conf  positive number < 1 specifying the level of confidence interval, default is 0.95.\cr\cr
+#' @param method a binary calculation method with 'Estimated' or 'Empirical'\cr
+#' @return a matrix of estimated Asymptotic Diversity with order q: \cr\cr
+#' @examples
+#' \dontrun{
+#' ## Type (1) example for abundance based data (data.frame)
+#' ## Ex.1
+#' data(Spider)
+#' out1 <- AsymDiv(x = Spider, datatype = "abundance")
+#' out1
+#'
+#' ## Type (2) example for incidence based data (list of data.frame)
+#' ## Ex.2
+#' data(woody_incid)
+#' out2 <- AsymDiv(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' out2
+#' }
+#' @references
+#' Chao,A. and Jost,L.(2015).Estimating diversity and entropy profiles via discovery rates of new species.
+#' @export
+
+AsymDiv <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
+                    conf = 0.95, method = "Both") {
+  iNEXT:::AsymDiv(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
+                  conf = 0.95, method = "Both")
+}
+
 #
-# \code{ggAsymDiv} The figure for estimation of Asymptotic diversity with order q
-#
-# @param output a table generated from AsymDiv function
-# @return a figure of estimated sample completeness with order q
+####
+#' ggplot for Asymptotic diversity
+#'
+#' \code{ggAsymDiv} The figure for estimation of Asymptotic diversity with order q\cr
+#'
+#' @param output a table generated from AsymDiv function\cr
+#' @return a figure of estimated sample completeness with order q\cr\cr
+#' @examples
+#' \dontrun{
+#' ## Type (1) example for abundance based data (data.frame)
+#' ## Ex.1
+#' data(Spider)
+#' out1 <- AsymDiv(x = Spider, datatype = "abundance")
+#' ggAsymDiv(out1)
+#' ## Type (2) example for incidence based data (list of data.frame)
+#'
+#' ## Ex.2
+#' data(woody_incid)
+#' out2 <- AsymDiv(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' ggAsymDiv(out2)
+#' }
+#' @references
+#' Chao,A. and Jost,L.(2015).Estimating diversity and entropy profiles via discovery rates of new species.
 #' @export
 
 ggAsymDiv <- function(output){
@@ -398,28 +488,48 @@ Evenness.profile <- function(x, q, datatype=c("abundance","incidence_freq"),
 
 #
 ####
-# Evenness main function
-#
-# \code{SC} Estimation (Empirical) of Evenness with order q
-#
-## R scipts "Evenness" for Chao and Ricotta (2019) Ecology paper.
-## This R code is for computing Figures 2, 3 and 4 of Chao and Ricotta (2019) paper.
-# installed and loaded before running the scripts.
+#' Evenness main function
+#'
+#' \code{Evenness} Estimation (Empirical) of Evenness with order q
+#'
+#' R scipts "Evenness" for Chao and Ricotta (2019) Ecology paper.
+#' This R code is for computing Figures 2, 3 and 4 of Chao and Ricotta (2019) paper.
+#' installed and loaded before running the scripts.
 
-# @param x data.frame or matrix of data
-# @param q a integer vector of the order of Hill number
-# @param datatype a binary choose with 'abundance' or 'incidence_freq'
-# @param method a binary calculation method with 'Estimated' or 'Empirical'
-# @param nboot the number of bootstrap resampling times, default is 50
-# @param conf a integer value between 0 to 1 for confidence interval
-# @param E.type a integer vector between 1 to 6
-# @return A list of estimated(empirical) evenness with order q.
-#         Different lists represents different classes of Evenness.
-#         Each list is combined with order.q and sites.
+#' @param x a matrix/data.frame/list/vector of abundances-based/incidences-based species data.\cr
+#' @param q a integer vector of the order of Hill number\cr
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
+#' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
+#' @param method a binary calculation method with 'Estimated' or 'Empirical'\cr
+#' @param nboot an integer specifying the number of bootstrap replications, default is 30.\cr
+#' @param conf a positive number < 1 specifying the level of confidence interval, default is 0.95.\cr
+#' @param E.type a integer vector between 1 to 6
+#' @return A list of estimated(empirical) evenness with order q.\cr
+#'         Different lists represents different classes of Evenness.\cr
+#'         Each list is combined with order.q and sites.\cr
+#'         If "method" is estimated, then fist list will be named "Cmax" which means the
+#'         maximum standardized coverage between all double reference sample size.\cr\cr
+#' \code{$summary} individual summary of 4 steps of data. \cr\cr
+#' @examples
+#' \dontrun{
+#' ## Type (1) example for abundance based data (data.frame)
+#' ## Ex.1
+#' data(Spider)
+#' out1 <- Evenness(data = Spider, datatype = "abundance")
+#' out1
+#'
+#' ## Type (2) example for incidence based data (list of data.frame)
+#' ## Ex.2
+#' data(woody_incid)
+#' out2 <- Evenness(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' out2
+#' }
+#' @references
+#' Chao,A.and Ricotta,C.(2019).Quantifying evenness and linking it to diversity, beta diversity, and similarity.
 #' @export
 
 Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
-                      nboot = 50, conf = 0.95, E.type = c(1:5))
+                      nboot = 30, conf = 0.95, E.type = c(1:5))
 {
   TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
   if (is.na(pmatch(datatype, TYPE)))
@@ -555,12 +665,28 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
 
 #
 ####
-# ggplot for Evenness
+#' ggplot for Evenness
 #
-# \code{ggEven} The figure for estimation of Evenness with order q
-#
-# @param output a table generated from Evenness function
-# @return a figure of estimated sample completeness with order q
+#' \code{ggEven} The figure for estimation of Evenness with order q\cr
+#'
+#' @param output a table generated from Evenness function\cr
+#' @return a figure of estimated sample completeness with order q\cr
+#' @examples
+#' \dontrun{
+#' ## Type (1) example for abundance based data (data.frame)
+#' ## Ex.1
+#' data(Spider)
+#' out1 <- iNEXT.4steps(data = Spider, datatype = "abundance")
+#' ggEven(out1)
+#'
+#' ## Type (2) example for incidence based data (list of data.frame)
+#' ## Ex.2
+#' data(woody_incid)
+#' out2 <- iNEXT.4steps(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' ggEven(out2)
+#' }
+#' @references
+#' Chao,A.and Ricotta,C.(2019).Quantifying evenness and linking it to diversity, beta diversity, and similarity.
 #' @export
 
 ggEven <- function(output) {
