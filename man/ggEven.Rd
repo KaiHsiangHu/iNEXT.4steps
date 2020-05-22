@@ -22,13 +22,13 @@ ggplot for Evenness
 ## Type (1) example for abundance based data (data.frame)
 ## Ex.1
 data(Spider)
-out1 <- iNEXT.4steps(data = Spider, datatype = "abundance")
+out1 <- Evenness(x = Spider, datatype = "abundance")
 ggEven(out1)
 
 ## Type (2) example for incidence based data (list of data.frame)
 ## Ex.2
 data(woody_incid)
-out2 <- iNEXT.4steps(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
+out2 <- Evenness(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
 ggEven(out2)
 }
 }

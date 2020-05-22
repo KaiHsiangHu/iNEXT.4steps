@@ -8,7 +8,7 @@ AsymDiv(
   x,
   q = seq(0, 2, 0.2),
   datatype = "abundance",
-  nboot = 50,
+  nboot = 30,
   conf = 0.95,
   method = "Both"
 )

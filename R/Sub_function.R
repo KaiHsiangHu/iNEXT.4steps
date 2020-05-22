@@ -337,10 +337,10 @@ ggSC <- function(output) {
 #' Chao,A. and Jost,L.(2015).Estimating diversity and entropy profiles via discovery rates of new species.
 #' @export
 
-AsymDiv <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
+AsymDiv <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
                     conf = 0.95, method = "Both") {
-  iNEXT:::AsymDiv(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
-                  conf = 0.95, method = "Both")
+  iNEXT:::AsymDiv(x, q = q, datatype = datatype, nboot = nboot,
+                  conf = conf, method = method)
 }
 
 #
@@ -515,13 +515,13 @@ Evenness.profile <- function(x, q, datatype=c("abundance","incidence_freq"),
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
 #' data(Spider)
-#' out1 <- Evenness(data = Spider, datatype = "abundance")
+#' out1 <- Evenness(x = Spider, datatype = "abundance")
 #' out1
 #'
 #' ## Type (2) example for incidence based data (list of data.frame)
 #' ## Ex.2
 #' data(woody_incid)
-#' out2 <- Evenness(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' out2 <- Evenness(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
 #' out2
 #' }
 #' @references
@@ -676,13 +676,13 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
 #' data(Spider)
-#' out1 <- iNEXT.4steps(data = Spider, datatype = "abundance")
+#' out1 <- Evenness(x = Spider, datatype = "abundance")
 #' ggEven(out1)
 #'
 #' ## Type (2) example for incidence based data (list of data.frame)
 #' ## Ex.2
 #' data(woody_incid)
-#' out2 <- iNEXT.4steps(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' out2 <- Evenness(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
 #' ggEven(out2)
 #' }
 #' @references
