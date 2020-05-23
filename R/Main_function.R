@@ -179,7 +179,7 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
     tab = list("Sample Completeness" = SC.table, "iNEXT" = RE.table,
                "Asymptotic Diversity" = asy.table, "Evenness" = even.table)
 
-    if (length(SC.table$Community) <= 8) {
+    if (length(unique(SC.table$Community)) <= 8) {
       ans <- list(summary = summary,
                   figure = list(SC.plot, size.RE.plot, asy.plot,
                                 cover.RE.plot, even.plot, steps.plot),
