@@ -86,12 +86,12 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
                   "STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis",
                   "STEP4. Evenness among species abundances")
   ## 4 Details ##
-  SC.table <- SC(data, q=seq(0, 2, 0.2), datatype, nboot, conf)
+  SC.table <- SC(data, q=seq(0, 2, 0.25), datatype, nboot, conf)
   RE.table <- iNEXT(data, q=c(0, 1, 2), datatype, size, endpoint, knots, se, conf, nboot)
-  asy.table <- rbind(iNEXT:::AsymDiv(data, q=seq(0, 2, 0.2), datatype, nboot, conf, method="Estimated"),
-                     iNEXT:::AsymDiv(data, q=seq(0, 2, 0.2), datatype, 0, conf, method="Empirical"))
+  asy.table <- rbind(iNEXT:::AsymDiv(data, q=seq(0, 2, 0.25), datatype, nboot, conf, method="Estimated"),
+                     iNEXT:::AsymDiv(data, q=seq(0, 2, 0.25), datatype, 0, conf, method="Empirical"))
   asy.table$s.e. = (asy.table$qD.UCL-asy.table$qD)/qnorm(1-(1-conf)/2)
-  even.table <- Evenness(data, q=seq(0, 2, 0.2), datatype, "Estimated", nboot, conf, E.type=3)
+  even.table <- Evenness(data, q=seq(0, 2, 0.25), datatype, "Estimated", nboot, conf, E.type=3)
   Cmax = even.table[1]
 
   if (length(SC.table$Community)>1) {
