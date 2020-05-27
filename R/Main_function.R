@@ -88,8 +88,8 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
   ## 4 Details ##
   SC.table <- SC(data, q=seq(0, 2, 0.25), datatype, nboot, conf)
   RE.table <- iNEXT(data, q=c(0, 1, 2), datatype, size, endpoint, knots, se, conf, nboot)
-  asy.table <- rbind(iNEXT:::AsymDiv(data, q=seq(0, 2, 0.25), datatype, nboot, conf, method="Estimated"),
-                     iNEXT:::AsymDiv(data, q=seq(0, 2, 0.25), datatype, 0, conf, method="Empirical"))
+  asy.table <- rbind(AsymDiv(data, q=seq(0, 2, 0.25), datatype, nboot, conf, method="Estimated"),
+                     AsymDiv(data, q=seq(0, 2, 0.25), datatype, 0, conf, method="Empirical"))
   asy.table$s.e. = (asy.table$qD.UCL-asy.table$qD)/qnorm(1-(1-conf)/2)
   even.table <- Evenness(data, q=seq(0, 2, 0.25), datatype, "Estimated", nboot, conf, E.type=3)
   Cmax = even.table[1]
@@ -98,7 +98,7 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
     if (class(RE.table$DataInfo$site) != "factor")
       RE.table$DataInfo$site = factor(RE.table$DataInfo$site)
 
-    level = levels(RE.table$DataInfo$site)
+    level = levels(RE.table$AsyEst$Site)
     SC.table$Community = factor(SC.table$Community, level)
     asy.table$Site = factor(asy.table$Site, level)
     even.table[[2]]$Community = factor(even.table[[2]]$Community, level)
@@ -176,7 +176,7 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
     } else { ans <- list(summary = summary) }
 
   } else if (details==TRUE) {
-    tab = list("Sample Completeness" = SC.table, "iNEXT" = RE.table,
+    tab = list("Sample Completeness" = SC.table, "iNEXT" = RE.table$iNextEst,
                "Asymptotic Diversity" = asy.table, "Evenness" = even.table)
 
     if (length(unique(SC.table$Community)) <= 8) {
