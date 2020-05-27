@@ -97,8 +97,9 @@ iNEXT.4steps <- function(data, datatype="abundance", size=NULL, endpoint=NULL,
   if (length(SC.table$Community)>1) {
     if (class(RE.table$DataInfo$site) != "factor")
       RE.table$DataInfo$site = factor(RE.table$DataInfo$site)
+    if (RE.table$DataInfo$site == "site.1") RE.table$DataInfo$site = unique(asy.table$Site)
 
-    level = levels(RE.table$AsyEst$Site)
+    level = levels(RE.table$DataInfo$site)
     SC.table$Community = factor(SC.table$Community, level)
     asy.table$Site = factor(asy.table$Site, level)
     even.table[[2]]$Community = factor(even.table[[2]]$Community, level)
