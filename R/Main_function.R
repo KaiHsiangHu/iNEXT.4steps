@@ -18,6 +18,7 @@
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
 #' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
 #' @param q a integer vector for the order of Hill number\cr
+#' (setting except \code{step2}).\cr
 #' @param size a vector of nonnegative integers specifying the sample sizes for which diversity estimates will be calculated. If \code{NULL}, the diversity estimates will
 #' be calculated for those sample sizes determined by the specified/default \code{endpoint} and \code{knot}. \cr
 #' (setting only for \code{step2}).\cr
