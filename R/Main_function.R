@@ -143,7 +143,7 @@ iNEXT.4steps <- function(data, datatype="abundance", q=seq(0, 2, 0.25), size=NUL
             plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
             plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
 
-    even.plot <- ggEven(even.table)[[1]] +
+    even.plot <- ggEven(even.table) +
       labs(title=plot.names[5]) +
       theme(text=element_text(size=12),
             plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
