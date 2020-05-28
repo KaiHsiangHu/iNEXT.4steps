@@ -18,7 +18,6 @@ ggplot for Evenness
 \code{ggEven} The figure for estimation of Evenness with order q\cr
 }
 \examples{
-\dontrun{
 ## Type (1) example for abundance based data (data.frame)
 ## Ex.1
 data(Spider)
@@ -30,7 +29,7 @@ ggEven(out1)
 data(woody_incid)
 out2 <- Evenness(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
 ggEven(out2)
-}
+
 }
 \references{
 Chao,A.and Ricotta,C.(2019).Quantifying evenness and linking it to diversity, beta diversity, and similarity.

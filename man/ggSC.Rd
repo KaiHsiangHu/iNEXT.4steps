@@ -16,7 +16,6 @@ a figure of estimated sample completeness with order q
 \code{SC} The figure for estimation of Sample Completeness with order q
 }
 \examples{
-\dontrun{
 ## Type (1) example for abundance based data (data.frame)
 ## Ex.1
 data(Spider)
@@ -28,7 +27,7 @@ ggSC(out1)
 data(woody_incid)
 out2 <- SC(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
 ggSC(out2)
-}
+
 }
 \references{
 Chao,A.,Y.Kubota,D.Zelený,C.-H.Chiu.

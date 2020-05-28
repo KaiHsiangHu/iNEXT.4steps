@@ -34,7 +34,6 @@ a matrix of estimated Asymptotic Diversity with order q: \cr\cr
 \code{AsymDiv} Estimation of Asymptotic Diversity with order q
 }
 \examples{
-\dontrun{
 ## Type (1) example for abundance based data (data.frame)
 ## Ex.1
 data(Spider)
@@ -46,7 +45,7 @@ out1
 data(woody_incid)
 out2 <- AsymDiv(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
 out2
-}
+
 }
 \references{
 Chao,A. and Jost,L.(2015).Estimating diversity and entropy profiles via discovery rates of new species.

@@ -57,8 +57,8 @@ summary.deal <- function(table, step, Pielou=NULL) {
 #' @param nboot an integer specifying the number of bootstrap replications, default is 30.\cr
 #' @param conf  positive number < 1 specifying the level of confidence interval, default is 0.95.\cr\cr
 #' @return a matrix of estimated sample completeness with order q: \cr\cr
+#'
 #' @examples
-#' \dontrun{
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
 #' data(Spider)
@@ -70,7 +70,7 @@ summary.deal <- function(table, step, Pielou=NULL) {
 #' data(woody_incid)
 #' out2 <- SC(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
 #' out2
-#' }
+#'
 #' @references
 #' Chao,A.,Y.Kubota,D.Zelený,C.-H.Chiu.
 #' Quantifying sample completeness and comparing diversities among assemblages.
@@ -268,8 +268,8 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 #'
 #' @param output a table generated from SC function
 #' @return a figure of estimated sample completeness with order q
+#'
 #' @examples
-#' \dontrun{
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
 #' data(Spider)
@@ -281,7 +281,7 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 #' data(woody_incid)
 #' out2 <- SC(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
 #' ggSC(out2)
-#' }
+#'
 #' @references
 #' Chao,A.,Y.Kubota,D.Zelený,C.-H.Chiu.
 #' Quantifying sample completeness and comparing diversities among assemblages.
@@ -319,8 +319,8 @@ ggSC <- function(output) {
 #' @param conf  positive number < 1 specifying the level of confidence interval, default is 0.95.\cr\cr
 #' @param method a binary calculation method with 'Estimated' or 'Empirical'\cr
 #' @return a matrix of estimated Asymptotic Diversity with order q: \cr\cr
+#'
 #' @examples
-#' \dontrun{
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
 #' data(Spider)
@@ -332,7 +332,7 @@ ggSC <- function(output) {
 #' data(woody_incid)
 #' out2 <- AsymDiv(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
 #' out2
-#' }
+#'
 #' @references
 #' Chao,A. and Jost,L.(2015).Estimating diversity and entropy profiles via discovery rates of new species.
 #' @export
@@ -353,8 +353,8 @@ AsymDiv <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
 #'
 #' @param output a table generated from AsymDiv function\cr
 #' @return a figure of estimated sample completeness with order q\cr\cr
+#'
 #' @examples
-#' \dontrun{
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
 #' data(Spider)
@@ -366,7 +366,7 @@ AsymDiv <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
 #' data(woody_incid)
 #' out2 <- AsymDiv(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
 #' ggAsymDiv(out2)
-#' }
+#'
 #' @references
 #' Chao,A. and Jost,L.(2015).Estimating diversity and entropy profiles via discovery rates of new species.
 #' @export
@@ -512,8 +512,8 @@ Evenness.profile <- function(x, q, datatype=c("abundance","incidence_freq"),
 #'         If "method" is estimated, then fist list will be named "Cmax" which means the
 #'         maximum standardized coverage between all double reference sample size.\cr\cr
 #' \code{$summary} individual summary of 4 steps of data. \cr\cr
+#'
 #' @examples
-#' \dontrun{
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
 #' data(Spider)
@@ -525,7 +525,7 @@ Evenness.profile <- function(x, q, datatype=c("abundance","incidence_freq"),
 #' data(woody_incid)
 #' out2 <- Evenness(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
 #' out2
-#' }
+#'
 #' @references
 #' Chao,A.and Ricotta,C.(2019).Quantifying evenness and linking it to diversity, beta diversity, and similarity.
 #' @export
@@ -673,8 +673,8 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
 #'
 #' @param output a table generated from Evenness function\cr
 #' @return a figure of estimated sample completeness with order q\cr
+#'
 #' @examples
-#' \dontrun{
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
 #' data(Spider)
@@ -686,7 +686,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
 #' data(woody_incid)
 #' out2 <- Evenness(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
 #' ggEven(out2)
-#' }
+#'
 #' @references
 #' Chao,A.and Ricotta,C.(2019).Quantifying evenness and linking it to diversity, beta diversity, and similarity.
 #' @export
@@ -723,14 +723,14 @@ ggEven <- function(output) {
       )
   }
 
-  fig <- list()
-  for (i in 1:length(output)) {
-    fig[[i]] = evengp(output[[i]]) +
-      labs(title=names(output[i])) +
-      theme(plot.title = element_text(size=20, colour='purple', face="bold", hjust = 0.5))
-    }
+  # fig <- list()
+  # for (i in 1:length(output)) {
+  #   fig[[i]] = evengp(output[[i]]) +
+  #     labs(title=names(output[i])) +
+  #     theme(plot.title = element_text(size=20, colour='purple', face="bold", hjust = 0.5))
+  #   }
 
-  fig[[length(output)+1]] = evengp(classdata) +
+  fig = evengp(classdata) +
     facet_wrap(~class) +
     theme(strip.text.x = element_text(size=12, colour = "purple", face="bold"))
 

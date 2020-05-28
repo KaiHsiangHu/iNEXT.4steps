@@ -16,7 +16,6 @@ a figure of estimated sample completeness with order q\cr\cr
 \code{ggAsymDiv} The figure for estimation of Asymptotic diversity with order q\cr
 }
 \examples{
-\dontrun{
 ## Type (1) example for abundance based data (data.frame)
 ## Ex.1
 data(Spider)
@@ -28,7 +27,7 @@ ggAsymDiv(out1)
 data(woody_incid)
 out2 <- AsymDiv(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
 ggAsymDiv(out2)
-}
+
 }
 \references{
 Chao,A. and Jost,L.(2015).Estimating diversity and entropy profiles via discovery rates of new species.
