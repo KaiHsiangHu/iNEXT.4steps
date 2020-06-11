@@ -112,7 +112,7 @@ iNEXT.4steps <- function(data, datatype = "abundance", qD = "TD",
     inextFD = iNEXTFD(data, distM, "abundance", q=c(0,1,2), nboot=0)
     m = inextFD$inext[inextFD$inext$order==0,]$m
     m = lapply(1:ncol(data), function(i) m[(length(m)/3*(i-1)+1):(i*length(m)/3)])
-    inextAUC = FunD:::AUCtable_iNextFD(data, distM, datatype="abundance", m=m, nboot=2)
+    inextAUC = FunD:::AUCtable_iNextFD(data, distM, datatype="abundance", m=m, nboot=nboot)
     inextAUC$SC = (inextAUC$SC.LCL+inextAUC$SC.UCL)/2
     inextAUCFD = data.frame(inextAUC)
     inextAUCFD$order = as.factor(inextAUCFD$order)
@@ -139,7 +139,7 @@ iNEXT.4steps <- function(data, datatype = "abundance", qD = "TD",
   } else if (qD == "FunD") {
 
     estAUC = FunD:::AUCtable_est(data, distM, q=q, datatype=datatype, nboot=nboot)
-    empAUC = FunD:::AUCtable_mle(data, distM, q=q, datatype=datatype, nboot=nboot)
+    empAUC = FunD:::AUCtable_mle(data, distM, q=q, datatype=datatype, nboot=0)
     asy.table = cbind(rbind(data.frame(estAUC), data.frame(empAUC)),
                     method = rep(c("Estimated", "Empirical"), each=nrow(estAUC)))
     colnames(asy.table) = c("Site", "order", "qD", "qD.LCL", "qD.UCL", "method")
