@@ -7,6 +7,7 @@
 iNEXT.4steps(
   data,
   datatype = "abundance",
+  diversity = "TD",
   q = seq(0, 2, 0.25),
   size = NULL,
   endpoint = NULL,
@@ -30,6 +31,9 @@ list of species; then the rows of the input data refer to this pooled list. \cr}
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
 sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr}
+
+\item{diversity}{a choosen attribute diversity of three class:
+"TD" for "Taxonomic diversity", "PhD" for "Phylogenetic diversity", "FunD" for "Functional diversity".}
 
 \item{q}{a integer vector for the order of Hill number\cr
 (setting except \code{step2}).\cr}

@@ -23,8 +23,10 @@ Imports: devtools,
         dplyr,
         stats,
         ggpubr,
-        purrr
-Remotes: YanHanChen/iNEXT
+        purrr,
+        PhD,
+        FunD
+Remotes: YanHanChen/iNEXT, YanHanChen/PhD, YanHanChen/FunD
 Encoding: UTF-8
 BugReports: https://github.com/KaiHsiangHu/iNEXT.4steps/issues
 LazyData: true
