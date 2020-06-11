@@ -324,7 +324,7 @@ iNEXT.4steps <- function(data, datatype = "abundance", qD = "TD",
         geom_point(size = 3, data = subset(RE.table, method ==
                                              "Observed")) +
         xlab("Number of individuals") + ylab("Functional diversity") +
-        labs(title=plot.names[2]) +
+        labs(title=plot.names[4]) +
         scale_linetype_manual(values = c("solid", "dashed"),
                               name = "lty", breaks = c("Rarefaction", "Extrapolation"),
                               labels = c("Interpolation", "Extrapolation")) +
