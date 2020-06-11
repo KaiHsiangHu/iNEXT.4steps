@@ -241,7 +241,7 @@ iNEXT.4steps <- function(data, datatype = "abundance", qD = "TD",
         geom_line(size = 1.2, aes(x = m, y = AUC, color = site,
                                   linetype = lty)) +
         scale_colour_manual(values = cbPalette) +
-        geom_ribbon(aes(ymin = AUC.LCL, ymax = AUC.UCL, fill = site),
+        geom_ribbon(aes(ymin = AUC_LCL, ymax = AUC_UCL, fill = site),
                     alpha = 0.3, colour = NA) +
         scale_fill_manual(values = cbPalette) +
         geom_point(size = 3, data = subset(RE.table, method ==
@@ -318,7 +318,7 @@ iNEXT.4steps <- function(data, datatype = "abundance", qD = "TD",
         geom_line(size = 1.2, aes(x = SC, y = AUC, color = site,
                                   linetype = lty)) +
         scale_colour_manual(values = cbPalette) +
-        geom_ribbon(aes(ymin = AUC.LCL, ymax = AUC.UCL, fill = site),
+        geom_ribbon(aes(ymin = AUC_LCL, ymax = AUC_UCL, fill = site),
                     alpha = 0.3, colour = NA) +
         scale_fill_manual(values = cbPalette) +
         geom_point(size = 3, data = subset(RE.table, method ==
