@@ -74,7 +74,8 @@
 iNEXT.4steps <- function(data, datatype = "abundance", qD = "TD",
                          tree = NULL, distM = NULL, threshold = NULL,
                          q = seq(0, 2, 0.25), size = NULL, endpoint = NULL,
-                         knots = 30, conf = 0.95, nboot = 30, details = FALSE) {
+                         knots = 30, conf = 0.95, nboot = 30) {
+  details = FALSE
   if ((length(data)==1) && (class(data) %in% c("numeric", "integer")))
     stop("Error: Your data does not have enough information.")
   logic = c("TRUE", "FALSE")
