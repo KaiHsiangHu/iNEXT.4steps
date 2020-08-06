@@ -279,7 +279,7 @@ ggSC <- function(output) {
   ggplot(output, aes(x = Order.q, y = Estimate.SC, colour = Community))+
     geom_line(size = 1.2) +
     scale_colour_manual(values = cbPalette) +
-    geom_ribbon(aes(ymin = SC.LCL, ymax = SC.UCL, fill = Community), alpha = 0.2) +
+    geom_ribbon(aes(ymin = SC.LCL, ymax = SC.UCL, fill = Community), alpha = 0.2, linetype=0) +
     scale_fill_manual(values = cbPalette) +
     labs(x = "Order q", y = "Sample completeness") +
     theme(text = element_text(size=18)) +
