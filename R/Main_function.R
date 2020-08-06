@@ -17,9 +17,8 @@
 #' list of species; then the rows of the input data refer to this pooled list. \cr
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
 #' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
-#' @param qD a choosen attribute diversity of three class:
-#' "TD" for "Taxonomic diversity", "PhD" for "Phylogenetic diversity", "FunD" for "Functional diversity".
 #' @param tree a structure data for phylogenetic diversity
+#' @param reftime a positive value or sequence specifying the reference times for diversity computation. If NULL, then reftime is set to be the tree depth of the phylogenetic tree, which is spanned by all the observed species in the pooled assemblage. Default is NULL.
 #' @param distM a distance matrix for functional diversity
 #' @param threshold a proposed tau value for functional diversity
 #' @param q a integer vector for the order of Hill number\cr
@@ -36,13 +35,13 @@
 #' @param nboot an integer specifying the number of bootstrap replications, default is 30.\cr
 #' @param details a logical variable to determine whether do you want to print out the detailed value of 4 plots, default is \code{FALSE}.\cr
 #' @import devtools
-#' @import iNEXT
 #' @import ggplot2
 #' @import reshape2
 #' @import dplyr
 #' @import ggpubr
 #' @import purrr
-#' @import PhD
+#' @import iNEXT
+#' @import iNEXTPD2
 #' @import FunD
 #' @importFrom stats qnorm
 #' @importFrom stats rbinom
@@ -71,11 +70,10 @@
 #' Quantifying sample completeness and comparing diversities among assemblages. Ecological Research.
 #' @export
 
-iNEXT.4steps <- function(data, datatype = "abundance", qD = "TD",
-                         tree = NULL, distM = NULL, threshold = NULL,
+iNEXT.4steps <- function(data, datatype = "abundance", tree = NULL, reftime = NULL, distM = NULL, threshold = NULL,
                          q = seq(0, 2, 0.25), size = NULL, endpoint = NULL,
-                         knots = 30, conf = 0.95, nboot = 30) {
-  details = FALSE
+                         knots = 30, conf = 0.95, nboot = 30, details = FALSE) {
+  qD = "TD"
   if ((length(data)==1) && (class(data) %in% c("numeric", "integer")))
     stop("Error: Your data does not have enough information.")
   logic = c("TRUE", "FALSE")
@@ -83,10 +81,11 @@ iNEXT.4steps <- function(data, datatype = "abundance", qD = "TD",
     stop("invalid details setting")
   if (pmatch(details, logic) == -1)
     stop("ambiguous details setting")
-  # if (length(unique(names(data))) != length(data))
-  #   stop("Your data has repeat group names.")
   if (sum(c(0,1,2) %in% q) != 3) {q = c(q, c(0,1,2)[(c(0,1,2) %in% q) == FALSE]); q = sort(q)}
-
+  if ((qD == "PhD") && is.null(tree))
+    stop("You should input tree data for Phylogenetic diversity.")
+  if ((qD == "FunD") && is.null(distM))
+    stop("You should input distance data for Functional diversity.")
 
   plot.names = c("(a) Sample completeness profiles",
                  "(b) Size-based rarefaction/extrapolation",
@@ -97,88 +96,74 @@ iNEXT.4steps <- function(data, datatype = "abundance", qD = "TD",
                   "STEP2. Asymptotic analysis",
                   "STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis",
                   "STEP4. Evenness among species abundances")
-
+  ## SC ##
   SC.table <- SC(data, q=q, datatype, nboot, 0.95)
+
+  ## iNEXT ##
   if (qD == "TD") {
-    RE.table <- iNEXT(data, q=c(0, 1, 2), datatype, size, endpoint, knots, se=TRUE, 0.95, nboot)
+    inextTD.table <- iNEXT(data, q=c(0, 1, 2), datatype, size, endpoint, knots, se=TRUE, conf, nboot)
   } else if (qD == "PhD") {
-
-    RE.table <- iNEXTPD(data, tree, datatype, q=c(0, 1, 2), endpoint=endpoint,
-                        knots=knots, size=size, conf=conf, nboot=nboot)
-    RE.table$inext$order = as.factor(RE.table$inext$order)
-    RE.table$inext = RE.table$inext %>% mutate(lty = method)
-    RE.table$inext$lty[RE.table$inext$lty == "Observed"] = "Rarefaction"
-
+    inextPD.table <- iNEXTPD(data, datatype=datatype, tree=tree, q=c(0, 1, 2), reftime=NULL,
+                        endpoint=endpoint, knots=knots, size=size, nboot=nboot, conf=conf)
   } else if (qD == "FunD") {
-    inextFD = iNEXTFD(data, distM, "abundance", q=c(0,1,2), nboot=0)
-    m = inextFD$inext[inextFD$inext$order==0,]$m
-    m = lapply(1:ncol(data), function(i) m[(length(m)/3*(i-1)+1):(i*length(m)/3)])
-    inextAUC = FunD:::AUCtable_iNextFD(data, distM, datatype="abundance", m=m, nboot=nboot)
-    inextAUC$SC = (inextAUC$SC.LCL+inextAUC$SC.UCL)/2
-    inextAUCFD = data.frame(inextAUC)
-    inextAUCFD$order = as.factor(inextAUCFD$order)
-    inextAUCFD = inextAUCFD %>% mutate(lty = method)
-    inextAUCFD$lty[inextAUCFD$lty == "Observed"] = "Rarefaction"
-    RE.table = inextAUCFD
+    # inextFD = iNEXTFD(data, distM, "abundance", q=c(0,1,2), nboot=0)
+    # m = inextFD$inext[inextFD$inext$Order.q==0,]$m
+    # m = lapply(1:ncol(data), function(i) m[(length(m)/3*(i-1)+1):(i*length(m)/3)])
+    # RE.table = FunD:::AUCtable_iNextFD(data, distM, datatype="abundance", m=m, nboot=nboot)
   }
 
+  ## qD ##
   if (qD == "TD") {
-    asy.table <- rbind(AsymDiv(data, q=q, datatype, nboot, conf, method="Estimated"),
-                       AsymDiv(data, q=q, datatype, 0, conf, method="Empirical"))
-    asy.table$s.e. = (asy.table$qD.UCL-asy.table$qD)/qnorm(1-(1-conf)/2)
+    asy.TD <- TdAsy(data, q=q, datatype=datatype, nboot=nboot, conf=conf)
+    obs.TD <- TdObs(data, q=q, datatype=datatype, nboot=0, conf=conf)
+
+    qTD.table = rbind(asy.TD, obs.TD)
+    qTD.table$s.e. = (qTD.table$qD.UCL-qTD.table$qD)/qnorm(1-(1-conf)/2)
   } else if (qD == "PhD") {
-    asy <- PhdAsy(data, tree, datatype, q=q, conf=conf, nboot=nboot)
-    obs <- PhdObs(data, tree, datatype, q=q, conf=conf, nboot=0)
-    asy <- as.data.frame(asy$asy[,c(1,2,4,5,6)])
-    obs <- as.data.frame(obs$forq_table[obs$forq_table$RefTime=="root = 1",c(1,2,3,4,6)])
-    colnames(asy) = colnames(obs) = c("order", "qD", "qD.LCL", "qD.UCL", "Site")
+    asy.PD <- PhdAsy(data, datatype=datatype, tree=tree, q=q, reftime=reftime, type="PD", conf=conf, nboot=nboot)
+    obs.PD <- PhdObs(data, datatype=datatype, tree=tree, q=q, reftime=reftime, type="PD", conf=conf, nboot=0)
 
-    asy.table = cbind(rbind(asy, obs), method=rep(c("Estimated", "Empirical"), each=nrow(asy)))
-    asy.table$method = factor(asy.table$method, levels=c("Estimated", "Empirical"))
-    asy.table$s.e. = (asy.table$qD.UCL-asy.table$qD)/qnorm(1-(1-conf)/2)
-
+    qPD.table = rbind(asy.PD, obs.PD)
+    qPD.table$s.e. = (qPD.table$qPD.UCL-qPD.table$qPD)/qnorm(1-(1-conf)/2)
   } else if (qD == "FunD") {
 
-    estAUC = FunD:::AUCtable_est(data, distM, q=q, datatype=datatype, nboot=nboot)
-    empAUC = FunD:::AUCtable_mle(data, distM, q=q, datatype=datatype, nboot=0)
-    asy.table = cbind(rbind(data.frame(estAUC), data.frame(empAUC)),
-                    method = rep(c("Estimated", "Empirical"), each=nrow(estAUC)))
-    colnames(asy.table) = c("Site", "order", "qD", "qD.LCL", "qD.UCL", "method")
-    asy.table$method = factor(asy.table$method, levels=c("Estimated", "Empirical"))
-    asy.table$s.e. = (asy.table$qD.UCL-asy.table$qD)/qnorm(1-(1-conf)/2)
+    # estAUC = FunD:::AUCtable_est(data, distM, q=q, datatype=datatype, nboot=nboot)
+    # empAUC = FunD:::AUCtable_mle(data, distM, q=q, datatype=datatype, nboot=0)
+    # asy.table = cbind(rbind(data.frame(estAUC), data.frame(empAUC)),
+    #                 method = rep(c("Estimated", "Empirical"), each=nrow(estAUC)))
+    # colnames(asy.table) = c("Site", "order", "qD", "qD.LCL", "qD.UCL", "method")
+    # asy.table$method = factor(asy.table$method, levels=c("Estimated", "Empirical"))
+    # asy.table$s.e. = (asy.table$qD.UCL-asy.table$qD)/qnorm(1-(1-conf)/2)
   }
 
-  even.table <- Evenness(data, q=q, datatype, "Estimated", nboot, conf, E.type=3)
+  even.table <- Evenness(data, q=q, datatype, "Estimated", nboot, conf, E.class=3)
   Cmax = even.table[1]
 
   if (length(unique((even.table[[2]]$Community)))>1) {
     if (qD=="TD") {
-
-      if (class(RE.table$DataInfo$site) != "factor")
-        RE.table$DataInfo$site = factor(RE.table$DataInfo$site)
-      if ("site.1" %in% RE.table$DataInfo$site) RE.table$DataInfo$site = unique(asy.table$Site)
-      level = levels(RE.table$DataInfo$site)
+      inextTD.table$iNextEst$size_based$Assemblage = factor(inextTD.table$iNextEst$size_based$Assemblage)
+      level = levels(inextTD.table$iNextEst$size_based$Assemblage)
 
       SC.table$Community = factor(SC.table$Community, level)
-      asy.table$Site = factor(asy.table$Site, level)
+      qTD.table$Site = factor(qTD.table$Site, level)
       even.table[[2]]$Community = factor(even.table[[2]]$Community, level)
 
     } else if (qD=="PhD") {
 
-      RE.table$inext$site = as.factor(RE.table$inext$site)
-      level = levels(RE.table$inext$site)
-
-      SC.table$Community = factor(SC.table$Community, level)
-      asy.table$Site = factor(asy.table$Site, level)
-      even.table[[2]]$Community = factor(even.table[[2]]$Community, level)
+      # RE.table$inext$site = as.factor(RE.table$inext$site)
+      # level = levels(RE.table$inext$site)
+      #
+      # SC.table$Community = factor(SC.table$Community, level)
+      # asy.table$Site = factor(asy.table$Site, level)
+      # even.table[[2]]$Community = factor(even.table[[2]]$Community, level)
 
     } else if (qD=="FunD") {
-      RE.table$site = as.factor(RE.table$site)
-      level = levels(RE.table$site)
-
-      SC.table$Community = factor(SC.table$Community, level)
-      asy.table$Site = factor(asy.table$Site, level)
-      even.table[[2]]$Community = factor(even.table[[2]]$Community, level)
+      # RE.table$site = as.factor(RE.table$site)
+      # level = levels(RE.table$site)
+      #
+      # SC.table$Community = factor(SC.table$Community, level)
+      # asy.table$Site = factor(asy.table$Site, level)
+      # even.table[[2]]$Community = factor(even.table[[2]]$Community, level)
 
     }
   }
@@ -193,7 +178,7 @@ iNEXT.4steps <- function(data, datatype = "abundance", qD = "TD",
             plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
 
     if (qD=="TD") {
-      size.RE.plot <- ggiNEXT(RE.table, type=1, facet.var="order", color.var="order") +
+      size.RE.plot <- ggiNEXT(inextTD.table, type=1, facet.var="Order.q", color.var="Order.q") +
         labs(title=plot.names[2]) +
         theme(text=element_text(size=12),
               plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
@@ -235,41 +220,11 @@ iNEXT.4steps <- function(data, datatype = "abundance", qD = "TD",
       size.plot <- ggplot_build(size.RE.plot + guides(color=FALSE, fill=FALSE, shape=FALSE))
       size.plot <- ggplot_gtable(size.plot)
     } else if (qD=="FunD") {
-      cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
-                         "#330066", "#CC79A7", "#0072B2", "#D55E00"))
 
-      size.RE.plot = ggplot(RE.table, aes(x = m, y = AUC, color = site)) +
-        geom_line(size = 1.2, aes(x = m, y = AUC, color = site,
-                                  linetype = lty)) +
-        scale_colour_manual(values = cbPalette) +
-        geom_ribbon(aes(ymin = AUC.LCL, ymax = AUC.UCL, fill = site),
-                    alpha = 0.3, colour = NA) +
-        scale_fill_manual(values = cbPalette) +
-        geom_point(size = 3, data = subset(RE.table, method ==
-                                             "Observed")) +
-        xlab("Number of individuals") + ylab("Functional diversity") +
-        labs(title=plot.names[2]) +
-        scale_linetype_manual(values = c("solid", "dashed"),
-                              name = "lty", breaks = c("Rarefaction", "Extrapolation"),
-                              labels = c("Interpolation", "Extrapolation")) +
-        theme(legend.position = "bottom", legend.box = "vertical",
-              legend.key.width = unit(1.2,"cm"),
-              # plot.margin = unit(c(1.5,0.3,1.2,0.3), "lines"),
-              legend.title = element_blank(),
-              legend.margin = margin(0,0,0,0),
-              legend.box.margin = margin(-10,-10,-5,-10),
-              text = element_text(size=8),
-              plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-              plot.title = element_text(size=11, colour='blue', face="bold", hjust=0)) +
-        guides(linetype = guide_legend(keywidth = 2.5)) +
-        facet_wrap(.~order)
-
-      size.plot <- ggplot_build(size.RE.plot + guides(color=FALSE, fill=FALSE, shape=FALSE))
-      size.plot <- ggplot_gtable(size.plot)
     }
 
     if (qD=="TD") {
-      cover.RE.plot <- ggiNEXT(RE.table, type=3, facet.var="order", color.var="order") +
+      cover.RE.plot <- ggiNEXT(inextTD.table, type=3, facet.var="Order.q", color.var="Order.q") +
         labs(title=plot.names[4]) +
         theme(text=element_text(size=12),
               plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
@@ -312,41 +267,12 @@ iNEXT.4steps <- function(data, datatype = "abundance", qD = "TD",
       cover.plot <- ggplot_build(cover.RE.plot + guides(color=FALSE, fill=FALSE, shape=FALSE))
       cover.plot <- ggplot_gtable(cover.plot)
     } else if (qD == "FunD") {
-      cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
-                         "#330066", "#CC79A7", "#0072B2", "#D55E00"))
 
-      cover.RE.plot = ggplot(RE.table, aes(x = SC, y = AUC, color = site)) +
-        geom_line(size = 1.2, aes(x = SC, y = AUC, color = site,
-                                  linetype = lty)) +
-        scale_colour_manual(values = cbPalette) +
-        geom_ribbon(aes(ymin = AUC.LCL, ymax = AUC.UCL, fill = site),
-                    alpha = 0.3, colour = NA) +
-        scale_fill_manual(values = cbPalette) +
-        geom_point(size = 3, data = subset(RE.table, method ==
-                                             "Observed")) +
-        xlab("Number of individuals") + ylab("Functional diversity") +
-        labs(title=plot.names[4]) +
-        scale_linetype_manual(values = c("solid", "dashed"),
-                              name = "lty", breaks = c("Rarefaction", "Extrapolation"),
-                              labels = c("Interpolation", "Extrapolation")) +
-        theme(legend.position = "bottom", legend.box = "vertical",
-              legend.key.width = unit(1.2,"cm"),
-              # plot.margin = unit(c(1.5,0.3,1.2,0.3), "lines"),
-              legend.title = element_blank(),
-              legend.margin = margin(0,0,0,0),
-              legend.box.margin = margin(-10,-10,-5,-10),
-              text = element_text(size=8),
-              plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-              plot.title = element_text(size=11, colour='blue', face="bold", hjust=0)) +
-        guides(linetype = guide_legend(keywidth = 2.5)) +
-        facet_wrap(.~order)
-
-      cover.plot <- ggplot_build(cover.RE.plot + guides(color=FALSE, fill=FALSE, shape=FALSE))
-      cover.plot <- ggplot_gtable(cover.plot)
     }
 
     if (qD=="TD") {
-      asy.plot <- ggAsymDiv(asy.table) +
+      qTD.table$method = factor(qTD.table$method, level=c("Estimated", "Empirical"))
+      asy.plot <- ggtqplotD(qTD.table) +
         labs(title=plot.names[3]) +
         theme(text=element_text(size=12),
               plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
@@ -405,7 +331,7 @@ iNEXT.4steps <- function(data, datatype = "abundance", qD = "TD",
   if (qD=="TD") {
     estD = estimateD(data, q=c(0,1,2), datatype, base="coverage", level=NULL, nboot=0)
   } else if (qD=="PhD") {
-    estD = PhD::EstimatePD(data, tree, datatype, q=c(0,1,2), level=NULL, nboot=0)[[1]]
+    estD = EstimatePD(data, tree, datatype, q=c(0,1,2), level=NULL, nboot=0)[[1]]
     colnames(estD)[6:8] = c("qD", "qD.LCL", "qD.UCL")
   } else if (qD=="FunD") {
     estD = FunD:::EstimateFD(data, distM, datatype, q=c(0,1,2), nboot=0)
@@ -413,9 +339,9 @@ iNEXT.4steps <- function(data, datatype = "abundance", qD = "TD",
   }
   ##  Outpue_summary ##
   summary = list(summary.deal(SC.table, 1),
-                 summary.deal(asy.table, 2),
+                 summary.deal(qTD.table, 2),
                  summary.deal(estD, 3),
-                 summary.deal(even.table, 4, as.data.frame(estD))
+                 summary.deal(even.table, 4, estD)
   )
   names(summary) = table.names
 
@@ -430,8 +356,8 @@ iNEXT.4steps <- function(data, datatype = "abundance", qD = "TD",
     } else { ans <- list(summary = summary) }
 
   } else if (details==TRUE) {
-    tab = list("Sample Completeness" = SC.table, "iNEXT" = RE.table$iNextEst,
-               "Asymptotic Diversity" = asy.table, "Evenness" = even.table)
+    tab = list("Sample Completeness" = SC.table, "iNEXT" = inextTD.table$iNextEst,
+               "Asymptotic Diversity" = qTD.table, "Evenness" = even.table)
 
     if (length(unique(SC.table$Community)) <= 8) {
       ans <- list(summary = summary,

@@ -23,21 +23,21 @@ summary.deal <- function(table, step, Pielou=NULL) {
     out$Diversity[out$Diversity == c(0,1,2)] = c("Species richness", "Shannon diversity", "Simpson diversity")
   }
   if (step==3){
-    tmp = table[,c("order","qD","site")]
-    Cmax = round(min(table$SC), 3)
-    out = dcast(tmp, site~order, value.var="qD")
-    colnames(out) = c(paste("maxC=", Cmax, sep=""),
+    tmp = table[,c("Assemblage","Order.q","qD")]
+    C = round(min(table$SC), 3)
+    out = dcast(tmp, Assemblage~Order.q, value.var="qD")
+    colnames(out) = c(paste("maxC=", C, sep=""),
                       paste("q=", c(0,1,2), sep=""))
   }
   if (step==4){
-    if (names(table[1]) == "Cmax")  table = table[-1]
+    if (names(table[1]) == "C")  table = table[-1]
     tmp = (table[[1]] %>%
              filter(Order.q %in% c(0,1,2)))[,c("Order.q","Evenness","Community")]
     out = acast(tmp, Community~Order.q, value.var="Evenness")
 
-    D = (Pielou %>% filter(order == 1))[,c("site","qD")]
-    S = (Pielou %>% filter(order == 0))[,c("site","qD")]
-    out[,1] = sapply(rownames(out), function(x) log(D[D$site==x,"qD"])/log(S[S$site==x,"qD"]))
+    D = (Pielou %>% filter(Order.q == 1))[,c("Assemblage","qD")]
+    S = (Pielou %>% filter(Order.q == 0))[,c("Assemblage","qD")]
+    out[,1] = sapply(rownames(out), function(x) log(D[D$Assemblage==x,"qD"])/log(S[S$Assemblage==x,"qD"]))
     colnames(out) = c("Pielou J'", paste("q=", c(1,2), sep=""))
   }
 
@@ -86,9 +86,6 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
   class_x <- class(x)[1]
-  if (datatype == "incidence") {
-    stop("datatype=\"incidence\" was no longer supported after v2.0.8, \n         please try datatype=\"incidence_freq\".")
-  }
   if (datatype == "incidence_raw") {
     if (class_x == "list") {
       x <- lapply(x, as.incfreq)
@@ -98,7 +95,7 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
     }
     datatype <- "incidence"
   }
-  if (datatype == "incidence_freq")
+  if (datatype %in% c("incidence_freq", "incidence_raw"))
     datatype <- "incidence"
   if (class(x) == "numeric" | class(x) == "integer") {
     x <- list(data = x)
@@ -120,9 +117,9 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
                 1, sd, na.rm = TRUE)
       }
       else {
-        se = 0
+        se = NA
       }
-      out <- data.frame(Order.q = q, Estimate.SC = dq, s.e. = se,
+      out <- data.frame(Order.q = q, Estimate.SC = dq,
                         SC.LCL = dq-qnorm(1-(1-conf)/2)*se, SC.UCL = dq+qnorm(1-(1-conf)/2)*se,
                         Community = names(x)[i], method = rep("Estimated", length(q)))
       out$SC.LCL[out$SC.LCL < 0] <- 0
@@ -152,9 +149,9 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
         }
       }
       else {
-        se = 0
+        se = NA
       }
-      out <- data.frame(Order.q = q, Estimate.SC = dq, s.e. = se,
+      out <- data.frame(Order.q = q, Estimate.SC = dq,
                         SC.LCL = dq-qnorm(1-(1-conf)/2)*se, SC.UCL = dq+qnorm(1-(1-conf)/2)*se,
                         Community = names(x)[i], method = rep("Estimated", length(q)))
       out$SC.LCL[out$SC.LCL < 0] <- 0
@@ -178,17 +175,6 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
 # @return a vector of estimated sample completeness with order q
 
 sample_completeness = function(x, q, datatype = c("abundance","incidence_freq")){
-  TYPE <- c("abundance", "incidence", "incidence_freq")
-  if (is.na(pmatch(datatype, TYPE)))
-    stop("invalid datatype")
-  if (pmatch(datatype, TYPE) == -1)
-    stop("ambiguous datatype")
-  datatype <- match.arg(datatype, TYPE)
-  class_x <- class(x)[1]
-  if (datatype == "incidence") {
-    stop("Please try datatype=\"incidence_freq\".")
-  }
-
   if(datatype=="abundance"){
     x = x[x>0]
     n = sum(x)
@@ -290,26 +276,109 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 ggSC <- function(output) {
   cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
                      "#330066", "#CC79A7", "#0072B2", "#D55E00"))
-  ggplot(output, aes(x=Order.q, y=Estimate.SC, colour=Community))+
-    geom_line(size=1.2) +
+  ggplot(output, aes(x = Order.q, y = Estimate.SC, colour = Community))+
+    geom_line(size = 1.2) +
     scale_colour_manual(values = cbPalette) +
-    geom_ribbon(aes(ymin=SC.LCL, ymax=SC.UCL, fill=Community, colour=NULL), alpha=0.2) +
+    geom_ribbon(aes(ymin = SC.LCL, ymax = SC.UCL, fill = Community), alpha = 0.2) +
     scale_fill_manual(values = cbPalette) +
-    labs(x="Order q", y="Sample completeness") +
-    # theme_bw(base_size = 18) +
-    theme(text=element_text(size=18)) +
-    theme(legend.position="bottom", legend.box = "vertical",
+    labs(x = "Order q", y = "Sample completeness") +
+    theme(text = element_text(size=18)) +
+    theme(legend.position = "bottom", legend.box = "vertical",
           legend.key.width = unit(1.2,"cm"),
-          # plot.margin = unit(c(1.5,0.3,1.2,0.3), "lines"),
-          legend.title=element_blank())
+          legend.title = element_blank())
 }
 
+#
+####
+#' Estimated Asymptotic Diversity
+#'
+#' \code{Diversity_est} Estimation of Asymptotic Diversity with order q
+#'
+#' @param x a vector of abundances-based/incidences-based species data.\cr
+#' @param q a integer vector for the order of Hill number\cr
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
+#' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
+#' @return a vector of estimated Asymptotic Diversity with order q: \cr\cr
+#'
+Diversity_est = function (x, q, datatype) {
+  if (datatype == "abundance") {
+    x = x[x > 0]
+    n = sum(x)
+    Sub <- function(x, q){
+      f1 = sum(x==1)
+      f2 = sum(x==2)
+      A = ifelse(f2>0, 2*f2/((n-1)*f1+2*f2), ifelse(f1>0, 2/((n-1)*(f1-1)+2), 1))
+      r <- 1:(n-1)
+      x = x[x>0]
+
+      if(q == 0){
+        sum(x>0) + (n-1)/n*ifelse(f2>0, f1^2/2/f2, f1*(f1-1)/2)
+      }
+      else if(q == 1){
+        part1 <- sum(x/n*(digamma(n)-digamma(x)))
+        part2 <- ifelse(f1==0|A==1, 0, f1/n*(1-A)^(1-n)*(-log(A)-sum((1-A)^r/r)))
+        exp(part1+part2)
+      }else if(abs(q-round(q)) == 0){
+        part <- sum(exp(lchoose(x[x>=q],q) - lchoose(n,q)))
+        part^(1/(1-q))
+      }else {
+        sort.data = sort(unique(x))
+        tab = table(x)
+        term = sapply(sort.data, function(z){
+          k=0:(n-z)
+          sum(choose(k-q,k)*exp(lchoose(n-k-1,z-1)-lchoose(n,z)))
+        })
+        r <- 0:(n-1)
+        part1 = sum(tab*term)
+        part2 = ifelse(f1==0|A==1, 0, f1/n*(1-A)^(1-n)*(A^(q-1) - sum(choose(q-1,r)*(A-1)^r)))
+        (part1+part2)^(1/(1-q))
+      }
+    }
+    sapply(q, Sub, x=x)
+  } else if (datatype == "incidence_freq") {
+    T = x[1]
+    y = x[-1]; y = y[y>0]
+
+    Sub <- function(y, q){
+      y = y[y>0]
+      U = sum(y)
+      Q1 = sum(y==1)
+      Q2 = sum(y==2)
+      A = ifelse(Q2>0, 2*Q2/((T-1)*Q1+2*Q2), ifelse(Q1>0, 2/((T-1)*(Q1-1)+2), 1))
+      r <- 1:(T-1)
+
+      if(q == 0){
+        sum(y>0) + (T-1)/T*ifelse(Q2>0, Q1^2/2/Q2, Q1*(Q1-1)/2)
+      }
+      else if(q == 1){
+        part1 <- sum(y/T*(digamma(T)-digamma(y)))
+        part2 <- ifelse(Q1==0|A==1, 0, Q1/T*(1-A)^(1-T)*(-log(A)-sum((1-A)^r/r)))
+        exp(T/U*(part1+part2)+log(U/T))
+      }else if(abs(q-round(q)) == 0){
+        part <- sum(exp(lchoose(y[y>=q],q) - lchoose(T,q)))
+        (U/T)^(q/(q-1))*part^(1/(1-q))
+      }else {
+        sort.data = sort(unique(y))
+        tab = table(y)
+        term = sapply(sort.data, function(z){
+          k=0:(T-z)
+          sum(choose(k-q,k)*exp(lchoose(T-k-1,z-1)-lchoose(T,z)))
+        })
+        r <- 0:(T-1)
+        part1 = sum(tab*term)
+        part2 = ifelse(Q1==0|A==1, 0, Q1/T*(1-A)^(1-T)*(A^(q-1) - sum(choose(q-1,r)*(A-1)^r)))
+        (U/T)^(q/(q-1))*(part1+part2)^(1/(1-q))
+      }
+    }
+    sapply(q, Sub, y=y)
+  }
+}
 
 #
 ####
 #' Asymptotic Diversity main function
 #'
-#' \code{AsymDiv} Estimation of Asymptotic Diversity with order q
+#' \code{TdAsy} Estimation of Asymptotic Diversity with order q
 #'
 #' @param x a matrix/data.frame/list/vector of abundances-based/incidences-based species data.\cr
 #' @param q a integer vector for the order of Hill number\cr
@@ -317,31 +386,103 @@ ggSC <- function(output) {
 #' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
 #' @param nboot an integer specifying the number of bootstrap replications, default is 30.\cr
 #' @param conf  positive number < 1 specifying the level of confidence interval, default is 0.95.\cr\cr
-#' @param method a binary calculation method with 'Estimated' or 'Empirical'\cr
-#' @return a matrix of estimated Asymptotic Diversity with order q: \cr\cr
+#' @return a data frame of estimated Asymptotic Diversity with order q: \cr\cr
 #'
 #' @examples
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
 #' data(Spider)
-#' out1 <- AsymDiv(x = Spider, datatype = "abundance")
+#' out1 <- TdAsy(x = Spider, datatype = "abundance")
 #' out1
 #'
 #' ## Type (2) example for incidence based data (list of data.frame)
 #' ## Ex.2
 #' data(woody_incid)
-#' out2 <- AsymDiv(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' out2 <- TdAsy(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
 #' out2
 #'
 #' @references
 #' Chao,A. and Jost,L.(2015).Estimating diversity and entropy profiles via discovery rates of new species.
 #' @export
 
-AsymDiv <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
-                    conf = 0.95, method = "Both") {
-  out = iNEXT:::AsymDiv(x, q = q, datatype = datatype, nboot = nboot,
-                        conf = conf, method = method)
-  out$method = factor(out$method, levels = c("Estimated", "Empirical"))
+TdAsy <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30, conf = 0.95) {
+  out = iNEXT:::AsymDiv(x, q, datatype, nboot, conf, method="Estimated")
+  return(out)
+}
+
+#
+####
+#' Empirical Diversity
+#'
+#' \code{Diversity_emp} Empirical Diversity with order q
+#'
+#' @param x a vector of abundances-based/incidences-based species data.\cr
+#' @param q a integer vector for the order of Hill number\cr
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
+#' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
+#' @return a vector of empirical Diversity with order q: \cr\cr
+#'
+Diversity_emp = function (x, q, datatype) {
+  if (datatype == "abundance") {
+    p <- x[x>0]/sum(x)
+    n = sum(x)
+
+    Sub <- function(q, p){
+      p = p[p>0]
+
+      if(q==0) sum(p>0)
+      else if(q==1) exp(-sum(p*log(p)))
+      else sum(p^q)^(1/(1-q))
+    }
+    sapply(q, Sub, p=p)
+  } else if (datatype == "incidence_freq") {
+    T = x[1]; x = x[-1]
+
+    Sub <- function(q, x){
+      pi <- x[x>0]/T
+      p = pi/sum(pi)
+
+      if(q==0) sum(p>0)
+      else if(q==1) exp(-sum(p*log(p)))
+      else sum(p^q)^(1/(1-q))
+    }
+    sapply(q, Sub, x=x)
+  }
+}
+
+#
+####
+#' Empirical Diversity main function
+#'
+#' \code{TdObs} Estimation of Asymptotic Diversity with order q
+#'
+#' @param x a matrix/data.frame/list/vector of abundances-based/incidences-based species data.\cr
+#' @param q a integer vector for the order of Hill number\cr
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
+#' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
+#' @param nboot an integer specifying the number of bootstrap replications, default is 30.\cr
+#' @param conf  positive number < 1 specifying the level of confidence interval, default is 0.95.\cr\cr
+#' @return a data frame of empirical diversity with order q: \cr\cr
+#'
+#' @examples
+#' ## Type (1) example for abundance based data (data.frame)
+#' ## Ex.1
+#' data(Spider)
+#' out1 <- TdObs(x = Spider, datatype = "abundance")
+#' out1
+#'
+#' ## Type (2) example for incidence based data (list of data.frame)
+#' ## Ex.2
+#' data(woody_incid)
+#' out2 <- TdObs(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' out2
+#'
+#' @references
+#' Chao,A. and Jost,L.(2015).Estimating diversity and entropy profiles via discovery rates of new species.
+#' @export
+
+TdObs <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30, conf = 0.95) {
+  out = iNEXT:::AsymDiv(x, q = q, datatype = datatype, nboot = nboot, conf = conf, method = "Empirical")
   return(out)
 }
 
@@ -349,7 +490,7 @@ AsymDiv <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
 ####
 #' ggplot for Asymptotic diversity
 #'
-#' \code{ggAsymDiv} The figure for estimation of Asymptotic diversity with order q\cr
+#' \code{ggtqplotD} The figure for estimation of Asymptotic diversity with order q\cr
 #'
 #' @param output a table generated from AsymDiv function\cr
 #' @return a figure of estimated sample completeness with order q\cr\cr
@@ -358,20 +499,20 @@ AsymDiv <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
 #' data(Spider)
-#' out1 <- AsymDiv(x = Spider, datatype = "abundance")
-#' ggAsymDiv(out1)
+#' out1 <- TdAsy(x = Spider, datatype = "abundance")
+#' ggtqplotD(out1)
 #' ## Type (2) example for incidence based data (list of data.frame)
 #'
 #' ## Ex.2
 #' data(woody_incid)
-#' out2 <- AsymDiv(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
-#' ggAsymDiv(out2)
+#' out2 <- TdObs(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' ggtqplotD(out2)
 #'
 #' @references
 #' Chao,A. and Jost,L.(2015).Estimating diversity and entropy profiles via discovery rates of new species.
 #' @export
 
-ggAsymDiv <- function(output){
+ggtqplotD <- function(output){
   cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
                      "#330066", "#CC79A7", "#0072B2", "#D55E00"))
   ggplot(output, aes(x=order, y=qD, colour=Site, lty = method)) +
@@ -403,17 +544,17 @@ ggAsymDiv <- function(output){
 # @param E a integer value between 1 to 6
 # @return a vector for evenness value
 
-even = function(q, qD, S, E) {
+even.class = function(q, qD, S, E.class) {
   tmp = c()
-  if (E == 1)
+  if (E.class == 1)
     tmp = ifelse(q!=1, (1-qD^(1-q))/(1-S^(1-q)), log(qD)/log(S))
-  if (E == 2)
+  if (E.class == 2)
     tmp = ifelse(q!=1, (1-qD^(q-1))/(1-S^(q-1)), log(qD)/log(S))
-  if (E == 3)
+  if (E.class == 3)
     tmp = (qD-1)/(S-1)
-  if (E == 4)
+  if (E.class == 4)
     tmp = (1-1/qD)/(1-1/S)
-  if (E == 5)
+  if (E.class == 5)
     tmp = log(qD)/log(S)
 
   return(tmp)
@@ -429,62 +570,43 @@ even = function(q, qD, S, E) {
 # @param q a integer vector for the order of Hill number.
 # @param datatype a binary choose with 'abundance' or 'incidence_freq'
 # @param method a binary calculation method with 'Estimated' or 'Empirical'
-# @param E.type a integer vector between 1 to 6
-# @param Cmax a standardized coverage for calculating diversity
+# @param E.class a integer vector between 1 to 6
+# @param C a standardized coverage for calculating evenness index
 # @return a list of estimated(empirical) evenness with order q, each list is combined with a matrix
 
-Evenness.profile <- function(x, q, datatype=c("abundance","incidence_freq"),
-                             method=c("Estimated", "Empirical"), E.type, Cmax=NULL) {
-  if (class(x)=="list") {
-    y = x
-    if (is.null(names(y))) names(y) = paste("Data", 1:length(y), sep="")
-    y
-  }
-
-  if (class(x) == "data.frame" | class(x) == "matrix") {
-    y=lapply(1:ncol(x), function(k) x[,k])
-    names(y) = colnames(x)
-    if (is.null(names(y))) names(y) = paste("Data", 1:length(y), sep="")
-    y
-  }
-
-  if (class(x) == "numeric" | class(x) == "integer") {
-    y = list(Data = x)
-  }
-  x = lapply(y, function(i) i[i>0])
-
+Evenness.profile <- function(x, q, datatype=c("abundance","incidence_freq"), method, E.class, C=NULL) {
   if (method == "Estimated") {
-    estqD = estimateD(x, q, datatype, base="coverage", level=Cmax, nboot=0)
-    estS = estimateD(x, 0, datatype, base="coverage", level=Cmax, nboot=0)
+    estqD = estimateD(x, q, datatype, base="coverage", level=C, nboot=0)
+    estS = estimateD(x, 0, datatype, base="coverage", level=C, nboot=0)
 
-    out = lapply(E.type, function(i) {
-      tt = sapply(names(x), function(k) even(q, estqD[estqD$site==k, "qD"], estS[estS$site==k, "qD"], i))
-      if(class(tt) %in% c("numeric","integer")) {tt = t(as.matrix(tt, nrow=1))}
-      rownames(tt) = q
-      tt
+    out = lapply(E.class, function(i) {
+      tmp = sapply(names(x), function(k) even.class(q, estqD[estqD$Assemblage==k, "qD"], estS[estS$Assemblage==k, "qD"], i))
+      if(class(tmp)[1] %in% c("numeric","integer")) {tmp = t(as.matrix(tmp, nrow=1))}
+      rownames(tmp) = q
+      tmp
       })
   } else if (method == "Empirical") {
 
     if (datatype == "abundance") {
-      empqD = sapply(y, function(k) iNEXT:::Diversity_profile_MLE(k, q))
-      empS = sapply(y, function(k) iNEXT:::Diversity_profile_MLE(k, 0))
+      empqD = sapply(x, function(k) iNEXT:::Diversity_profile_MLE(k, q))
+      empS = sapply(x, function(k) iNEXT:::Diversity_profile_MLE(k, 0))
     } else if (datatype == "incidence_freq") {
-      empqD = sapply(y, function(k) iNEXT:::Diversity_profile_MLE.inc(k, q))
-      empS = sapply(y, function(k) iNEXT:::Diversity_profile_MLE.inc(k, 0))
+      empqD = sapply(x, function(k) iNEXT:::Diversity_profile_MLE.inc(k, q))
+      empS = sapply(x, function(k) iNEXT:::Diversity_profile_MLE.inc(k, 0))
     }
 
-    out = lapply(E.type, function(i) {
+    out = lapply(E.class, function(i) {
       if ((is.vector(empqD)==TRUE) & (length(empqD)==1)) {
         name = names(empqD); empqD = matrix(empqD); colnames(empqD) = name}
 
-      tt = sapply(names(y), function(k) even(q, empqD[,k], empS[k], i))
-      if(class(tt) %in% c("numeric","integer")) {tt = t(as.matrix(tt, nrow=1))}
-      rownames(tt) = q
-      tt
+      tmp = sapply(names(x), function(k) even.class(q, empqD[,k], empS[k], i))
+      if(class(tmp)[1] %in% c("numeric","integer")) {tmp = t(as.matrix(tmp, nrow=1))}
+      rownames(tmp) = q
+      tmp
     })
   }
 
-  names(out) = paste("E", E.type, sep="")
+  names(out) = paste("E", E.class, sep="")
   return(out)
 }
 
@@ -505,11 +627,12 @@ Evenness.profile <- function(x, q, datatype=c("abundance","incidence_freq"),
 #' @param method a binary calculation method with 'Estimated' or 'Empirical'\cr
 #' @param nboot an integer specifying the number of bootstrap replications, default is 30.\cr
 #' @param conf a positive number < 1 specifying the level of confidence interval, default is 0.95.\cr
-#' @param E.type a integer vector between 1 to 6
+#' @param E.class a integer vector between 1 to 6
+#' @param C a standardized coverage for calculating evenness index
 #' @return A list of estimated(empirical) evenness with order q.\cr
 #'         Different lists represents different classes of Evenness.\cr
 #'         Each list is combined with order.q and sites.\cr
-#'         If "method" is estimated, then fist list will be named "Cmax" which means the
+#'         If "method" is estimated, then fist list will be named "C" which means the
 #'         maximum standardized coverage between all double reference sample size.\cr\cr
 #' \code{$summary} individual summary of 4 steps of data. \cr\cr
 #'
@@ -531,7 +654,7 @@ Evenness.profile <- function(x, q, datatype=c("abundance","incidence_freq"),
 #' @export
 
 Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
-                      nboot = 30, conf = 0.95, E.type = c(1:5))
+                      nboot = 30, conf = 0.95, E.class = c(1:5), C=NULL)
 {
   TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
   if (is.na(pmatch(datatype, TYPE)))
@@ -553,8 +676,8 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
     stop("ambiguous method")
 
   class <- c(1:5)
-  if (sum(E.type %in% class) != length(E.type))
-    stop("invalid E.type")
+  if (sum(E.class %in% class) != length(E.class))
+    stop("invalid E.class")
 
   if (datatype == "incidence_raw") {
     if (class_x == "list") {
@@ -580,9 +703,9 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
 
 
   if (datatype == "abundance") {
-    qD <- Evenness.profile(x, q, "abundance", method, E.type)
+    qD <- Evenness.profile(x, q, "abundance", method, E.class, C)
     qD <- map(qD, as.vector)
-    Cmax=min(estimateD(x, q=1, datatype="abundance", base="coverage", nboot=0)$SC)
+    C = min(estimateD(x, q=1, datatype="abundance", base="coverage", nboot=0)$SC)
 
     if (nboot > 1) {
       Prob.hat <- lapply(1:length(x), function(i) iNEXT:::EstiBootComm.Ind(x[[i]]))
@@ -590,18 +713,20 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
 
       error = apply( matrix(sapply(1:nboot, function(b) {
                     dat = lapply(1:length(Abun.Mat),function(j) Abun.Mat[[j]][,b])
-                    dat.qD = Evenness.profile(dat, q, "abundance", method, E.type, Cmax)
-                    unlist(dat.qD)  }), nrow=length(q)*length(E.type)*length(Abun.Mat))
+                    names(dat) = paste("Site", 1:length(dat), sep="")
+                    dat.qD = Evenness.profile(dat, q, "abundance", method, E.class, C)
+                    unlist(dat.qD)
+                    }), nrow=length(q)*length(E.class)*length(Abun.Mat))
         , 1, sd, na.rm = TRUE)
 
-      error = matrix(error, ncol=length(E.type))
+      error = matrix(error, ncol=length(E.class))
       se = split(error, col(error))
 
     } else {
-      se = as.list(rep(0, length(E.type)))
+      se = lapply(1:length(E.class), function(x) NA)
     }
 
-    out <- lapply(1:length(E.type), function(k) {
+    out <- lapply(1:length(E.class), function(k) {
       tmp = data.frame(Order.q = rep(q, length(x)), Evenness = as.vector(qD[[k]]), s.e. = as.vector(se[[k]]),
                       Even.LCL = as.vector(qD[[k]] - qnorm(1-(1-conf)/2)*se[[k]]), Even.UCL = as.vector(qD[[k]] + qnorm(1-(1-conf)/2)*se[[k]]),
                       Community = rep(names(x), each=length(q)), method = rep( method, length(q)*length(x))
@@ -609,12 +734,12 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
     })
-    if (method=="Estimated") {out <- append(Cmax, out)}
+    if (method=="Estimated") {out <- append(C, out)}
 
   } else if (datatype == "incidence") {
-    qD <- Evenness.profile(x, q, "incidence_freq", method, E.type)
+    qD <- Evenness.profile(x, q, "incidence_freq", method, E.class)
     qD <- map(qD, as.vector)
-    Cmax=min(estimateD(x, q=1, datatype="incidence_freq", base="coverage", nboot=0)$SC)
+    C=min(estimateD(x, q=1, datatype="incidence_freq", base="coverage", nboot=0)$SC)
 
     if (nboot > 1) {
       nT <- lapply(1:length(x), function(i) x[[i]][1])
@@ -629,24 +754,25 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
       }
 
       if (ncol(Incid.Mat[[1]]) == 0) {
-        error = as.list(rep(0, length(E.type)))
+        error = as.list(rep(0, length(E.class)))
         warning("Insufficient data to compute bootstrap s.e.")
       } else {
         error = apply(  matrix(sapply(1:nboot, function(b) {
           dat = lapply(1:length(Incid.Mat),function(j) Incid.Mat[[j]][,b])
-          dat.qD = Evenness.profile(dat, q, "incidence_freq", method, E.type, Cmax)
-          unlist(dat.qD)  }), nrow=length(q)*length(E.type)*length(Incid.Mat))
+          names(dat) = paste("Site", 1:length(dat), sep="")
+          dat.qD = Evenness.profile(dat, q, "incidence_freq", method, E.class, C)
+          unlist(dat.qD)  }), nrow=length(q)*length(E.class)*length(Incid.Mat))
           , 1, sd, na.rm = TRUE)
 
-        error = matrix(error, ncol=length(E.type))
+        error = matrix(error, ncol=length(E.class))
         se = split(error, col(error))
       }
 
     } else {
-      se = as.list(rep(0, length(E.type)))
+      se = lapply(1:length(E.class), function(x) NA)
     }
 
-    out <- lapply(1:length(E.type), function(k) {
+    out <- lapply(1:length(E.class), function(k) {
       tmp = data.frame(Order.q = rep(q, length(x)), Evenness = as.vector(qD[[k]]), s.e. = as.vector(se[[k]]),
                        Even.LCL = as.vector(qD[[k]] - qnorm(1-(1-conf)/2)*se[[k]]), Even.UCL = as.vector(qD[[k]] + qnorm(1-(1-conf)/2)*se[[k]]),
                        Community = rep(names(x), each=length(q)), method = rep(method, length(q)*length(x))
@@ -654,12 +780,12 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
     })
-    if (method=="Estimated") {out <- append(Cmax, out)}
+    if (method=="Estimated") {out <- append(C, out)}
   }
 
   if (method=="Estimated") {
-    names(out)=c("Cmax", paste("E", E.type, sep = ""))
-  } else if (method=="Empirical") {names(out)=paste("E", E.type, sep = "")}
+    names(out)=c("C", paste("E", E.class, sep = ""))
+  } else if (method=="Empirical") {names(out)=paste("E", E.class, sep = "")}
 
   return(out)
 }
@@ -692,7 +818,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
 #' @export
 
 ggEven <- function(output) {
-  if (names(output[1]) == "Cmax")  output = output[-1]
+  if (names(output[1]) == "C")  output = output[-1]
   cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
                      "#330066", "#CC79A7", "#0072B2", "#D55E00"))
   classdata = cbind(do.call(rbind, output),
@@ -735,5 +861,24 @@ ggEven <- function(output) {
     theme(strip.text.x = element_text(size=12, colour = "purple", face="bold"))
 
   return(fig)
+}
+
+
+#
+#' ggplot2 extension for an iNEXT object of Phylogenetic and Functional diversity
+#'
+#' \code{ggRE} The figure for estimation of rarefaction and extrapolation with order q\cr
+#'
+#' @param output a table generated from iNEXTFD function\cr
+#' @return a figure of estimated sample completeness with order q\cr
+#'
+#' @export
+
+ggRE <- function(output) {
+  output$inext$Order.q = as.factor(output$inext$Order.q)
+  output$inext = output$inext %>% mutate(point = method)
+  output$inext$point[output$inext$point == "Observed"] = "Rarefaction"
+
+
 }
 

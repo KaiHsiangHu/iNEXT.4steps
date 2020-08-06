@@ -7,12 +7,14 @@
 iNEXT.4steps(
   data,
   datatype = "abundance",
-  diversity = "TD",
+  tree = NULL,
+  reftime = NULL,
+  distM = NULL,
+  threshold = NULL,
   q = seq(0, 2, 0.25),
   size = NULL,
   endpoint = NULL,
   knots = 30,
-  se = TRUE,
   conf = 0.95,
   nboot = 30,
   details = FALSE
@@ -32,8 +34,13 @@ list of species; then the rows of the input data refer to this pooled list. \cr}
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
 sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr}
 
-\item{diversity}{a choosen attribute diversity of three class:
-"TD" for "Taxonomic diversity", "PhD" for "Phylogenetic diversity", "FunD" for "Functional diversity".}
+\item{tree}{a structure data for phylogenetic diversity}
+
+\item{reftime}{a positive value or sequence specifying the reference times for diversity computation. If NULL, then reftime is set to be the tree depth of the phylogenetic tree, which is spanned by all the observed species in the pooled assemblage. Default is NULL.}
+
+\item{distM}{a distance matrix for functional diversity}
+
+\item{threshold}{a proposed tau value for functional diversity}
 
 \item{q}{a integer vector for the order of Hill number\cr
 (setting except \code{step2}).\cr}
@@ -47,9 +54,6 @@ reference sample size. It will be ignored if \code{size} is given. \cr
 (setting only for \code{step2}).\cr}
 
 \item{knots}{an integer specifying the number of knot between 1 and the \code{endpoint}, default is 40.\cr
-(setting only for \code{step2}).\cr}
-
-\item{se}{a logical variable to calculate the bootstrap standard error and confidence interval of a level specified by conf, default is \code{TRUE}.\cr
 (setting only for \code{step2}).\cr}
 
 \item{conf}{a positive number < 1 specifying the level of confidence interval, default is 0.95.\cr}

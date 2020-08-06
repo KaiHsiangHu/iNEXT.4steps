@@ -17,16 +17,16 @@ Description: iNEXT.4steps provides a simple function to create a complete analys
 License: GPL (>= 3)
 Depends: R (>= 3.4)
 Imports: devtools,
-        iNEXT,
         ggplot2,
         reshape2,
         dplyr,
         stats,
         ggpubr,
         purrr,
-        PhD,
+        iNEXT,
+        iNEXTPD2,
         FunD
-Remotes: YanHanChen/iNEXT, YanHanChen/PhD, YanHanChen/FunD
+Remotes: YanHanChen/iNEXT, YanHanChen/iNEXTPD2, YanHanChen/FunD
 Encoding: UTF-8
 BugReports: https://github.com/KaiHsiangHu/iNEXT.4steps/issues
 LazyData: true

@@ -11,7 +11,8 @@ Evenness(
   method = "Estimated",
   nboot = 30,
   conf = 0.95,
-  E.type = c(1:5)
+  E.class = c(1:5),
+  C = NULL
 )
 }
 \arguments{
@@ -28,13 +29,15 @@ sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq
 
 \item{conf}{a positive number < 1 specifying the level of confidence interval, default is 0.95.\cr}
 
-\item{E.type}{a integer vector between 1 to 6}
+\item{E.class}{a integer vector between 1 to 6}
+
+\item{C}{a standardized coverage for calculating evenness index}
 }
 \value{
 A list of estimated(empirical) evenness with order q.\cr
         Different lists represents different classes of Evenness.\cr
         Each list is combined with order.q and sites.\cr
-        If "method" is estimated, then fist list will be named "Cmax" which means the
+        If "method" is estimated, then fist list will be named "C" which means the
         maximum standardized coverage between all double reference sample size.\cr\cr
 \code{$summary} individual summary of 4 steps of data. \cr\cr
 }
