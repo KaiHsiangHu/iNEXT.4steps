@@ -824,42 +824,33 @@ ggEven <- function(output) {
   classdata = cbind(do.call(rbind, output),
                     class = rep(names(output), each=nrow(output[[1]])))
 
-  evengp <- function(out) {
-    ggplot(out, aes(x=Order.q, y=Evenness, colour=Community, lty = method)) +
-      geom_line(size=1.2) +
-      scale_colour_manual(values = cbPalette) +
-      geom_ribbon(data = out %>% filter(method=="Estimated"),
-                  aes(ymin=Even.LCL, ymax=Even.UCL, fill=Community),
-                  alpha=0.2, linetype=0) +
-      geom_ribbon(data = out %>% filter(method=="Empirical"),
-                  aes(ymin=Even.LCL, ymax=Even.UCL, fill=Community),
-                  alpha=0.2, linetype=0) +
-      scale_fill_manual(values = cbPalette) +
-      labs(x="Order q", y="Evenness") +
-      # theme_bw(base_size = 18) +
-      theme(text=element_text(size=18)) +
-      theme(legend.position = "bottom", legend.box = "vertical",
-            legend.key.width = unit(1.2,"cm"),
-            # plot.margin = unit(c(1.5,0.3,1.2,0.3), "lines"),
-            legend.title = element_blank(),
-            legend.margin = margin(0,0,0,0),
-            legend.box.margin = margin(-10,-10,-5,-10),
-            text = element_text(size=12),
-            plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt")
-      )
-  }
-
-  # fig <- list()
-  # for (i in 1:length(output)) {
-  #   fig[[i]] = evengp(output[[i]]) +
-  #     labs(title=names(output[i])) +
-  #     theme(plot.title = element_text(size=20, colour='purple', face="bold", hjust = 0.5))
-  #   }
-
-  fig = evengp(classdata) +
+  fig = ggplot(classdata, aes(x=Order.q, y=Evenness, colour=Community, lty = method)) +
+    geom_line(size=1.2) +
+    scale_colour_manual(values = cbPalette) +
+    geom_ribbon(data = classdata %>% filter(method=="Estimated"),
+                aes(ymin=Even.LCL, ymax=Even.UCL, fill=Community),
+                alpha=0.2, linetype=0) +
+    geom_ribbon(data = classdata %>% filter(method=="Empirical"),
+                aes(ymin=Even.LCL, ymax=Even.UCL, fill=Community),
+                alpha=0.2, linetype=0) +
+    scale_fill_manual(values = cbPalette) +
+    labs(x="Order q", y="Evenness") +
+    # theme_bw(base_size = 18) +
+    theme(text=element_text(size=18)) +
+    theme(legend.position = "bottom", legend.box = "vertical",
+          legend.key.width = unit(1.2,"cm"),
+          # plot.margin = unit(c(1.5,0.3,1.2,0.3), "lines"),
+          legend.title = element_blank(),
+          legend.margin = margin(0,0,0,0),
+          legend.box.margin = margin(-10,-10,-5,-10),
+          text = element_text(size=12),
+          plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt")
+    )
+  
+  if (length(output) != 1) fig = fig +
     facet_wrap(~class) +
     theme(strip.text.x = element_text(size=12, colour = "purple", face="bold"))
-
+  
   return(fig)
 }
 
