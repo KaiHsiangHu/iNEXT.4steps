@@ -1,6 +1,6 @@
 #' iNEXT 4 steps
 #'
-#' \code{iNEXT.4steps}:\cr
+#' \code{iNEXT4steps}:\cr
 #' A complete (random sampling) biological analysis combined with four parts:\cr
 #' Step1: Sample Completeness.\cr
 #' Step2: Interpolation and Extrapolation.\cr
@@ -57,12 +57,12 @@
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
 #' data(Spider)
-#' out1 <- iNEXT.4steps(data = Spider, datatype = "abundance")
+#' out1 <- iNEXT4steps(data = Spider, datatype = "abundance")
 #' out1
 #' ## Type (2) example for incidence based data (list of data.frame)
 #' ## Ex.2
 #' data(woody_incid)
-#' out2 <- iNEXT.4steps(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' out2 <- iNEXT4steps(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
 #' out2
 #' }
 #' @references
