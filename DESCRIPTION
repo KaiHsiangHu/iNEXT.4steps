@@ -1,4 +1,4 @@
-Package: iNEXT.4steps
+Package: iNEXT4steps
 Type: Package
 Title: four steps of INterpolation and EXTrapolation analysis
 Version: 1.0.1
@@ -28,6 +28,6 @@ Imports: devtools,
         FunD
 Remotes: YanHanChen/iNEXT, YanHanChen/iNEXTPD2, YanHanChen/FunD
 Encoding: UTF-8
-BugReports: https://github.com/KaiHsiangHu/iNEXT.4steps/issues
+BugReports: https://github.com/KaiHsiangHu/iNEXT4steps/issues
 LazyData: true
 RoxygenNote: 7.1.0
