@@ -17,10 +17,6 @@
 #' list of species; then the rows of the input data refer to this pooled list. \cr
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
 #' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
-#' @param tree a structure data for phylogenetic diversity
-#' @param reftime a positive value or sequence specifying the reference times for diversity computation. If NULL, then reftime is set to be the tree depth of the phylogenetic tree, which is spanned by all the observed species in the pooled assemblage. Default is NULL.
-#' @param distM a distance matrix for functional diversity
-#' @param threshold a proposed tau value for functional diversity
 #' @param q a integer vector for the order of Hill number\cr
 #' (setting except \code{step2}).\cr
 #' @param size a vector of nonnegative integers specifying the sample sizes for which diversity estimates will be calculated. If \code{NULL}, the diversity estimates will
@@ -41,8 +37,6 @@
 #' @import ggpubr
 #' @import purrr
 #' @import iNEXT
-#' @import iNEXTPD2
-#' @import FunD
 #' @importFrom stats qnorm
 #' @importFrom stats rbinom
 #' @importFrom stats rmultinom
@@ -51,7 +45,7 @@
 #' \code{$summary} individual summary of 4 steps of data. \cr\cr
 #' \code{$figure} 5 figures of analysis process. \cr\cr
 #' \code{$details} the information for generating \code{figure}. \cr
-#' If you nees it, you should key in \code{details = TRUE}. \cr\cr
+#' If you need it, you should key in \code{details = TRUE}. \cr\cr
 #' @examples
 #' \dontrun{
 #' ## Type (1) example for abundance based data (data.frame)
@@ -70,9 +64,9 @@
 #' Quantifying sample completeness and comparing diversities among assemblages. Ecological Research.
 #' @export
 
-iNEXT4steps <- function(data, datatype = "abundance", tree = NULL, reftime = NULL, distM = NULL, threshold = NULL,
+iNEXT4steps <- function(data, datatype = "abundance",
                          q = seq(0, 2, 0.25), size = NULL, endpoint = NULL,
-                         knots = 30, conf = 0.95, nboot = 30, details = FALSE) {
+                         knots = 30, conf = 0.95, nboot = 50, details = FALSE) {
   qD = "TD"
   if ((length(data)==1) && (class(data) %in% c("numeric", "integer")))
     stop("Error: Your data does not have enough information.")

@@ -290,16 +290,16 @@ ggSC <- function(output) {
 
 #
 ####
-#' Estimated Asymptotic Diversity
-#'
-#' \code{Diversity_est} Estimation of Asymptotic Diversity with order q
-#'
-#' @param x a vector of abundances-based/incidences-based species data.\cr
-#' @param q a integer vector for the order of Hill number\cr
-#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
-#' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
-#' @return a vector of estimated Asymptotic Diversity with order q: \cr\cr
-#'
+# Estimated Asymptotic Diversity
+#
+# \code{Diversity_est} Estimation of Asymptotic Diversity with order q
+#
+# @param x a vector of abundances-based/incidences-based species data.\cr
+# @param q a integer vector for the order of Hill number\cr
+# @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
+# sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
+# @return a vector of estimated Asymptotic Diversity with order q: \cr\cr
+#
 Diversity_est = function (x, q, datatype) {
   if (datatype == "abundance") {
     x = x[x > 0]
@@ -376,34 +376,17 @@ Diversity_est = function (x, q, datatype) {
 
 #
 ####
-#' Asymptotic Diversity main function
-#'
-#' \code{TdAsy} Estimation of Asymptotic Diversity with order q
-#'
-#' @param x a matrix/data.frame/list/vector of abundances-based/incidences-based species data.\cr
-#' @param q a integer vector for the order of Hill number\cr
-#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
-#' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
-#' @param nboot an integer specifying the number of bootstrap replications, default is 30.\cr
-#' @param conf  positive number < 1 specifying the level of confidence interval, default is 0.95.\cr\cr
-#' @return a data frame of estimated Asymptotic Diversity with order q: \cr\cr
-#'
-#' @examples
-#' ## Type (1) example for abundance based data (data.frame)
-#' ## Ex.1
-#' data(Spider)
-#' out1 <- TdAsy(x = Spider, datatype = "abundance")
-#' out1
-#'
-#' ## Type (2) example for incidence based data (list of data.frame)
-#' ## Ex.2
-#' data(woody_incid)
-#' out2 <- TdAsy(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
-#' out2
-#'
-#' @references
-#' Chao,A. and Jost,L.(2015).Estimating diversity and entropy profiles via discovery rates of new species.
-#' @export
+# Asymptotic Diversity main function
+#
+# \code{TdAsy} Estimation of Asymptotic Diversity with order q
+#
+# @param x a matrix/data.frame/list/vector of abundances-based/incidences-based species data.\cr
+# @param q a integer vector for the order of Hill number\cr
+# @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
+# sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
+# @param nboot an integer specifying the number of bootstrap replications, default is 30.\cr
+# @param conf  positive number < 1 specifying the level of confidence interval, default is 0.95.\cr\cr
+# @return a data frame of estimated Asymptotic Diversity with order q: \cr\cr
 
 TdAsy <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30, conf = 0.95) {
   out = iNEXT:::AsymDiv(x, q, datatype, nboot, conf, method="Estimated")
@@ -412,16 +395,16 @@ TdAsy <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30, con
 
 #
 ####
-#' Empirical Diversity
-#'
-#' \code{Diversity_emp} Empirical Diversity with order q
-#'
-#' @param x a vector of abundances-based/incidences-based species data.\cr
-#' @param q a integer vector for the order of Hill number\cr
-#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
-#' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
-#' @return a vector of empirical Diversity with order q: \cr\cr
-#'
+# Empirical Diversity
+#
+# \code{Diversity_emp} Empirical Diversity with order q
+#
+# @param x a vector of abundances-based/incidences-based species data.\cr
+# @param q a integer vector for the order of Hill number\cr
+# @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
+# sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
+# @return a vector of empirical Diversity with order q: \cr\cr
+
 Diversity_emp = function (x, q, datatype) {
   if (datatype == "abundance") {
     p <- x[x>0]/sum(x)
@@ -452,34 +435,17 @@ Diversity_emp = function (x, q, datatype) {
 
 #
 ####
-#' Empirical Diversity main function
-#'
-#' \code{TdObs} Estimation of Asymptotic Diversity with order q
-#'
-#' @param x a matrix/data.frame/list/vector of abundances-based/incidences-based species data.\cr
-#' @param q a integer vector for the order of Hill number\cr
-#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
-#' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
-#' @param nboot an integer specifying the number of bootstrap replications, default is 30.\cr
-#' @param conf  positive number < 1 specifying the level of confidence interval, default is 0.95.\cr\cr
-#' @return a data frame of empirical diversity with order q: \cr\cr
-#'
-#' @examples
-#' ## Type (1) example for abundance based data (data.frame)
-#' ## Ex.1
-#' data(Spider)
-#' out1 <- TdObs(x = Spider, datatype = "abundance")
-#' out1
-#'
-#' ## Type (2) example for incidence based data (list of data.frame)
-#' ## Ex.2
-#' data(woody_incid)
-#' out2 <- TdObs(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
-#' out2
-#'
-#' @references
-#' Chao,A. and Jost,L.(2015).Estimating diversity and entropy profiles via discovery rates of new species.
-#' @export
+# Empirical Diversity main function
+#
+# \code{TdObs} Estimation of Asymptotic Diversity with order q
+#
+# @param x a matrix/data.frame/list/vector of abundances-based/incidences-based species data.\cr
+# @param q a integer vector for the order of Hill number\cr
+# @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
+# sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
+# @param nboot an integer specifying the number of bootstrap replications, default is 30.\cr
+# @param conf  positive number < 1 specifying the level of confidence interval, default is 0.95.\cr\cr
+# @return a data frame of empirical diversity with order q: \cr\cr
 
 TdObs <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30, conf = 0.95) {
   out = iNEXT:::AsymDiv(x, q = q, datatype = datatype, nboot = nboot, conf = conf, method = "Empirical")
@@ -488,29 +454,10 @@ TdObs <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30, con
 
 #
 ####
-#' ggplot for Asymptotic diversity
-#'
-#' \code{ggtqplotD} The figure for estimation of Asymptotic diversity with order q\cr
-#'
-#' @param output a table generated from AsymDiv function\cr
-#' @return a figure of estimated sample completeness with order q\cr\cr
-#'
-#' @examples
-#' ## Type (1) example for abundance based data (data.frame)
-#' ## Ex.1
-#' data(Spider)
-#' out1 <- TdAsy(x = Spider, datatype = "abundance")
-#' ggtqplotD(out1)
-#' ## Type (2) example for incidence based data (list of data.frame)
-#'
-#' ## Ex.2
-#' data(woody_incid)
-#' out2 <- TdObs(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
-#' ggtqplotD(out2)
-#'
-#' @references
-#' Chao,A. and Jost,L.(2015).Estimating diversity and entropy profiles via discovery rates of new species.
-#' @export
+# ggplot for Asymptotic diversity
+#
+# @param output a table generated from AsymDiv function\cr
+# @return a figure of estimated sample completeness with order q\cr\cr
 
 ggtqplotD <- function(output){
   cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
@@ -852,24 +799,5 @@ ggEven <- function(output) {
     theme(strip.text.x = element_text(size=12, colour = "purple", face="bold"))
   
   return(fig)
-}
-
-
-#
-#' ggplot2 extension for an iNEXT object of Phylogenetic and Functional diversity
-#'
-#' \code{ggRE} The figure for estimation of rarefaction and extrapolation with order q\cr
-#'
-#' @param output a table generated from iNEXTFD function\cr
-#' @return a figure of estimated sample completeness with order q\cr
-#'
-#' @export
-
-ggRE <- function(output) {
-  output$inext$Order.q = as.factor(output$inext$Order.q)
-  output$inext = output$inext %>% mutate(point = method)
-  output$inext$point[output$inext$point == "Observed"] = "Rarefaction"
-
-
 }
 

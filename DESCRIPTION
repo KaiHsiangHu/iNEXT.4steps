@@ -30,4 +30,4 @@ Remotes: YanHanChen/iNEXT, YanHanChen/iNEXTPD2, YanHanChen/FunD
 Encoding: UTF-8
 BugReports: https://github.com/KaiHsiangHu/iNEXT4steps/issues
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1

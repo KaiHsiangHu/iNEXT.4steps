@@ -7,16 +7,12 @@
 iNEXT4steps(
   data,
   datatype = "abundance",
-  tree = NULL,
-  reftime = NULL,
-  distM = NULL,
-  threshold = NULL,
   q = seq(0, 2, 0.25),
   size = NULL,
   endpoint = NULL,
   knots = 30,
   conf = 0.95,
-  nboot = 30,
+  nboot = 50,
   details = FALSE
 )
 }
@@ -33,14 +29,6 @@ list of species; then the rows of the input data refer to this pooled list. \cr}
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
 sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr}
-
-\item{tree}{a structure data for phylogenetic diversity}
-
-\item{reftime}{a positive value or sequence specifying the reference times for diversity computation. If NULL, then reftime is set to be the tree depth of the phylogenetic tree, which is spanned by all the observed species in the pooled assemblage. Default is NULL.}
-
-\item{distM}{a distance matrix for functional diversity}
-
-\item{threshold}{a proposed tau value for functional diversity}
 
 \item{q}{a integer vector for the order of Hill number\cr
 (setting except \code{step2}).\cr}
@@ -67,7 +55,7 @@ a list of two of objects: \cr\cr
 \code{$summary} individual summary of 4 steps of data. \cr\cr
 \code{$figure} 5 figures of analysis process. \cr\cr
 \code{$details} the information for generating \code{figure}. \cr
-If you nees it, you should key in \code{details = TRUE}. \cr\cr
+If you need it, you should key in \code{details = TRUE}. \cr\cr
 }
 \description{
 \code{iNEXT4steps}:\cr
