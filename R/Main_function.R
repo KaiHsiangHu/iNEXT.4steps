@@ -108,10 +108,8 @@ iNEXT4steps <- function(data, datatype = "abundance",
 
   ## qD ##
   if (qD == "TD") {
-    asy.TD <- TdAsy(data, q=q, datatype=datatype, nboot=nboot, conf=conf)
-    obs.TD <- TdObs(data, q=q, datatype=datatype, nboot=0, conf=conf)
-
-    qTD.table = rbind(asy.TD, obs.TD)
+    
+    qTD.table <- AsyD(data, q=q, datatype=datatype, nboot=nboot, conf=conf)
     qTD.table$s.e. = (qTD.table$qD.UCL-qTD.table$qD)/qnorm(1-(1-conf)/2)
   } else if (qD == "PhD") {
     asy.PD <- PhdAsy(data, datatype=datatype, tree=tree, q=q, reftime=reftime, type="PD", conf=conf, nboot=nboot)
@@ -139,7 +137,7 @@ iNEXT4steps <- function(data, datatype = "abundance",
       level = levels(inextTD.table$iNextEst$size_based$Assemblage)
 
       SC.table$Community = factor(SC.table$Community, level)
-      qTD.table$Site = factor(qTD.table$Site, level)
+      qTD.table$Site = factor(qTD.table$Assemblage, level)
       even.table[[2]]$Community = factor(even.table[[2]]$Community, level)
 
     } else if (qD=="PhD") {
@@ -164,7 +162,6 @@ iNEXT4steps <- function(data, datatype = "abundance",
 
   ## 5 figures ##
   if (length(unique(SC.table$Community)) <= 8) {
-
     SC.plot <- ggSC(SC.table) +
       labs(title=plot.names[1]) +
       theme(text=element_text(size=12),
@@ -266,7 +263,7 @@ iNEXT4steps <- function(data, datatype = "abundance",
 
     if (qD=="TD") {
       qTD.table$method = factor(qTD.table$method, level=c("Estimated", "Empirical"))
-      asy.plot <- ggtqplotD(qTD.table) +
+      asy.plot <- ggAsyD(qTD.table) +
         labs(title=plot.names[3]) +
         theme(text=element_text(size=12),
               plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),

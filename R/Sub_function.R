@@ -10,14 +10,14 @@
 
 summary.deal <- function(table, step, Pielou=NULL) {
   if (step==1) {
-    tmp = (table %>% filter(Order.q %in% c(0,1,2)))[,c("Order.q","Estimate.SC","Community")]
-    out = dcast(tmp, Community~Order.q, value.var = "Estimate.SC")
+    tmp = (table %>% filter(Order.q %in% c(0,1,2)))[,c("Order.q","Estimate.SC","Assemblage")]
+    out = dcast(tmp, Assemblage~Order.q, value.var = "Estimate.SC")
     colnames(out)[-1] = paste("q=", c(0,1,2), sep="")
   }
   if (step==2){
-    tmp1 = (table %>% filter((order %in% c(0,1,2)) & (method == "Empirical")))[,c("Site", "order", "qD")]
-    names(tmp1) = c("Site", "Diversity", "Observed diversity")
-    tmp2 = (table %>% filter((order %in% c(0,1,2)) & (method == "Estimated")))[,c("qD", "s.e.", "qD.LCL", "qD.UCL")]
+    tmp1 = (table %>% filter((Order.q %in% c(0,1,2)) & (method == "Empirical")))[,c("Assemblage", "Order.q", "qD")]
+    names(tmp1) = c("Assemblage", "Diversity", "Observed diversity")
+    tmp2 = (table %>% filter((Order.q %in% c(0,1,2)) & (method == "Estimated")))[,c("qD", "s.e.", "qD.LCL", "qD.UCL")]
     names(tmp2) = c("Asymptotic diversity estimate", "s.e.", "LCL", "UCL")
     out = cbind(tmp1, tmp2)
     out$Diversity[out$Diversity == c(0,1,2)] = c("Species richness", "Shannon diversity", "Simpson diversity")
@@ -32,8 +32,8 @@ summary.deal <- function(table, step, Pielou=NULL) {
   if (step==4){
     if (names(table[1]) == "C")  table = table[-1]
     tmp = (table[[1]] %>%
-             filter(Order.q %in% c(0,1,2)))[,c("Order.q","Evenness","Community")]
-    out = acast(tmp, Community~Order.q, value.var="Evenness")
+             filter(Order.q %in% c(0,1,2)))[,c("Order.q","Evenness","Assemblage")]
+    out = acast(tmp, Assemblage~Order.q, value.var="Evenness")
 
     D = (Pielou %>% filter(Order.q == 1))[,c("Assemblage","qD")]
     S = (Pielou %>% filter(Order.q == 0))[,c("Assemblage","qD")]
@@ -121,7 +121,7 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
       }
       out <- data.frame(Order.q = q, Estimate.SC = dq,
                         SC.LCL = dq-qnorm(1-(1-conf)/2)*se, SC.UCL = dq+qnorm(1-(1-conf)/2)*se,
-                        Community = names(x)[i], method = rep("Estimated", length(q)))
+                        Assemblage = names(x)[i], method = rep("Estimated", length(q)))
       out$SC.LCL[out$SC.LCL < 0] <- 0
       out$SC.UCL[out$SC.UCL > 1] <- 1
       out
@@ -153,7 +153,7 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
       }
       out <- data.frame(Order.q = q, Estimate.SC = dq,
                         SC.LCL = dq-qnorm(1-(1-conf)/2)*se, SC.UCL = dq+qnorm(1-(1-conf)/2)*se,
-                        Community = names(x)[i], method = rep("Estimated", length(q)))
+                        Assemblage = names(x)[i], method = rep("Estimated", length(q)))
       out$SC.LCL[out$SC.LCL < 0] <- 0
       out$SC.UCL[out$SC.UCL > 1] <- 1
       out
@@ -276,121 +276,16 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 ggSC <- function(output) {
   cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
                      "#330066", "#CC79A7", "#0072B2", "#D55E00"))
-  ggplot(output, aes(x = Order.q, y = Estimate.SC, colour = Community))+
+  ggplot(output, aes(x = Order.q, y = Estimate.SC, colour = Assemblage))+
     geom_line(size = 1.2) +
     scale_colour_manual(values = cbPalette) +
-    geom_ribbon(aes(ymin = SC.LCL, ymax = SC.UCL, fill = Community), alpha = 0.2, linetype=0) +
+    geom_ribbon(aes(ymin = SC.LCL, ymax = SC.UCL, fill = Assemblage), alpha = 0.2, linetype=0) +
     scale_fill_manual(values = cbPalette) +
     labs(x = "Order q", y = "Sample completeness") +
     theme(text = element_text(size=18)) +
     theme(legend.position = "bottom", legend.box = "vertical",
           legend.key.width = unit(1.2,"cm"),
           legend.title = element_blank())
-}
-
-#
-####
-# Estimated Asymptotic Diversity
-#
-# \code{Diversity_est} Estimation of Asymptotic Diversity with order q
-#
-# @param x a vector of abundances-based/incidences-based species data.\cr
-# @param q a integer vector for the order of Hill number\cr
-# @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
-# sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
-# @return a vector of estimated Asymptotic Diversity with order q: \cr\cr
-#
-Diversity_est = function (x, q, datatype) {
-  if (datatype == "abundance") {
-    x = x[x > 0]
-    n = sum(x)
-    Sub <- function(x, q){
-      f1 = sum(x==1)
-      f2 = sum(x==2)
-      A = ifelse(f2>0, 2*f2/((n-1)*f1+2*f2), ifelse(f1>0, 2/((n-1)*(f1-1)+2), 1))
-      r <- 1:(n-1)
-      x = x[x>0]
-
-      if(q == 0){
-        sum(x>0) + (n-1)/n*ifelse(f2>0, f1^2/2/f2, f1*(f1-1)/2)
-      }
-      else if(q == 1){
-        part1 <- sum(x/n*(digamma(n)-digamma(x)))
-        part2 <- ifelse(f1==0|A==1, 0, f1/n*(1-A)^(1-n)*(-log(A)-sum((1-A)^r/r)))
-        exp(part1+part2)
-      }else if(abs(q-round(q)) == 0){
-        part <- sum(exp(lchoose(x[x>=q],q) - lchoose(n,q)))
-        part^(1/(1-q))
-      }else {
-        sort.data = sort(unique(x))
-        tab = table(x)
-        term = sapply(sort.data, function(z){
-          k=0:(n-z)
-          sum(choose(k-q,k)*exp(lchoose(n-k-1,z-1)-lchoose(n,z)))
-        })
-        r <- 0:(n-1)
-        part1 = sum(tab*term)
-        part2 = ifelse(f1==0|A==1, 0, f1/n*(1-A)^(1-n)*(A^(q-1) - sum(choose(q-1,r)*(A-1)^r)))
-        (part1+part2)^(1/(1-q))
-      }
-    }
-    sapply(q, Sub, x=x)
-  } else if (datatype == "incidence_freq") {
-    T = x[1]
-    y = x[-1]; y = y[y>0]
-
-    Sub <- function(y, q){
-      y = y[y>0]
-      U = sum(y)
-      Q1 = sum(y==1)
-      Q2 = sum(y==2)
-      A = ifelse(Q2>0, 2*Q2/((T-1)*Q1+2*Q2), ifelse(Q1>0, 2/((T-1)*(Q1-1)+2), 1))
-      r <- 1:(T-1)
-
-      if(q == 0){
-        sum(y>0) + (T-1)/T*ifelse(Q2>0, Q1^2/2/Q2, Q1*(Q1-1)/2)
-      }
-      else if(q == 1){
-        part1 <- sum(y/T*(digamma(T)-digamma(y)))
-        part2 <- ifelse(Q1==0|A==1, 0, Q1/T*(1-A)^(1-T)*(-log(A)-sum((1-A)^r/r)))
-        exp(T/U*(part1+part2)+log(U/T))
-      }else if(abs(q-round(q)) == 0){
-        part <- sum(exp(lchoose(y[y>=q],q) - lchoose(T,q)))
-        (U/T)^(q/(q-1))*part^(1/(1-q))
-      }else {
-        sort.data = sort(unique(y))
-        tab = table(y)
-        term = sapply(sort.data, function(z){
-          k=0:(T-z)
-          sum(choose(k-q,k)*exp(lchoose(T-k-1,z-1)-lchoose(T,z)))
-        })
-        r <- 0:(T-1)
-        part1 = sum(tab*term)
-        part2 = ifelse(Q1==0|A==1, 0, Q1/T*(1-A)^(1-T)*(A^(q-1) - sum(choose(q-1,r)*(A-1)^r)))
-        (U/T)^(q/(q-1))*(part1+part2)^(1/(1-q))
-      }
-    }
-    sapply(q, Sub, y=y)
-  }
-}
-
-#
-####
-# Asymptotic Diversity main function
-#
-# \code{TdAsy} Estimation of Asymptotic Diversity with order q
-#
-# @param x a matrix/data.frame/list/vector of abundances-based/incidences-based species data.\cr
-# @param q a integer vector for the order of Hill number\cr
-# @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
-# sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
-# @param nboot an integer specifying the number of bootstrap replications, default is 30.\cr
-# @param conf  positive number < 1 specifying the level of confidence interval, default is 0.95.\cr\cr
-# @return a data frame of estimated Asymptotic Diversity with order q: \cr\cr
-
-TdAsy <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30, conf = 0.95) {
-  out = iNEXT:::AsymDiv(x, q, datatype, nboot, conf, method="Estimated")
-  return(out)
 }
 
 #
@@ -431,54 +326,6 @@ Diversity_emp = function (x, q, datatype) {
     }
     sapply(q, Sub, x=x)
   }
-}
-
-#
-####
-# Empirical Diversity main function
-#
-# \code{TdObs} Estimation of Asymptotic Diversity with order q
-#
-# @param x a matrix/data.frame/list/vector of abundances-based/incidences-based species data.\cr
-# @param q a integer vector for the order of Hill number\cr
-# @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
-# sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
-# @param nboot an integer specifying the number of bootstrap replications, default is 30.\cr
-# @param conf  positive number < 1 specifying the level of confidence interval, default is 0.95.\cr\cr
-# @return a data frame of empirical diversity with order q: \cr\cr
-
-TdObs <- function(x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30, conf = 0.95) {
-  out = iNEXT:::AsymDiv(x, q = q, datatype = datatype, nboot = nboot, conf = conf, method = "Empirical")
-  return(out)
-}
-
-#
-####
-# ggplot for Asymptotic diversity
-#
-# @param output a table generated from AsymDiv function\cr
-# @return a figure of estimated sample completeness with order q\cr\cr
-
-ggtqplotD <- function(output){
-  cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
-                     "#330066", "#CC79A7", "#0072B2", "#D55E00"))
-  ggplot(output, aes(x=order, y=qD, colour=Site, lty = method)) +
-    geom_line(size=1.2) +
-    scale_colour_manual(values = cbPalette) +
-    geom_ribbon(data = output %>% filter(method=="Estimated"),
-                aes(ymin=qD.LCL, ymax=qD.UCL, fill=Site), alpha=0.2, linetype=0) +
-    geom_ribbon(data = output %>% filter(method=="Empirical"),
-                aes(ymin=qD.LCL, ymax=qD.UCL, fill=Site), alpha=0.2, linetype=0) +
-    scale_fill_manual(values = cbPalette) +
-    labs(x="Order q", y="Species diversity") +
-    # theme_bw(base_size = 18) +
-    theme(text=element_text(size=18)) +
-    theme(legend.position="bottom", legend.box = "vertical",
-          legend.key.width = unit(1.2,"cm"),
-          # plot.margin = unit(c(1.5,0.3,1.2,0.3), "lines"),
-          legend.title=element_blank(),
-          legend.margin=margin(0,0,0,0),
-          legend.box.margin = margin(-10,-10,-5,-10))
 }
 
 #
@@ -676,7 +523,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
     out <- lapply(1:length(E.class), function(k) {
       tmp = data.frame(Order.q = rep(q, length(x)), Evenness = as.vector(qD[[k]]), s.e. = as.vector(se[[k]]),
                       Even.LCL = as.vector(qD[[k]] - qnorm(1-(1-conf)/2)*se[[k]]), Even.UCL = as.vector(qD[[k]] + qnorm(1-(1-conf)/2)*se[[k]]),
-                      Community = rep(names(x), each=length(q)), method = rep( method, length(q)*length(x))
+                      Assemblage = rep(names(x), each=length(q)), method = rep( method, length(q)*length(x))
       )
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
@@ -722,7 +569,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
     out <- lapply(1:length(E.class), function(k) {
       tmp = data.frame(Order.q = rep(q, length(x)), Evenness = as.vector(qD[[k]]), s.e. = as.vector(se[[k]]),
                        Even.LCL = as.vector(qD[[k]] - qnorm(1-(1-conf)/2)*se[[k]]), Even.UCL = as.vector(qD[[k]] + qnorm(1-(1-conf)/2)*se[[k]]),
-                       Community = rep(names(x), each=length(q)), method = rep(method, length(q)*length(x))
+                       Assemblage = rep(names(x), each=length(q)), method = rep(method, length(q)*length(x))
       )
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
@@ -771,14 +618,14 @@ ggEven <- function(output) {
   classdata = cbind(do.call(rbind, output),
                     class = rep(names(output), each=nrow(output[[1]])))
 
-  fig = ggplot(classdata, aes(x=Order.q, y=Evenness, colour=Community, lty = method)) +
+  fig = ggplot(classdata, aes(x=Order.q, y=Evenness, colour=Assemblage, lty = method)) +
     geom_line(size=1.2) +
     scale_colour_manual(values = cbPalette) +
     geom_ribbon(data = classdata %>% filter(method=="Estimated"),
-                aes(ymin=Even.LCL, ymax=Even.UCL, fill=Community),
+                aes(ymin=Even.LCL, ymax=Even.UCL, fill=Assemblage),
                 alpha=0.2, linetype=0) +
     geom_ribbon(data = classdata %>% filter(method=="Empirical"),
-                aes(ymin=Even.LCL, ymax=Even.UCL, fill=Community),
+                aes(ymin=Even.LCL, ymax=Even.UCL, fill=Assemblage),
                 alpha=0.2, linetype=0) +
     scale_fill_manual(values = cbPalette) +
     labs(x="Order q", y="Evenness") +
