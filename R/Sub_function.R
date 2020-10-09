@@ -527,7 +527,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
     })
-    if (is.null(C) == TRUE) C = "Observed data"
+    if (is.null(C) == TRUE) C = unique(estimateD(x, q = 0, datatype = datatype, base = "coverage", nboot=0)$goalSC)
     if (method=="Estimated") {out <- append(C, out)}
 
   } else if (datatype == "incidence") {
@@ -573,7 +573,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
     })
-    if (is.null(C) == TRUE) C = "Observed data"
+    if (is.null(C) == TRUE) C = unique(estimateD(x, q = 0, datatype = datatype, base = "coverage", nboot=0)$goalSC)
     if (method=="Estimated") {out <- append(C, out)}
   }
 
