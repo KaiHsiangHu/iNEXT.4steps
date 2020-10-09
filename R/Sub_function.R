@@ -494,13 +494,12 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
     else names(datalist) <- colnames(x)
     x <- datalist
   }
-
-
+  
+  
   if (datatype == "abundance") {
     qD <- Evenness.profile(x, q, "abundance", method, E.class, C)
     qD <- map(qD, as.vector)
-    C = min(estimateD(x, q=1, datatype="abundance", base="coverage", nboot=0)$SC)
-
+    
     if (nboot > 1) {
       Prob.hat <- lapply(1:length(x), function(i) iNEXT:::EstiBootComm.Ind(x[[i]]))
       Abun.Mat <- lapply(1:length(x), function(i) rmultinom(nboot, sum(x[[i]]), Prob.hat[[i]]))
@@ -528,13 +527,13 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
     })
+    if (is.null(C) == TRUE) C = "Observed data"
     if (method=="Estimated") {out <- append(C, out)}
 
   } else if (datatype == "incidence") {
-    qD <- Evenness.profile(x, q, "incidence_freq", method, E.class)
+    qD <- Evenness.profile(x, q, "incidence_freq", method, E.class, C)
     qD <- map(qD, as.vector)
-    C=min(estimateD(x, q=1, datatype="incidence_freq", base="coverage", nboot=0)$SC)
-
+    
     if (nboot > 1) {
       nT <- lapply(1:length(x), function(i) x[[i]][1])
       Prob.hat <- lapply(1:length(x), function(i) iNEXT:::EstiBootComm.Sam(x[[i]]))
@@ -574,12 +573,13 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
     })
+    if (is.null(C) == TRUE) C = "Observed data"
     if (method=="Estimated") {out <- append(C, out)}
   }
 
   if (method=="Estimated") {
-    names(out)=c("C", paste("E", E.class, sep = ""))
-  } else if (method=="Empirical") {names(out)=paste("E", E.class, sep = "")}
+    names(out) = c("Coverage", paste("E", E.class, sep = ""))
+  } else if (method=="Empirical") {names(out) = paste("E", E.class, sep = "")}
 
   return(out)
 }
