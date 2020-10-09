@@ -612,7 +612,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
 #' @export
 
 ggEven <- function(output) {
-  if (names(output[1]) == "C")  output = output[-1]
+  if (names(output[1]) == "Coverage")  output = output[-1]
   cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
                      "#330066", "#CC79A7", "#0072B2", "#D55E00"))
   classdata = cbind(do.call(rbind, output),
