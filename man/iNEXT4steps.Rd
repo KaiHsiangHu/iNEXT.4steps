@@ -13,6 +13,8 @@ iNEXT4steps(
   knots = 30,
   conf = 0.95,
   nboot = 50,
+  p_row = 2,
+  p_col = 3,
   details = FALSE
 )
 }
@@ -47,6 +49,10 @@ reference sample size. It will be ignored if \code{size} is given. \cr
 \item{conf}{a positive number < 1 specifying the level of confidence interval, default is 0.95.\cr}
 
 \item{nboot}{an integer specifying the number of bootstrap replications, default is 30.\cr}
+
+\item{p_row}{number of row for 4steps figure, default = 2}
+
+\item{p_col}{number of column for 4steps figure, default = 3}
 
 \item{details}{a logical variable to determine whether do you want to print out the detailed value of 4 plots, default is \code{FALSE}.\cr}
 }

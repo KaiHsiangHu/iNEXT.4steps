@@ -29,6 +29,8 @@
 #' (setting only for \code{step2}).\cr
 #' @param conf a positive number < 1 specifying the level of confidence interval, default is 0.95.\cr
 #' @param nboot an integer specifying the number of bootstrap replications, default is 30.\cr
+#' @param p_row number of row for 4steps figure, default = 2
+#' @param p_col number of column for 4steps figure, default = 3
 #' @param details a logical variable to determine whether do you want to print out the detailed value of 4 plots, default is \code{FALSE}.\cr
 #' @import devtools
 #' @import ggplot2
@@ -66,7 +68,7 @@
 
 iNEXT4steps <- function(data, datatype = "abundance",
                          q = seq(0, 2, 0.25), size = NULL, endpoint = NULL,
-                         knots = 30, conf = 0.95, nboot = 50, details = FALSE) {
+                         knots = 30, conf = 0.95, nboot = 50, p_row = 2, p_col = 3, details = FALSE) {
   qD = "TD"
   if ((length(data)==1) && (class(data) %in% c("numeric", "integer")))
     stop("Error: Your data does not have enough information.")
@@ -315,7 +317,7 @@ iNEXT4steps <- function(data, datatype = "abundance",
                            asy.plot + guides(color=FALSE, fill=FALSE),
                            cover.plot,
                            even.plot + guides(color=FALSE, fill=FALSE),
-                           legend.p, nrow=3, ncol=2
+                           legend.p, nrow=p_row, ncol=p_col
     )
   } else { warning("The number of communities exceed eight. We don't show the figures.") }
 
