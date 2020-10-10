@@ -30,7 +30,7 @@ summary.deal <- function(table, step, Pielou=NULL) {
                       paste("q=", c(0,1,2), sep=""))
   }
   if (step==4){
-    if (names(table[1]) == "C")  table = table[-1]
+    if (names(table[1]) == "Coverage")  table = table[-1]
     tmp = (table[[1]] %>%
              filter(Order.q %in% c(0,1,2)))[,c("Order.q","Evenness","Assemblage")]
     out = acast(tmp, Assemblage~Order.q, value.var="Evenness")
