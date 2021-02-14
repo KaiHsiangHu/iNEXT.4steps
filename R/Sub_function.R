@@ -121,7 +121,7 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
       }
       out <- data.frame(Order.q = q, Estimate.SC = dq,
                         SC.LCL = dq-qnorm(1-(1-conf)/2)*se, SC.UCL = dq+qnorm(1-(1-conf)/2)*se,
-                        Assemblage = names(x)[i], method = rep("Estimated", length(q)))
+                        Assemblage = names(x)[i], Method = rep("Estimated", length(q)))
       out$SC.LCL[out$SC.LCL < 0] <- 0
       out$SC.UCL[out$SC.UCL > 1] <- 1
       out
@@ -153,7 +153,7 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
       }
       out <- data.frame(Order.q = q, Estimate.SC = dq,
                         SC.LCL = dq-qnorm(1-(1-conf)/2)*se, SC.UCL = dq+qnorm(1-(1-conf)/2)*se,
-                        Assemblage = names(x)[i], method = rep("Estimated", length(q)))
+                        Assemblage = names(x)[i], Method = rep("Estimated", length(q)))
       out$SC.LCL[out$SC.LCL < 0] <- 0
       out$SC.UCL[out$SC.UCL > 1] <- 1
       out
@@ -482,7 +482,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
     out <- lapply(1:length(E.class), function(k) {
       tmp = data.frame(Order.q = rep(q, length(x)), Evenness = as.vector(qD[[k]]), s.e. = as.vector(se[[k]]),
                       Even.LCL = as.vector(qD[[k]] - qnorm(1-(1-conf)/2)*se[[k]]), Even.UCL = as.vector(qD[[k]] + qnorm(1-(1-conf)/2)*se[[k]]),
-                      Assemblage = rep(names(x), each=length(q)), method = rep( method, length(q)*length(x))
+                      Assemblage = rep(names(x), each=length(q)), Method = rep( method, length(q)*length(x))
       )
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
@@ -528,7 +528,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
     out <- lapply(1:length(E.class), function(k) {
       tmp = data.frame(Order.q = rep(q, length(x)), Evenness = as.vector(qD[[k]]), s.e. = as.vector(se[[k]]),
                        Even.LCL = as.vector(qD[[k]] - qnorm(1-(1-conf)/2)*se[[k]]), Even.UCL = as.vector(qD[[k]] + qnorm(1-(1-conf)/2)*se[[k]]),
-                       Assemblage = rep(names(x), each=length(q)), method = rep(method, length(q)*length(x))
+                       Assemblage = rep(names(x), each=length(q)), Method = rep(method, length(q)*length(x))
       )
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
@@ -578,13 +578,13 @@ ggEven <- function(output) {
   classdata = cbind(do.call(rbind, output),
                     class = rep(names(output), each=nrow(output[[1]])))
 
-  fig = ggplot(classdata, aes(x=Order.q, y=Evenness, colour=Assemblage, lty = method)) +
+  fig = ggplot(classdata, aes(x=Order.q, y=Evenness, colour=Assemblage, lty = Method)) +
     geom_line(size=1.2) +
     scale_colour_manual(values = cbPalette) +
-    geom_ribbon(data = classdata %>% filter(method=="Estimated"),
+    geom_ribbon(data = classdata %>% filter(Method=="Estimated"),
                 aes(ymin=Even.LCL, ymax=Even.UCL, fill=Assemblage),
                 alpha=0.2, linetype=0) +
-    geom_ribbon(data = classdata %>% filter(method=="Empirical"),
+    geom_ribbon(data = classdata %>% filter(Method=="Empirical"),
                 aes(ymin=Even.LCL, ymax=Even.UCL, fill=Assemblage),
                 alpha=0.2, linetype=0) +
     scale_fill_manual(values = cbPalette) +
