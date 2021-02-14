@@ -17,7 +17,7 @@ summary.deal <- function(table, step, Pielou=NULL) {
   if (step==2){
     tmp1 = (table %>% filter((Order.q %in% c(0,1,2)) & (method == "Empirical")))[,c("Assemblage", "Order.q", "qD")]
     names(tmp1) = c("Assemblage", "Diversity", "Observed diversity")
-    tmp2 = (table %>% filter((Order.q %in% c(0,1,2)) & (method == "Estimated")))[,c("qD", "s.e.", "qD.LCL", "qD.UCL")]
+    tmp2 = (table %>% filter((Order.q %in% c(0,1,2)) & (method == "Asymptotic")))[,c("qD", "s.e.", "qD.LCL", "qD.UCL")]
     names(tmp2) = c("Asymptotic diversity estimate", "s.e.", "LCL", "UCL")
     out = cbind(tmp1, tmp2)
     out$Diversity[out$Diversity == c(0,1,2)] = c("Species richness", "Shannon diversity", "Simpson diversity")
@@ -111,7 +111,7 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
     out <- lapply(1:length(x), function(i) {
       dq <- sample_completeness(x[[i]], q, "abundance")
       if (nboot > 1) {
-        Prob.hat <- iNEXT:::EstiBootComm.Ind(x[[i]])
+        Prob.hat <- iNEXT3D:::EstiBootComm.Ind(x[[i]])
         Abun.Mat <- rmultinom(nboot, sum(x[[i]]), Prob.hat)
         se <- apply( matrix(apply(Abun.Mat,  2, function(xb) sample_completeness(xb, q, "abundance")), nrow=length(q)),
                 1, sd, na.rm = TRUE)
@@ -133,7 +133,7 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
       dq <- sample_completeness(x[[i]], q, "incidence_freq")
       if (nboot > 1) {
         nT <- x[[i]][1]
-        Prob.hat <- iNEXT:::EstiBootComm.Sam(x[[i]])
+        Prob.hat <- iNEXT3D:::EstiBootComm.Sam(x[[i]])
         Incid.Mat <- t(sapply(Prob.hat, function(p) rbinom(nboot, nT, p)))
         Incid.Mat <- matrix(c(rbind(nT, Incid.Mat)), ncol = nboot)
         tmp <- which(colSums(Incid.Mat) == nT)
@@ -290,46 +290,6 @@ ggSC <- function(output) {
 
 #
 ####
-# Empirical Diversity
-#
-# \code{Diversity_emp} Empirical Diversity with order q
-#
-# @param x a vector of abundances-based/incidences-based species data.\cr
-# @param q a integer vector for the order of Hill number\cr
-# @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
-# sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
-# @return a vector of empirical Diversity with order q: \cr\cr
-
-Diversity_emp = function (x, q, datatype) {
-  if (datatype == "abundance") {
-    p <- x[x>0]/sum(x)
-    n = sum(x)
-
-    Sub <- function(q, p){
-      p = p[p>0]
-
-      if(q==0) sum(p>0)
-      else if(q==1) exp(-sum(p*log(p)))
-      else sum(p^q)^(1/(1-q))
-    }
-    sapply(q, Sub, p=p)
-  } else if (datatype == "incidence_freq") {
-    T = x[1]; x = x[-1]
-
-    Sub <- function(q, x){
-      pi <- x[x>0]/T
-      p = pi/sum(pi)
-
-      if(q==0) sum(p>0)
-      else if(q==1) exp(-sum(p*log(p)))
-      else sum(p^q)^(1/(1-q))
-    }
-    sapply(q, Sub, x=x)
-  }
-}
-
-#
-####
 # Calculate six classes for Evenness
 #
 # @param q a integer vector for the order of Hill number
@@ -382,11 +342,11 @@ Evenness.profile <- function(x, q, datatype=c("abundance","incidence_freq"), met
   } else if (method == "Empirical") {
 
     if (datatype == "abundance") {
-      empqD = sapply(x, function(k) iNEXT:::Diversity_profile_MLE(k, q))
-      empS = sapply(x, function(k) iNEXT:::Diversity_profile_MLE(k, 0))
+      empqD = sapply(x, function(k) iNEXT3D:::Diversity_profile_MLE(k, q))
+      empS = sapply(x, function(k) iNEXT3D:::Diversity_profile_MLE(k, 0))
     } else if (datatype == "incidence_freq") {
-      empqD = sapply(x, function(k) iNEXT:::Diversity_profile_MLE.inc(k, q))
-      empS = sapply(x, function(k) iNEXT:::Diversity_profile_MLE.inc(k, 0))
+      empqD = sapply(x, function(k) iNEXT3D:::Diversity_profile_MLE.inc(k, q))
+      empS = sapply(x, function(k) iNEXT3D:::Diversity_profile_MLE.inc(k, 0))
     }
 
     out = lapply(E.class, function(i) {
@@ -501,7 +461,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
     qD <- map(qD, as.vector)
     
     if (nboot > 1) {
-      Prob.hat <- lapply(1:length(x), function(i) iNEXT:::EstiBootComm.Ind(x[[i]]))
+      Prob.hat <- lapply(1:length(x), function(i) iNEXT3D:::EstiBootComm.Ind(x[[i]]))
       Abun.Mat <- lapply(1:length(x), function(i) rmultinom(nboot, sum(x[[i]]), Prob.hat[[i]]))
 
       error = apply( matrix(sapply(1:nboot, function(b) {
@@ -536,7 +496,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
     
     if (nboot > 1) {
       nT <- lapply(1:length(x), function(i) x[[i]][1])
-      Prob.hat <- lapply(1:length(x), function(i) iNEXT:::EstiBootComm.Sam(x[[i]]))
+      Prob.hat <- lapply(1:length(x), function(i) iNEXT3D:::EstiBootComm.Sam(x[[i]]))
       Incid.Mat <- lapply(1:length(x), function(i) t(sapply(Prob.hat[[i]], function(p) rbinom(nboot, nT[[i]], p))))
       Incid.Mat <- lapply(1:length(x), function(i) matrix(c(rbind(nT[[i]], Incid.Mat[[i]])), ncol = nboot))
 

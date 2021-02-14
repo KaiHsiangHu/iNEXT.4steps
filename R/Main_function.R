@@ -38,7 +38,7 @@
 #' @import dplyr
 #' @import ggpubr
 #' @import purrr
-#' @import iNEXT
+#' @import iNEXT3D
 #' @importFrom stats qnorm
 #' @importFrom stats rbinom
 #' @importFrom stats rmultinom
@@ -99,35 +99,26 @@ iNEXT4steps <- function(data, datatype = "abundance",
   if (qD == "TD") {
     inextTD.table <- iNEXT(data, q=c(0, 1, 2), datatype, size, endpoint, knots, se=TRUE, conf, nboot)
   } else if (qD == "PhD") {
-    inextPD.table <- iNEXTPD(data, datatype=datatype, tree=tree, q=c(0, 1, 2), reftime=NULL,
+    inextPD.table <- iNEXTPD(data, tree=tree, datatype=datatype, q=c(0, 1, 2), reftime=NULL,
                         endpoint=endpoint, knots=knots, size=size, nboot=nboot, conf=conf)
   } else if (qD == "FunD") {
-    # inextFD = iNEXTFD(data, distM, "abundance", q=c(0,1,2), nboot=0)
-    # m = inextFD$inext[inextFD$inext$Order.q==0,]$m
-    # m = lapply(1:ncol(data), function(i) m[(length(m)/3*(i-1)+1):(i*length(m)/3)])
-    # RE.table = FunD:::AUCtable_iNextFD(data, distM, datatype="abundance", m=m, nboot=nboot)
+    inextFD.table = iNEXTPD(data, distM = distM, datatype=datatype, q=c(0, 1, 2),
+                      endpoint=endpoint, knots=knots, size=size, nboot=nboot, conf=conf)
   }
 
   ## qD ##
   if (qD == "TD") {
-    
-    qTD.table <- AsyD(data, q=q, datatype=datatype, nboot=nboot, conf=conf)
+    qTD.table <- rbind(AsyD(data, q=q, datatype=datatype, nboot=nboot, conf=conf),
+                       ObsD(data, q=q, datatype=datatype, nboot=nboot, conf=conf))
     qTD.table$s.e. = (qTD.table$qD.UCL-qTD.table$qD)/qnorm(1-(1-conf)/2)
   } else if (qD == "PhD") {
-    asy.PD <- PhdAsy(data, datatype=datatype, tree=tree, q=q, reftime=reftime, type="PD", conf=conf, nboot=nboot)
-    obs.PD <- PhdObs(data, datatype=datatype, tree=tree, q=q, reftime=reftime, type="PD", conf=conf, nboot=0)
-
-    qPD.table = rbind(asy.PD, obs.PD)
+    qPD.table = rbind(AsyPD(data, tree=tree, datatype=datatype, q=q, reftime=reftime, type="PD", conf=conf, nboot=nboot), 
+                      ObsPD(data, tree=tree, datatype=datatype, q=q, reftime=reftime, type="PD", conf=conf, nboot=nboot))
     qPD.table$s.e. = (qPD.table$qPD.UCL-qPD.table$qPD)/qnorm(1-(1-conf)/2)
   } else if (qD == "FunD") {
-
-    # estAUC = FunD:::AUCtable_est(data, distM, q=q, datatype=datatype, nboot=nboot)
-    # empAUC = FunD:::AUCtable_mle(data, distM, q=q, datatype=datatype, nboot=0)
-    # asy.table = cbind(rbind(data.frame(estAUC), data.frame(empAUC)),
-    #                 method = rep(c("Estimated", "Empirical"), each=nrow(estAUC)))
-    # colnames(asy.table) = c("Site", "order", "qD", "qD.LCL", "qD.UCL", "method")
-    # asy.table$method = factor(asy.table$method, levels=c("Estimated", "Empirical"))
-    # asy.table$s.e. = (asy.table$qD.UCL-asy.table$qD)/qnorm(1-(1-conf)/2)
+    qFD.table = rbind(AsyFD(data, distM=distM, datatype=datatype, q=q, reftime=reftime, type="PD", conf=conf, nboot=nboot), 
+                      ObsFD(data, distM=distM, datatype=datatype, q=q, reftime=reftime, type="PD", conf=conf, nboot=nboot))
+    qFD.table$s.e. = (qFD.table$qPD.UCL-qFD.table$qPD)/qnorm(1-(1-conf)/2)
   }
 
   even.table <- Evenness(data, q=q, datatype, "Estimated", nboot, conf, E.class=3)
@@ -264,7 +255,7 @@ iNEXT4steps <- function(data, datatype = "abundance",
     }
 
     if (qD=="TD") {
-      qTD.table$method = factor(qTD.table$method, level=c("Estimated", "Empirical"))
+      qTD.table$method = factor(qTD.table$Method, level=c("Asymptotic", "Empirical"))
       asy.plot <- ggAsyD(qTD.table) +
         labs(title=plot.names[3]) +
         theme(text=element_text(size=12),
@@ -324,7 +315,7 @@ iNEXT4steps <- function(data, datatype = "abundance",
   if (qD=="TD") {
     estD = estimateD(data, q=c(0,1,2), datatype, base="coverage", level=NULL, nboot=0)
   } else if (qD=="PhD") {
-    estD = EstimatePD(data, tree, datatype, q=c(0,1,2), level=NULL, nboot=0)[[1]]
+    estD = estimatePD(data, tree, datatype, q=c(0,1,2), level=NULL, nboot=0)[[1]]
     colnames(estD)[6:8] = c("qD", "qD.LCL", "qD.UCL")
   } else if (qD=="FunD") {
     estD = FunD:::EstimateFD(data, distM, datatype, q=c(0,1,2), nboot=0)
