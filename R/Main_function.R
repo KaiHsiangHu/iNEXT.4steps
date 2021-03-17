@@ -6,6 +6,7 @@
 #' Step2: Interpolation and Extrapolation.\cr
 #' Step3: Asymptotic diversity.\cr
 #' Step4: Evenness.\cr
+#' 
 #' @param data a matrix/data.frame/list/vector of abundances-based/incidences-based species data.\cr
 #' Type (1) abundance data:\cr
 #' When there are N assemblages, the
@@ -15,22 +16,18 @@
 #' The data input format for incidence data must be raw detection/non-detection data. That is, data for each community/assemblage
 #' consist of a species-by-sampling-unit matrix. Users must first merge multiple-community data by species identity to obtain a pooled
 #' list of species; then the rows of the input data refer to this pooled list. \cr
+#' @param class a choice of three-level diversity: 
+#' 'TD' = 'Taxonomic', 'PD' = 'Phylogenetic', and 'FD' = 'Functional' under certain threshold. Besides,'AUC' is the fourth choice which integrates several threshold functional diversity to get diversity.
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
 #' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
-#' @param q a integer vector for the order of Hill number\cr
-#' (setting except \code{step2}).\cr
-#' @param size a vector of nonnegative integers specifying the sample sizes for which diversity estimates will be calculated. If \code{NULL}, the diversity estimates will
-#' be calculated for those sample sizes determined by the specified/default \code{endpoint} and \code{knot}. \cr
-#' (setting only for \code{step2}).\cr
-#' @param endpoint an interger specifying the endpoint for rarefaction and extrapolation range. If \code{NULL}, \code{endpoint} = double of the maximum
-#' reference sample size. It will be ignored if \code{size} is given. \cr
-#' (setting only for \code{step2}).\cr
-#' @param knots an integer specifying the number of knot between 1 and the \code{endpoint}, default is 40.\cr
-#' (setting only for \code{step2}).\cr
-#' @param conf a positive number < 1 specifying the level of confidence interval, default is 0.95.\cr
+#' @param tree a phylo object describing the phylogenetic tree in Newick format for all observed species in the pooled assemblage. It is necessary when \code{class = 'PD'}.
+#' @param distM a pair wise distance matrix for all pairs of observed species in the pooled assemblage. It will be use when \code{class = 'FD' or 'AUC'}.
+#' @param nT needed only when \code{datatype = "incidence_raw"}, a sequence of named nonnegative integers specifying the number of sampling units in each assemblage.
+#' If \code{names(nT) = NULL}, then assemblage are automatically named as "assemblage1", "assemblage2",..., etc.
+#' It is necessary when \code{class = 'PD'} and \code{datatype = "incidence_raw"}.
 #' @param nboot an integer specifying the number of bootstrap replications, default is 30.\cr
-#' @param p_row number of row for 4steps figure, default = 2
-#' @param p_col number of column for 4steps figure, default = 3
+#' @param p_row number of row for 4steps figure, default = 2.
+#' @param p_col number of column for 4steps figure, default = 3.
 #' @param details a logical variable to determine whether do you want to print out the detailed value of 4 plots, default is \code{FALSE}.\cr
 #' @import devtools
 #' @import ggplot2
@@ -39,6 +36,8 @@
 #' @import ggpubr
 #' @import purrr
 #' @import iNEXT3D
+#' @import ape
+#' @import phyclust
 #' @importFrom stats qnorm
 #' @importFrom stats rbinom
 #' @importFrom stats rmultinom
@@ -48,39 +47,55 @@
 #' \code{$figure} 5 figures of analysis process. \cr\cr
 #' \code{$details} the information for generating \code{figure}. \cr
 #' If you need it, you should key in \code{details = TRUE}. \cr\cr
+#' 
 #' @examples
 #' \dontrun{
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
 #' data(Spider)
-#' out1 <- iNEXT4steps(data = Spider, datatype = "abundance")
+#' out1 <- iNEXT4steps(data = Spider, class = "TD", datatype = "abundance")
 #' out1
-#' ## Type (2) example for incidence based data (list of data.frame)
+#' 
 #' ## Ex.2
-#' data(woody_incid)
-#' out2 <- iNEXT4steps(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' data(brazil)
+#' data(brazil_tree)
+#' out2 <- iNEXT4steps(data = brazil, class = "PD", datatype = "abundance", tree = tree, nboot = 0)
 #' out2
+#' 
+#' ## Ex.3
+#' data(brazil)
+#' data(brazil_distM)
+#' out3 <- iNEXT4steps(data = brazil, class = "FD", datatype = "abundance", distM = distM, nboot = 20)
+#' out3
+#' 
+#' ## Type (2) example for incidence based data (list of data.frame)
+#' ## Ex.1
+#' data(woody_incid)
+#' out <- iNEXT4steps(data = woody_incid[,c(1,4)], class = "TD", datatype = "incidence_freq")
+#' out
+#' 
 #' }
+#' 
 #' @references
 #' Chao,A., Y.Kubota, D.Zeleny, C.-H.Chiu.
 #' Quantifying sample completeness and comparing diversities among assemblages. Ecological Research.
 #' @export
 
-iNEXT4steps <- function(data, datatype = "abundance",
-                         q = seq(0, 2, 0.25), size = NULL, endpoint = NULL,
-                         knots = 30, conf = 0.95, nboot = 50, p_row = 2, p_col = 3, details = FALSE) {
-  qD = "TD"
-  if ((length(data)==1) && (class(data) %in% c("numeric", "integer")))
+iNEXT4steps <- function(data, class = c("TD", "PD", "FD", "AUC"), datatype = "abundance",
+                        tree = NULL, distM = NULL, nT = NULL,
+                        nboot = 30, p_row = 2, p_col = 3, details = FALSE) {
+  q = seq(0, 2, 0.25)
+  if ((length(data) == 1) && (class(data) %in% c("numeric", "integer")))
     stop("Error: Your data does not have enough information.")
+  
   logic = c("TRUE", "FALSE")
   if (is.na(pmatch(details, logic)))
     stop("invalid details setting")
   if (pmatch(details, logic) == -1)
     stop("ambiguous details setting")
-  if (sum(c(0,1,2) %in% q) != 3) {q = c(q, c(0,1,2)[(c(0,1,2) %in% q) == FALSE]); q = sort(q)}
-  if ((qD == "PhD") && is.null(tree))
+  if ((class == "PD") && is.null(tree))
     stop("You should input tree data for Phylogenetic diversity.")
-  if ((qD == "FunD") && is.null(distM))
+  if ((class == "FD") && is.null(distM))
     stop("You should input distance data for Functional diversity.")
 
   plot.names = c("(a) Sample completeness profiles",
@@ -93,245 +108,94 @@ iNEXT4steps <- function(data, datatype = "abundance",
                   "STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis",
                   "STEP4. Evenness among species abundances")
   ## SC ##
-  SC.table <- SC(data, q=q, datatype, nboot, 0.95)
+  SC.table <- SC(data, q = q, datatype, nboot, 0.95)
 
   ## iNEXT ##
-  if (qD == "TD") {
-    inextTD.table <- iNEXT(data, q=c(0, 1, 2), datatype, size, endpoint, knots, se=TRUE, conf, nboot)
-  } else if (qD == "PhD") {
-    inextPD.table <- iNEXTPD(data, tree=tree, datatype=datatype, q=c(0, 1, 2), reftime=NULL,
-                        endpoint=endpoint, knots=knots, size=size, nboot=nboot, conf=conf)
-  } else if (qD == "FunD") {
-    inextFD.table = iNEXTPD(data, distM = distM, datatype=datatype, q=c(0, 1, 2),
-                      endpoint=endpoint, knots=knots, size=size, nboot=nboot, conf=conf)
-  }
+  iNEXT.table <- iNEXT3D(data, class = class, q = c(0, 1, 2), datatype = datatype, 
+                           nboot = nboot, tree = tree, distM = distM, nT = nT)
 
-  ## qD ##
-  if (qD == "TD") {
-    qTD.table <- rbind(AsyD(data, q=q, datatype=datatype, nboot=nboot, conf=conf),
-                       ObsD(data, q=q, datatype=datatype, nboot=nboot, conf=conf))
-    qTD.table$s.e. = (qTD.table$qD.UCL-qTD.table$qD)/qnorm(1-(1-conf)/2)
-  } else if (qD == "PhD") {
-    qPD.table = rbind(AsyPD(data, tree=tree, datatype=datatype, q=q, reftime=reftime, type="PD", conf=conf, nboot=nboot), 
-                      ObsPD(data, tree=tree, datatype=datatype, q=q, reftime=reftime, type="PD", conf=conf, nboot=nboot))
-    qPD.table$s.e. = (qPD.table$qPD.UCL-qPD.table$qPD)/qnorm(1-(1-conf)/2)
-  } else if (qD == "FunD") {
-    qFD.table = rbind(AsyFD(data, distM=distM, datatype=datatype, q=q, reftime=reftime, type="PD", conf=conf, nboot=nboot), 
-                      ObsFD(data, distM=distM, datatype=datatype, q=q, reftime=reftime, type="PD", conf=conf, nboot=nboot))
-    qFD.table$s.e. = (qFD.table$qPD.UCL-qFD.table$qPD)/qnorm(1-(1-conf)/2)
-  }
+  ## Asymptotic ##
+  qD.table <- rbind(Asy3D(data, class = class, q = q, datatype = datatype, nboot = nboot, tree = tree, distM = distM, nT = nT),
+                    Obs3D(data, class = class, q = q, datatype = datatype, nboot = nboot, tree = tree, distM = distM, nT = nT))
+  qD.table$s.e. = (qD.table[,4] - qD.table[,2])/qnorm(1 - (1 - 0.95)/2)
+  
+  ## Evenness ##
+  Even.table <- Evenness(data, q = q, datatype, "Estimated", nboot, E.class = 3)
+  Cmax = Even.table[1]
 
-  even.table <- Evenness(data, q=q, datatype, "Estimated", nboot, conf, E.class=3)
-  Cmax = even.table[1]
-
-  if (length(unique((even.table[[2]]$Community)))>1) {
-    if (qD=="TD") {
-      inextTD.table$iNextEst$size_based$Assemblage = factor(inextTD.table$iNextEst$size_based$Assemblage)
-      level = levels(inextTD.table$iNextEst$size_based$Assemblage)
-
-      SC.table$Community = factor(SC.table$Community, level)
-      qTD.table$Site = factor(qTD.table$Assemblage, level)
-      even.table[[2]]$Community = factor(even.table[[2]]$Community, level)
-
-    } else if (qD=="PhD") {
-
-      # RE.table$inext$site = as.factor(RE.table$inext$site)
-      # level = levels(RE.table$inext$site)
-      #
-      # SC.table$Community = factor(SC.table$Community, level)
-      # asy.table$Site = factor(asy.table$Site, level)
-      # even.table[[2]]$Community = factor(even.table[[2]]$Community, level)
-
-    } else if (qD=="FunD") {
-      # RE.table$site = as.factor(RE.table$site)
-      # level = levels(RE.table$site)
-      #
-      # SC.table$Community = factor(SC.table$Community, level)
-      # asy.table$Site = factor(asy.table$Site, level)
-      # even.table[[2]]$Community = factor(even.table[[2]]$Community, level)
-
+  if (length(unique((Even.table[[2]]$Community)))>1) {
+    if (class != 'AUC') {
+      iNEXT.table[[2]]$size_based$Assemblage = factor(iNEXT.table[[2]]$size_based$Assemblage)
+      level = levels(iNEXT.table[[2]]$size_based$Assemblage)
+      
+    } else {
+      iNEXT.table[[1]]$size_based$Assemblage = factor(iNEXT.table[[1]]$size_based$Assemblage)
+      level = levels(iNEXT.table[[1]]$size_based$Assemblage)
     }
+    
+    SC.table$Assemblage = factor(SC.table$Assemblage, level)
+    qD.table$Assemblage = factor(qD.table$Assemblage, level)
+    Even.table[[2]]$Assemblage = factor(Even.table[[2]]$Assemblage, level)
   }
 
   ## 5 figures ##
   if (length(unique(SC.table$Community)) <= 8) {
     SC.plot <- ggSC(SC.table) +
-      labs(title=plot.names[1]) +
-      theme(text=element_text(size=12),
-            plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-            plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
+      labs(title = plot.names[1]) +
+      theme(text = element_text(size = 12),
+            plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
+            plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
 
-    if (qD=="TD") {
-      size.RE.plot <- ggiNEXT(inextTD.table, type=1, facet.var="Order.q", color.var="Order.q") +
-        labs(title=plot.names[2]) +
-        theme(text=element_text(size=12),
-              plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-              legend.margin = margin(0, 0, 0, 0),
-              plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
-      size.plot <- ggplot_build(size.RE.plot + guides(color=FALSE, fill=FALSE, shape=FALSE))
-      size.plot$data[[1]]$size <- 3
-      size.plot <- ggplot_gtable(size.plot)
-    } else if (qD=="PhD") {
-      cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
-                         "#330066", "#CC79A7", "#0072B2", "#D55E00"))
+    size.RE.plot <- ggiNEXT3D(iNEXT.table, type = 1, facet.var = "Order.q", color.var = "Order.q")[[1]] +
+      labs(title = plot.names[2]) +
+      theme(text = element_text(size = 12),
+            plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
+            legend.margin = margin(0, 0, 0, 0),
+            plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
 
-      size.RE.plot = ggplot(RE.table$inext, aes(x = m, y = qPD, color = site)) +
-        geom_line(size = 1.2, aes(x = m, y = qPD, color = site,
-                                  linetype = lty)) +
-        scale_colour_manual(values = cbPalette) +
-        geom_ribbon(aes(ymin = qPD.LCL, ymax = qPD.UCL, fill = site),
-                    alpha = 0.3, colour = NA) +
-        scale_fill_manual(values = cbPalette) +
-        geom_point(size = 3, data = subset(RE.table$inext, method ==
-                                             "Observed")) +
-        xlab("Number of individuals") + ylab("Phylogenetic diversity") +
-        labs(title=plot.names[2]) +
-        scale_linetype_manual(values = c("solid", "dashed"),
-                              name = "lty", breaks = c("Rarefaction", "Extrapolation"),
-                              labels = c("Interpolation", "Extrapolation")) +
-        theme(legend.position = "bottom", legend.box = "vertical",
-              legend.key.width = unit(1.2,"cm"),
-              # plot.margin = unit(c(1.5,0.3,1.2,0.3), "lines"),
-              legend.title = element_blank(),
-              legend.margin = margin(0,0,0,0),
-              legend.box.margin = margin(-10,-10,-5,-10),
-              text = element_text(size=8),
-              plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-              plot.title = element_text(size=11, colour='blue', face="bold", hjust=0)) +
-        guides(linetype = guide_legend(keywidth = 2.5)) +
-        facet_wrap(.~order)
+    cover.RE.plot <- ggiNEXT3D(iNEXT.table, type = 3, facet.var = "Order.q", color.var = "Order.q")[[1]] +
+      labs(title = plot.names[4]) +
+      theme(text = element_text(size = 12),
+            plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
+            legend.margin = margin(0, 0, 0, 0),
+            plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
 
-      size.plot <- ggplot_build(size.RE.plot + guides(color=FALSE, fill=FALSE, shape=FALSE))
-      size.plot <- ggplot_gtable(size.plot)
-    } else if (qD=="FunD") {
+    asy.plot <- ggAsy3D(qD.table) +
+      labs(title = plot.names[3]) +
+      theme(text = element_text(size = 12),
+            plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
+            plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
 
-    }
-
-    if (qD=="TD") {
-      cover.RE.plot <- ggiNEXT(inextTD.table, type=3, facet.var="Order.q", color.var="Order.q") +
-        labs(title=plot.names[4]) +
-        theme(text=element_text(size=12),
-              plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-              legend.margin = margin(0, 0, 0, 0),
-              plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
-      cover.plot <- ggplot_build(cover.RE.plot + guides(color=FALSE, fill=FALSE, shape=FALSE))
-      cover.plot$data[[1]]$size <- 3
-      cover.plot <- ggplot_gtable(cover.plot)
-
-    } else if (qD=="PhD") {
-      cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
-                         "#330066", "#CC79A7", "#0072B2", "#D55E00"))
-
-      cover.RE.plot = ggplot(RE.table$inext, aes(x = SC, y = qPD, color = site)) +
-        geom_line(size = 1.2, aes(x = SC, y = qPD, color = site,
-                                  linetype = lty)) +
-        scale_colour_manual(values = cbPalette) +
-        geom_ribbon(aes(ymin = qPD.LCL, ymax = qPD.UCL, fill = site),
-                    alpha = 0.3, colour = NA) +
-        scale_fill_manual(values = cbPalette) +
-        geom_point(size = 3, data = subset(RE.table$inext, method ==
-                                             "Observed")) +
-        xlab("Sample Coverage") + ylab("Functional diversity") +
-        labs(title=plot.names[4]) +
-        scale_linetype_manual(values = c("solid", "dashed"),
-                              name = "lty", breaks = c("Rarefaction", "Extrapolation"),
-                              labels = c("Interpolation", "Extrapolation")) +
-        theme(legend.position = "bottom", legend.box = "vertical",
-              legend.key.width = unit(1.2,"cm"),
-              # plot.margin = unit(c(1.5,0.3,1.2,0.3), "lines"),
-              legend.title = element_blank(),
-              legend.margin = margin(0,0,0,0),
-              legend.box.margin = margin(-10,-10,-5,-10),
-              text = element_text(size=8),
-              plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-              plot.title = element_text(size=11, colour='blue', face="bold", hjust=0)) +
-        guides(linetype = guide_legend(keywidth = 2.5)) +
-        facet_wrap(.~order)
-
-      cover.plot <- ggplot_build(cover.RE.plot + guides(color=FALSE, fill=FALSE, shape=FALSE))
-      cover.plot <- ggplot_gtable(cover.plot)
-    } else if (qD == "FunD") {
-
-    }
-
-    if (qD=="TD") {
-      qTD.table$method = factor(qTD.table$Method, level=c("Asymptotic", "Empirical"))
-      asy.plot <- ggAsyD(qTD.table) +
-        labs(title=plot.names[3]) +
-        theme(text=element_text(size=12),
-              plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-              plot.title = element_text(size=11, colour='blue', face="bold", hjust=0))
-    } else if (qD=="PhD") {
-      asy.plot <- ggAsymDiv(asy.table) +
-        labs(x = "Order q", y = "Phylogenetic Asymptotic") +
-        labs(title=plot.names[3]) +
-        theme(legend.position = "bottom", legend.box = "vertical",
-              legend.key.width = unit(1.2,"cm"),
-              # plot.margin = unit(c(1.5,0.3,1.2,0.3), "lines"),
-              legend.title = element_blank(),
-              legend.margin = margin(0,0,0,0),
-              legend.box.margin = margin(-10,-10,-5,-10),
-              text = element_text(size=8),
-              plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-              plot.title = element_text(size=11, colour='blue', face="bold", hjust=0)
-        )
-    } else if (qD=="FunD") {
-      asy.plot <- ggAsymDiv(asy.table) +
-        labs(x = "Order q", y = "Functional Asymptotic") +
-        labs(title=plot.names[3]) +
-        theme(legend.position = "bottom", legend.box = "vertical",
-              legend.key.width = unit(1.2,"cm"),
-              # plot.margin = unit(c(1.5,0.3,1.2,0.3), "lines"),
-              legend.title = element_blank(),
-              legend.margin = margin(0,0,0,0),
-              legend.box.margin = margin(-10,-10,-5,-10),
-              text = element_text(size=8),
-              plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-              plot.title = element_text(size=11, colour='blue', face="bold", hjust=0)
-        )
-    }
-
-    even.plot <- ggEven(even.table) +
-      labs(title=plot.names[5]) +
-      theme(text=element_text(size=12),
-            plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt"),
-            plot.title = element_text(size=11, colour='blue', face="bold", hjust=0)) +
-      guides(linetype = FALSE)
-
-    if (qD=="PhD") {
-      SC.plot = SC.plot + theme(text=element_text(size=8))
-      even.plot = even.plot + theme(text=element_text(size=8))}
+    even.plot <- ggEven(Even.table) +
+      labs(title = plot.names[5]) +
+      theme(text = element_text(size = 12),
+            plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
+            plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
 
     legend.p = get_legend(SC.plot + theme(legend.direction = "vertical"))
-    steps.plot = ggarrange(SC.plot + guides(color=FALSE, fill=FALSE),
-                           size.plot,
-                           asy.plot + guides(color=FALSE, fill=FALSE),
-                           cover.plot,
-                           even.plot + guides(color=FALSE, fill=FALSE),
-                           legend.p, nrow=p_row, ncol=p_col
+    steps.plot = ggarrange(SC.plot + guides(color = FALSE, fill = FALSE),
+                           size.RE.plot,
+                           asy.plot + guides(color = FALSE, fill = FALSE),
+                           cover.RE.plot,
+                           even.plot + guides(color = FALSE, fill = FALSE),
+                           legend.p, nrow = p_row, ncol = p_col
     )
   } else { warning("The number of communities exceed eight. We don't show the figures.") }
-
-  if (qD=="TD") {
-    estD = estimateD(data, q=c(0,1,2), datatype, base="coverage", level=NULL, nboot=0)
-  } else if (qD=="PhD") {
-    estD = estimatePD(data, tree, datatype, q=c(0,1,2), level=NULL, nboot=0)[[1]]
-    colnames(estD)[6:8] = c("qD", "qD.LCL", "qD.UCL")
-  } else if (qD=="FunD") {
-    estD = FunD:::EstimateFD(data, distM, datatype, q=c(0,1,2), nboot=0)
-    colnames(estD)[6:8] = c("qD", "qD.LCL", "qD.UCL")
-  }
+  
+  estD = estimate3D(data, class = 'TD', q = c(0, 1, 2), datatype, base = "coverage", level = NULL, nboot = 0)
+  est3D = estimate3D(data, class = class, q = c(0, 1, 2), datatype, base = "coverage", level = NULL, nboot = 0, tree = tree, distM = distM, nT = nT)
+  
+  if (class == 'AUC') summary_step2 = iNEXT.table[[2]] else summary_step2 = iNEXT.table[[3]]
   ##  Outpue_summary ##
   summary = list(summary.deal(SC.table, 1),
-                 summary.deal(qTD.table, 2),
-                 summary.deal(estD, 3),
-                 summary.deal(even.table, 4, estD)
+                 summary_step2,
+                 summary.deal(est3D, 3),
+                 summary.deal(Even.table, 4, estD)
   )
   names(summary) = table.names
-
+  
   ##  Output ##
-
-  if (details==FALSE) {
+  if (details == FALSE) {
 
     if (length(unique(SC.table$Community)) <= 8) {
       ans <- list(summary = summary,
@@ -339,9 +203,9 @@ iNEXT4steps <- function(data, datatype = "abundance",
                                 cover.RE.plot, even.plot, steps.plot))
     } else { ans <- list(summary = summary) }
 
-  } else if (details==TRUE) {
-    tab = list("Sample Completeness" = SC.table, "iNEXT" = inextTD.table$iNextEst,
-               "Asymptotic Diversity" = qTD.table, "Evenness" = even.table)
+  } else if (details == TRUE) {
+    tab = list("Sample Completeness" = SC.table, "iNEXT" = ifelse(class == 'AUC', iNEXT.table[[2]], iNEXT.table[[3]]),
+               "Asymptotic Diversity" = qD.table, "Evenness" = Even.table)
 
     if (length(unique(SC.table$Community)) <= 8) {
       ans <- list(summary = summary,

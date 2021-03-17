@@ -1,4 +1,4 @@
-####
+# summary.deal -------------------------------------------------------------------
 # Generate the summary table from the deatils of each function.
 #
 # \code{summary.deal} Generate the summary table of four lists from the deatils of each function.
@@ -8,44 +8,36 @@
 # @param Pielou a logical variable whether you want to generate step 4 summary
 # @return a matrix or a list according different steps
 
-summary.deal <- function(table, step, Pielou=NULL) {
-  if (step==1) {
-    tmp = (table %>% filter(Order.q %in% c(0,1,2)))[,c("Order.q","Estimate.SC","Assemblage")]
-    out = dcast(tmp, Assemblage~Order.q, value.var = "Estimate.SC")
-    colnames(out)[-1] = paste("q=", c(0,1,2), sep="")
+summary.deal <- function(table, step, Pielou = NULL) {
+  if (step == 1) {
+    tmp = (table %>% filter(Order.q %in% c(0,1,2)))[, c("Order.q", "Estimate.SC", "Assemblage")]
+    out = dcast(tmp, Assemblage ~ Order.q, value.var = "Estimate.SC")
+    colnames(out)[-1] = paste("q = ", c(0,1,2), sep="")
   }
-  if (step==2){
-    tmp1 = (table %>% filter((Order.q %in% c(0,1,2)) & (method == "Empirical")))[,c("Assemblage", "Order.q", "qD")]
-    names(tmp1) = c("Assemblage", "Diversity", "Observed diversity")
-    tmp2 = (table %>% filter((Order.q %in% c(0,1,2)) & (method == "Asymptotic")))[,c("qD", "s.e.", "qD.LCL", "qD.UCL")]
-    names(tmp2) = c("Asymptotic diversity estimate", "s.e.", "LCL", "UCL")
-    out = cbind(tmp1, tmp2)
-    out$Diversity[out$Diversity == c(0,1,2)] = c("Species richness", "Shannon diversity", "Simpson diversity")
-  }
-  if (step==3){
-    tmp = table[,c("Assemblage","Order.q","qD")]
+  if (step == 3){
+    tmp = table[,c(1, 6, 7)]
     C = round(min(table$SC), 3)
-    out = dcast(tmp, Assemblage~Order.q, value.var="qD")
-    colnames(out) = c(paste("maxC=", C, sep=""),
-                      paste("q=", c(0,1,2), sep=""))
+    out = dcast(tmp, Assemblage ~ Order.q, value.var = colnames(tmp)[3])
+    colnames(out) = c(paste("maxC = ", C, sep = ""),
+                      paste("q = ", c(0, 1, 2), sep = ""))
   }
-  if (step==4){
+  if (step == 4){
     if (names(table[1]) == "Coverage")  table = table[-1]
     tmp = (table[[1]] %>%
-             filter(Order.q %in% c(0,1,2)))[,c("Order.q","Evenness","Assemblage")]
-    out = acast(tmp, Assemblage~Order.q, value.var="Evenness")
+             filter(Order.q %in% c(0,1,2)))[, c("Order.q", "Evenness", "Assemblage")]
+    out = acast(tmp, Assemblage ~ Order.q, value.var="Evenness")
 
-    D = (Pielou %>% filter(Order.q == 1))[,c("Assemblage","qD")]
-    S = (Pielou %>% filter(Order.q == 0))[,c("Assemblage","qD")]
-    out[,1] = sapply(rownames(out), function(x) log(D[D$Assemblage==x,"qD"])/log(S[S$Assemblage==x,"qD"]))
-    colnames(out) = c("Pielou J'", paste("q=", c(1,2), sep=""))
+    D = (Pielou %>% filter(Order.q == 1))[,c("Assemblage", "qD")]
+    S = (Pielou %>% filter(Order.q == 0))[,c("Assemblage", "qD")]
+    out[,1] = sapply(rownames(out), function(x) log(D[D$Assemblage == x,"qD"])/log(S[S$Assemblage == x,"qD"]))
+    colnames(out) = c("Pielou J'", paste("q = ", c(1,2), sep=""))
   }
 
   return(out)
 }
 
-#
-####
+
+# SC -------------------------------------------------------------------
 #' Sample Completeness main function
 #'
 #' \code{SC} Estimation of Sample Completeness with order q
@@ -163,10 +155,8 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
   return(out)
 }
 
-#
-####
-# Sample Completeness
-#
+
+# sample_completeness -------------------------------------------------------------------
 # \code{sample_completeness} Estimation of Sample Completeness with order q
 #
 # @param x a vector of data
@@ -246,11 +236,11 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
   return(est)
 }
 
-#
-####
+
+# ggSC -------------------------------------------------------------------
 #' ggplot for Sample Completeness
 #'
-#' \code{SC} The figure for estimation of Sample Completeness with order q
+#' \code{ggSC} The figure for estimation of Sample Completeness with order q
 #'
 #' @param output a table generated from SC function
 #' @return a figure of estimated sample completeness with order q
@@ -282,14 +272,19 @@ ggSC <- function(output) {
     geom_ribbon(aes(ymin = SC.LCL, ymax = SC.UCL, fill = Assemblage), alpha = 0.2, linetype=0) +
     scale_fill_manual(values = cbPalette) +
     labs(x = "Order q", y = "Sample completeness") +
-    theme(text = element_text(size=18)) +
+    theme_bw() +
     theme(legend.position = "bottom", legend.box = "vertical",
-          legend.key.width = unit(1.2,"cm"),
-          legend.title = element_blank())
+          legend.key.width = unit(1.2, "cm"),
+          legend.title = element_blank(),
+          legend.margin = margin(0, 0, 0, 0),
+          legend.box.margin = margin(-10, -10, -5, -10),
+          text = element_text(size = 16),
+          plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt")) +
+    guides(linetype = guide_legend(keywidth = 2.5))
 }
 
-#
-####
+
+# even.class -------------------------------------------------------------------
 # Calculate six classes for Evenness
 #
 # @param q a integer vector for the order of Hill number
@@ -298,7 +293,7 @@ ggSC <- function(output) {
 # @param E a integer value between 1 to 6
 # @return a vector for evenness value
 
-even.class = function(q, qD, S, E.class) {
+even.class = function(q, qD, S, E.class, pi) {
   tmp = c()
   if (E.class == 1)
     tmp = ifelse(q!=1, (1-qD^(1-q))/(1-S^(1-q)), log(qD)/log(S))
@@ -310,14 +305,25 @@ even.class = function(q, qD, S, E.class) {
     tmp = (1-1/qD)/(1-1/S)
   if (E.class == 5)
     tmp = log(qD)/log(S)
+  if (E.class == 6) 
+    tmp = sapply(q, function(qi) {
+      if(qi == 0){
+        pi <- pi[pi > 0]
+        nu <- abs(pi - (1/S))
+        nu <- nu[nu > 0]
+        sub <- (sum(log(abs(nu)))/sum(nu > 0) - (log(1 - 1/S) + (1 - S)*log(S)) / S)
+        1 - exp(sub)
+      }else{
+        pi <- pi[pi > 0]
+        1 - (sum(abs(pi - 1/S)^qi)/((1 - 1/S)^qi + (S - 1) * S^(-qi)))^(1/qi)
+      }
+    })
 
   return(tmp)
 }
 
-#
-####
-# Evenness profile
-#
+
+# Evenness.profile -------------------------------------------------------------------
 # \code{Evenness.profile} Estimation or Empirical of Evenness with order q
 #
 # @param x a data.frame, a vector, or a list for data.
@@ -328,33 +334,25 @@ even.class = function(q, qD, S, E.class) {
 # @param C a standardized coverage for calculating evenness index
 # @return a list of estimated(empirical) evenness with order q, each list is combined with a matrix
 
-Evenness.profile <- function(x, q, datatype=c("abundance","incidence_freq"), method, E.class, C=NULL) {
+Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), method, E.class, C = NULL) {
   if (method == "Estimated") {
-    estqD = estimateD(x, q, datatype, base="coverage", level=C, nboot=0)
-    estS = estimateD(x, 0, datatype, base="coverage", level=C, nboot=0)
+    estqD = estimate3D(x, class = 'TD', q, datatype, base = "coverage", level = C, nboot = 0)
+    estS = estimate3D(x, class = 'TD', 0, datatype, base = "coverage", level = C, nboot = 0)
 
     out = lapply(E.class, function(i) {
-      tmp = sapply(names(x), function(k) even.class(q, estqD[estqD$Assemblage==k, "qD"], estS[estS$Assemblage==k, "qD"], i))
-      if(class(tmp)[1] %in% c("numeric","integer")) {tmp = t(as.matrix(tmp, nrow=1))}
+      tmp = sapply(1:length(x), function(k) even.class(q, estqD[estqD$Assemblage == names(x)[k], "qD"], estS[estS$Assemblage == names(x)[k], "qD"], i, x[[k]]/sum(x[[k]])))
+      if (class(tmp)[1] %in% c("numeric","integer")) {tmp = t(as.matrix(tmp, nrow = 1))}
       rownames(tmp) = q
       tmp
       })
   } else if (method == "Empirical") {
 
-    if (datatype == "abundance") {
-      empqD = sapply(x, function(k) iNEXT3D:::Diversity_profile_MLE(k, q))
-      empS = sapply(x, function(k) iNEXT3D:::Diversity_profile_MLE(k, 0))
-    } else if (datatype == "incidence_freq") {
-      empqD = sapply(x, function(k) iNEXT3D:::Diversity_profile_MLE.inc(k, q))
-      empS = sapply(x, function(k) iNEXT3D:::Diversity_profile_MLE.inc(k, 0))
-    }
-
+    empqD = Obs3D(x, class = 'TD', q = q, datatype = datatype, nboot = 0)
+    empS = Obs3D(x, class = 'TD', q = 0, datatype = datatype, nboot = 0)
+    
     out = lapply(E.class, function(i) {
-      if ((is.vector(empqD)==TRUE) & (length(empqD)==1)) {
-        name = names(empqD); empqD = matrix(empqD); colnames(empqD) = name}
-
-      tmp = sapply(names(x), function(k) even.class(q, empqD[,k], empS[k], i))
-      if(class(tmp)[1] %in% c("numeric","integer")) {tmp = t(as.matrix(tmp, nrow=1))}
+      tmp = sapply(1:length(x), function(k) even.class(q, empqD[empqD$Assemblage == names(x)[k], "qD"], empS[empS$Assemblage == names(x)[k], "qD"], i, x[[k]]/sum(x[[k]])))
+      if (class(tmp)[1] %in% c("numeric","integer")) {tmp = t(as.matrix(tmp, nrow = 1))}
       rownames(tmp) = q
       tmp
     })
@@ -364,8 +362,8 @@ Evenness.profile <- function(x, q, datatype=c("abundance","incidence_freq"), met
   return(out)
 }
 
-#
-####
+
+# Evenness -------------------------------------------------------------------
 #' Evenness main function
 #'
 #' \code{Evenness} Estimation (Empirical) of Evenness with order q
@@ -408,7 +406,7 @@ Evenness.profile <- function(x, q, datatype=c("abundance","incidence_freq"), met
 #' @export
 
 Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
-                      nboot = 30, conf = 0.95, E.class = c(1:5), C=NULL)
+                      nboot = 30, conf = 0.95, E.class = 1:5, C = NULL)
 {
   TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
   if (is.na(pmatch(datatype, TYPE)))
@@ -429,7 +427,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
   if (pmatch(method, kind) == -1)
     stop("ambiguous method")
 
-  class <- c(1:5)
+  class <- c(1:6)
   if (sum(E.class %in% class) != length(E.class))
     stop("invalid E.class")
 
@@ -487,7 +485,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
     })
-    if (is.null(C) == TRUE) C = unique(estimateD(x, q = 0, datatype = "abundance", base = "coverage", nboot=0)$goalSC)
+    if (is.null(C) == TRUE) C = unique(estimate3D(x, class = 'TD', q = 0, datatype = "abundance", base = "coverage", nboot = 0)$goalSC)
     if (method=="Estimated") {out <- append(C, out)}
 
   } else if (datatype == "incidence") {
@@ -533,8 +531,8 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
     })
-    if (is.null(C) == TRUE) C = unique(estimateD(x, q = 0, datatype = "incidence_freq", base = "coverage", nboot=0)$goalSC)
-    if (method=="Estimated") {out <- append(C, out)}
+    if (is.null(C) == TRUE) C = unique(estimate3D(x, class = 'TD', q = 0, datatype = "incidence_freq", base = "coverage", nboot = 0)$goalSC)
+    if (method == "Estimated") {out <- append(C, out)}
   }
 
   if (method=="Estimated") {
@@ -545,8 +543,8 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
 }
 
 
-#
-####
+
+# ggEven -------------------------------------------------------------------
 #' ggplot for Evenness
 #
 #' \code{ggEven} The figure for estimation of Evenness with order q\cr
@@ -576,34 +574,28 @@ ggEven <- function(output) {
   cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
                      "#330066", "#CC79A7", "#0072B2", "#D55E00"))
   classdata = cbind(do.call(rbind, output),
-                    class = rep(names(output), each=nrow(output[[1]])))
+                    class = rep(names(output), each = nrow(output[[1]])))
 
-  fig = ggplot(classdata, aes(x=Order.q, y=Evenness, colour=Assemblage, lty = Method)) +
-    geom_line(size=1.2) +
+  fig = ggplot(classdata, aes(x = Order.q, y = Evenness, colour = Assemblage)) +
+    geom_line(size = 1.2) +
+    geom_ribbon(aes(ymin=Even.LCL, ymax=Even.UCL, fill = Assemblage),
+                alpha=0.2, linetype=0) +
     scale_colour_manual(values = cbPalette) +
-    geom_ribbon(data = classdata %>% filter(Method=="Estimated"),
-                aes(ymin=Even.LCL, ymax=Even.UCL, fill=Assemblage),
-                alpha=0.2, linetype=0) +
-    geom_ribbon(data = classdata %>% filter(Method=="Empirical"),
-                aes(ymin=Even.LCL, ymax=Even.UCL, fill=Assemblage),
-                alpha=0.2, linetype=0) +
     scale_fill_manual(values = cbPalette) +
-    labs(x="Order q", y="Evenness") +
-    # theme_bw(base_size = 18) +
-    theme(text=element_text(size=18)) +
+    labs(x = "Order q", y = "Evenness") +
+    theme_bw() +
     theme(legend.position = "bottom", legend.box = "vertical",
-          legend.key.width = unit(1.2,"cm"),
-          # plot.margin = unit(c(1.5,0.3,1.2,0.3), "lines"),
+          legend.key.width = unit(1.2, "cm"),
           legend.title = element_blank(),
-          legend.margin = margin(0,0,0,0),
-          legend.box.margin = margin(-10,-10,-5,-10),
-          text = element_text(size=12),
-          plot.margin = unit(c(5.5,5.5,5.5,5.5), "pt")
-    )
+          legend.margin = margin(0, 0, 0, 0),
+          legend.box.margin = margin(-10, -10, -5, -10),
+          text = element_text(size = 16),
+          plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt")) +
+    guides(linetype = guide_legend(keywidth = 2.5))
   
   if (length(output) != 1) fig = fig +
-    facet_wrap(~class) +
-    theme(strip.text.x = element_text(size=12, colour = "purple", face="bold"))
+    facet_wrap( ~ class) +
+    theme(strip.text.x = element_text(size = 12, colour = "purple", face = "bold"))
   
   return(fig)
 }

@@ -11,7 +11,7 @@ Evenness(
   method = "Estimated",
   nboot = 30,
   conf = 0.95,
-  E.class = c(1:5),
+  E.class = 1:5,
   C = NULL
 )
 }

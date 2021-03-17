@@ -6,13 +6,12 @@
 \usage{
 iNEXT4steps(
   data,
+  class = c("TD", "PD", "FD", "AUC"),
   datatype = "abundance",
-  q = seq(0, 2, 0.25),
-  size = NULL,
-  endpoint = NULL,
-  knots = 30,
-  conf = 0.95,
-  nboot = 50,
+  tree = NULL,
+  distM = NULL,
+  nT = NULL,
+  nboot = 30,
   p_row = 2,
   p_col = 3,
   details = FALSE
@@ -29,30 +28,25 @@ The data input format for incidence data must be raw detection/non-detection dat
 consist of a species-by-sampling-unit matrix. Users must first merge multiple-community data by species identity to obtain a pooled
 list of species; then the rows of the input data refer to this pooled list. \cr}
 
+\item{class}{a choice of three-level diversity: 
+'TD' = 'Taxonomic', 'PD' = 'Phylogenetic', and 'FD' = 'Functional' under certain threshold. Besides,'AUC' is the fourth choice which integrates several threshold functional diversity to get diversity.}
+
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
 sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr}
 
-\item{q}{a integer vector for the order of Hill number\cr
-(setting except \code{step2}).\cr}
+\item{tree}{a phylo object describing the phylogenetic tree in Newick format for all observed species in the pooled assemblage. It is necessary when \code{class = 'PD'}.}
 
-\item{size}{a vector of nonnegative integers specifying the sample sizes for which diversity estimates will be calculated. If \code{NULL}, the diversity estimates will
-be calculated for those sample sizes determined by the specified/default \code{endpoint} and \code{knot}. \cr
-(setting only for \code{step2}).\cr}
+\item{distM}{a pair wise distance matrix for all pairs of observed species in the pooled assemblage. It will be use when \code{class = 'FD' or 'AUC'}.}
 
-\item{endpoint}{an interger specifying the endpoint for rarefaction and extrapolation range. If \code{NULL}, \code{endpoint} = double of the maximum
-reference sample size. It will be ignored if \code{size} is given. \cr
-(setting only for \code{step2}).\cr}
-
-\item{knots}{an integer specifying the number of knot between 1 and the \code{endpoint}, default is 40.\cr
-(setting only for \code{step2}).\cr}
-
-\item{conf}{a positive number < 1 specifying the level of confidence interval, default is 0.95.\cr}
+\item{nT}{needed only when \code{datatype = "incidence_raw"}, a sequence of named nonnegative integers specifying the number of sampling units in each assemblage.
+If \code{names(nT) = NULL}, then assemblage are automatically named as "assemblage1", "assemblage2",..., etc.
+It is necessary when \code{class = 'PD'} and \code{datatype = "incidence_raw"}.}
 
 \item{nboot}{an integer specifying the number of bootstrap replications, default is 30.\cr}
 
-\item{p_row}{number of row for 4steps figure, default = 2}
+\item{p_row}{number of row for 4steps figure, default = 2.}
 
-\item{p_col}{number of column for 4steps figure, default = 3}
+\item{p_col}{number of column for 4steps figure, default = 3.}
 
 \item{details}{a logical variable to determine whether do you want to print out the detailed value of 4 plots, default is \code{FALSE}.\cr}
 }
@@ -76,14 +70,29 @@ Step4: Evenness.\cr
 ## Type (1) example for abundance based data (data.frame)
 ## Ex.1
 data(Spider)
-out1 <- iNEXT4steps(data = Spider, datatype = "abundance")
+out1 <- iNEXT4steps(data = Spider, class = "TD", datatype = "abundance")
 out1
-## Type (2) example for incidence based data (list of data.frame)
+
 ## Ex.2
-data(woody_incid)
-out2 <- iNEXT4steps(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
+data(brazil)
+data(brazil_tree)
+out2 <- iNEXT4steps(data = brazil, class = "PD", datatype = "abundance", tree = tree, nboot = 0)
 out2
+
+## Ex.3
+data(brazil)
+data(brazil_distM)
+out3 <- iNEXT4steps(data = brazil, class = "FD", datatype = "abundance", distM = distM, nboot = 20)
+out3
+
+## Type (2) example for incidence based data (list of data.frame)
+## Ex.1
+data(woody_incid)
+out <- iNEXT4steps(data = woody_incid[,c(1,4)], class = "TD", datatype = "incidence_freq")
+out
+
 }
+
 }
 \references{
 Chao,A., Y.Kubota, D.Zeleny, C.-H.Chiu.
