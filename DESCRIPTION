@@ -17,13 +17,16 @@ Description: iNEXT.4steps provides a simple function to create a complete analys
 License: GPL (>= 3)
 Depends: R (>= 3.4)
 Imports: devtools,
-        ggplot2,
-        reshape2,
-        dplyr,
-        stats,
-        ggpubr,
-        purrr,
-        iNEXT3D
+         ggplot2,
+         reshape2,
+         dplyr,
+         stats,
+         ggpubr,
+         purrr,
+         ape,
+         tidytree,
+         phyclust,
+         iNEXT3D
 Remotes: KaiHsiangHu/iNEXT3D
 Encoding: UTF-8
 BugReports: https://github.com/KaiHsiangHu/iNEXT4steps/issues

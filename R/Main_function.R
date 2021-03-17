@@ -35,9 +35,10 @@
 #' @import dplyr
 #' @import ggpubr
 #' @import purrr
-#' @import iNEXT3D
 #' @import ape
+#' @import tidytree
 #' @import phyclust
+#' @import iNEXT3D
 #' @importFrom stats qnorm
 #' @importFrom stats rbinom
 #' @importFrom stats rmultinom
