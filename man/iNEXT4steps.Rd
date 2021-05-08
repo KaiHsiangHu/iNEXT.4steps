@@ -6,10 +6,12 @@
 \usage{
 iNEXT4steps(
   data,
-  class = c("TD", "PD", "FD", "AUC"),
+  diversity = c("TD", "PD", "FD"),
   datatype = "abundance",
   tree = NULL,
+  PDtype = "PD",
   distM = NULL,
+  FDtype = "AUC",
   nT = NULL,
   nboot = 30,
   p_row = 2,
@@ -28,19 +30,24 @@ The data input format for incidence data must be raw detection/non-detection dat
 consist of a species-by-sampling-unit matrix. Users must first merge multiple-community data by species identity to obtain a pooled
 list of species; then the rows of the input data refer to this pooled list. \cr}
 
-\item{class}{a choice of three-level diversity: 
-'TD' = 'Taxonomic', 'PD' = 'Phylogenetic', and 'FD' = 'Functional' under certain threshold. Besides,'AUC' is the fourth choice which integrates several threshold functional diversity to get diversity.}
+\item{diversity}{a choice of three-level diversity: 
+'TD' = 'Taxonomic', 'PD' = 'Phylogenetic', and 'FD' = 'Functional'.}
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
 sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr}
 
-\item{tree}{a phylo object describing the phylogenetic tree in Newick format for all observed species in the pooled assemblage. It is necessary when \code{class = 'PD'}.}
+\item{tree}{a phylo object describing the phylogenetic tree in Newick format for all observed species in the pooled assemblage. It is necessary when \code{diversity = 'PD'}.}
 
-\item{distM}{a pair wise distance matrix for all pairs of observed species in the pooled assemblage. It will be use when \code{class = 'FD' or 'AUC'}.}
+\item{PDtype}{desired phylogenetic diversity type: PDtype = "PD" for Chao et al. (2010) phylogenetic diversity and PDtype = "meanPD" for mean phylogenetic diversity (phylogenetic Hill number). It will be use when diversity = 'PD'. Default is "PD".}
+
+\item{distM}{a pair wise distance matrix for all pairs of observed species in the pooled assemblage. It will be use when \code{diversity = 'FD'}.}
+
+\item{FDtype}{a binary selection for functional type. FDtype = "single" computes diversity under certain threshold. FDtype = "AUC" computes diversity which integrates several threshold between zero and one to get diversity. Default is "AUC".
+When you select 'single', then the threshold will be dmean.}
 
 \item{nT}{needed only when \code{datatype = "incidence_raw"}, a sequence of named nonnegative integers specifying the number of sampling units in each assemblage.
 If \code{names(nT) = NULL}, then assemblage are automatically named as "assemblage1", "assemblage2",..., etc.
-It is necessary when \code{class = 'PD'} and \code{datatype = "incidence_raw"}.}
+It is necessary when \code{diversity = 'PD'} and \code{datatype = "incidence_raw"}.}
 
 \item{nboot}{an integer specifying the number of bootstrap replications, default is 30.\cr}
 
@@ -70,25 +77,25 @@ Step4: Evenness.\cr
 ## Type (1) example for abundance based data (data.frame)
 ## Ex.1
 data(Spider)
-out1 <- iNEXT4steps(data = Spider, class = "TD", datatype = "abundance")
+out1 <- iNEXT4steps(data = Spider, diversity = "TD", datatype = "abundance")
 out1
 
 ## Ex.2
 data(brazil)
 data(brazil_tree)
-out2 <- iNEXT4steps(data = brazil, class = "PD", datatype = "abundance", tree = tree, nboot = 0)
+out2 <- iNEXT4steps(data = brazil, diversity = "PD", datatype = "abundance", tree = tree, nboot = 0)
 out2
 
 ## Ex.3
 data(brazil)
 data(brazil_distM)
-out3 <- iNEXT4steps(data = brazil, class = "FD", datatype = "abundance", distM = distM, nboot = 20)
+out3 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", distM = distM, FDtype = 'single', nboot = 0)
 out3
 
 ## Type (2) example for incidence based data (list of data.frame)
 ## Ex.1
 data(woody_incid)
-out <- iNEXT4steps(data = woody_incid[,c(1,4)], class = "TD", datatype = "incidence_freq")
+out <- iNEXT4steps(data = woody_incid[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
 out
 
 }

@@ -336,8 +336,8 @@ even.class = function(q, qD, S, E.class, pi) {
 
 Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), method, E.class, C = NULL) {
   if (method == "Estimated") {
-    estqD = estimate3D(x, class = 'TD', q, datatype, base = "coverage", level = C, nboot = 0)
-    estS = estimate3D(x, class = 'TD', 0, datatype, base = "coverage", level = C, nboot = 0)
+    estqD = estimate3D(x, diversity = 'TD', q, datatype, base = "coverage", level = C, nboot = 0)
+    estS = estimate3D(x, diversity = 'TD', 0, datatype, base = "coverage", level = C, nboot = 0)
 
     out = lapply(E.class, function(i) {
       tmp = sapply(1:length(x), function(k) even.class(q, estqD[estqD$Assemblage == names(x)[k], "qD"], estS[estS$Assemblage == names(x)[k], "qD"], i, x[[k]]/sum(x[[k]])))
@@ -347,8 +347,8 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
       })
   } else if (method == "Empirical") {
 
-    empqD = Obs3D(x, class = 'TD', q = q, datatype = datatype, nboot = 0)
-    empS = Obs3D(x, class = 'TD', q = 0, datatype = datatype, nboot = 0)
+    empqD = Obs3D(x, diversity = 'TD', q = q, datatype = datatype, nboot = 0)
+    empS = Obs3D(x, diversity = 'TD', q = 0, datatype = datatype, nboot = 0)
     
     out = lapply(E.class, function(i) {
       tmp = sapply(1:length(x), function(k) even.class(q, empqD[empqD$Assemblage == names(x)[k], "qD"], empS[empS$Assemblage == names(x)[k], "qD"], i, x[[k]]/sum(x[[k]])))
@@ -485,7 +485,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
     })
-    if (is.null(C) == TRUE) C = unique(estimate3D(x, class = 'TD', q = 0, datatype = "abundance", base = "coverage", nboot = 0)$goalSC)
+    if (is.null(C) == TRUE) C = unique(estimate3D(x, diversity = 'TD', q = 0, datatype = "abundance", base = "coverage", nboot = 0)$goalSC)
     if (method=="Estimated") {out <- append(C, out)}
 
   } else if (datatype == "incidence") {
@@ -531,7 +531,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
     })
-    if (is.null(C) == TRUE) C = unique(estimate3D(x, class = 'TD', q = 0, datatype = "incidence_freq", base = "coverage", nboot = 0)$goalSC)
+    if (is.null(C) == TRUE) C = unique(estimate3D(x, diversity = 'TD', q = 0, datatype = "incidence_freq", base = "coverage", nboot = 0)$goalSC)
     if (method == "Estimated") {out <- append(C, out)}
   }
 
