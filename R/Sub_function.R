@@ -103,7 +103,7 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
     out <- lapply(1:length(x), function(i) {
       dq <- sample_completeness(x[[i]], q, "abundance")
       if (nboot > 1) {
-        Prob.hat <- iNEXT3D:::EstiBootComm.Ind(x[[i]])
+        Prob.hat <- iNEXT.3D:::EstiBootComm.Ind(x[[i]])
         Abun.Mat <- rmultinom(nboot, sum(x[[i]]), Prob.hat)
         se <- apply( matrix(apply(Abun.Mat,  2, function(xb) sample_completeness(xb, q, "abundance")), nrow=length(q)),
                 1, sd, na.rm = TRUE)
@@ -125,7 +125,7 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
       dq <- sample_completeness(x[[i]], q, "incidence_freq")
       if (nboot > 1) {
         nT <- x[[i]][1]
-        Prob.hat <- iNEXT3D:::EstiBootComm.Sam(x[[i]])
+        Prob.hat <- iNEXT.3D:::EstiBootComm.Sam(x[[i]])
         Incid.Mat <- t(sapply(Prob.hat, function(p) rbinom(nboot, nT, p)))
         Incid.Mat <- matrix(c(rbind(nT, Incid.Mat)), ncol = nboot)
         tmp <- which(colSums(Incid.Mat) == nT)
@@ -459,7 +459,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
     qD <- map(qD, as.vector)
     
     if (nboot > 1) {
-      Prob.hat <- lapply(1:length(x), function(i) iNEXT3D:::EstiBootComm.Ind(x[[i]]))
+      Prob.hat <- lapply(1:length(x), function(i) iNEXT.3D:::EstiBootComm.Ind(x[[i]]))
       Abun.Mat <- lapply(1:length(x), function(i) rmultinom(nboot, sum(x[[i]]), Prob.hat[[i]]))
 
       error = apply( matrix(sapply(1:nboot, function(b) {
@@ -494,7 +494,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
     
     if (nboot > 1) {
       nT <- lapply(1:length(x), function(i) x[[i]][1])
-      Prob.hat <- lapply(1:length(x), function(i) iNEXT3D:::EstiBootComm.Sam(x[[i]]))
+      Prob.hat <- lapply(1:length(x), function(i) iNEXT.3D:::EstiBootComm.Sam(x[[i]]))
       Incid.Mat <- lapply(1:length(x), function(i) t(sapply(Prob.hat[[i]], function(p) rbinom(nboot, nT[[i]], p))))
       Incid.Mat <- lapply(1:length(x), function(i) matrix(c(rbind(nT[[i]], Incid.Mat[[i]])), ncol = nboot))
 

@@ -1,6 +1,6 @@
 #' iNEXT 4 steps
 #'
-#' \code{iNEXT4steps}:\cr
+#' \code{iNEXT.4steps}:\cr
 #' A complete (random sampling) biological analysis combined with four parts:\cr
 #' Step1: Sample Completeness.\cr
 #' Step2: Interpolation and Extrapolation.\cr
@@ -41,7 +41,7 @@
 #' @import ape
 #' @import tidytree
 #' @import phyclust
-#' @import iNEXT3D
+#' @import iNEXT.3D
 #' @importFrom stats qnorm
 #' @importFrom stats rbinom
 #' @importFrom stats rmultinom
@@ -57,25 +57,25 @@
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
 #' data(Spider)
-#' out1 <- iNEXT4steps(data = Spider, diversity = "TD", datatype = "abundance")
+#' out1 <- iNEXT.4steps(data = Spider, diversity = "TD", datatype = "abundance")
 #' out1
 #' 
 #' ## Ex.2
 #' data(brazil)
 #' data(brazil_tree)
-#' out2 <- iNEXT4steps(data = brazil, diversity = "PD", datatype = "abundance", tree = tree, nboot = 0)
+#' out2 <- iNEXT.4steps(data = brazil, diversity = "PD", datatype = "abundance", tree = tree, nboot = 0)
 #' out2
 #' 
 #' ## Ex.3
 #' data(brazil)
 #' data(brazil_distM)
-#' out3 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", distM = distM, FDtype = 'single', nboot = 0)
+#' out3 <- iNEXT.4steps(data = brazil, diversity = "FD", datatype = "abundance", distM = distM, FDtype = 'single', nboot = 0)
 #' out3
 #' 
 #' ## Type (2) example for incidence based data (list of data.frame)
 #' ## Ex.1
 #' data(woody_incid)
-#' out <- iNEXT4steps(data = woody_incid[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
+#' out <- iNEXT.4steps(data = woody_incid[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
 #' out
 #' 
 #' }
@@ -85,9 +85,9 @@
 #' Quantifying sample completeness and comparing diversities among assemblages. Ecological Research.
 #' @export
 
-iNEXT4steps <- function(data, diversity = c("TD", "PD", "FD"), datatype = "abundance",
-                        tree = NULL, PDtype = 'PD', distM = NULL, FDtype = 'AUC', nT = NULL,
-                        nboot = 30, p_row = 2, p_col = 3, details = FALSE) {
+iNEXT.4steps <- function(data, diversity = c("TD", "PD", "FD"), datatype = "abundance",
+                         tree = NULL, PDtype = 'PD', distM = NULL, FDtype = 'AUC', nT = NULL,
+                         nboot = 30, p_row = 2, p_col = 3, details = FALSE) {
   q = seq(0, 2, 0.25)
   if ((length(data) == 1) && (class(data) %in% c("numeric", "integer")))
     stop("Error: Your data does not have enough information.")
@@ -150,14 +150,14 @@ iNEXT4steps <- function(data, diversity = c("TD", "PD", "FD"), datatype = "abund
             plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
             plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
 
-    size.RE.plot <- ggiNEXT3D(iNEXT.table, type = 1, facet.var = "Order.q", color.var = "Order.q")[[1]] +
+    size.RE.plot <- ggiNEXT3D(iNEXT.table, type = 1, facet.var = "Order.q", color.var = "Order.q") +
       labs(title = plot.names[2]) +
       theme(text = element_text(size = 12),
             plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
             legend.margin = margin(0, 0, 0, 0),
             plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
 
-    cover.RE.plot <- ggiNEXT3D(iNEXT.table, type = 3, facet.var = "Order.q", color.var = "Order.q")[[1]] +
+    cover.RE.plot <- ggiNEXT3D(iNEXT.table, type = 3, facet.var = "Order.q", color.var = "Order.q") +
       labs(title = plot.names[4]) +
       theme(text = element_text(size = 12),
             plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),

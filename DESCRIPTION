@@ -1,4 +1,4 @@
-Package: iNEXT4steps
+Package: iNEXT.4steps
 Type: Package
 Title: four steps of INterpolation and EXTrapolation analysis
 Version: 1.0.1
@@ -26,9 +26,9 @@ Imports: devtools,
          ape,
          tidytree,
          phyclust,
-         iNEXT3D
-Remotes: KaiHsiangHu/iNEXT3D
+         iNEXT.3D
+Remotes: KaiHsiangHu/iNEXT.3D
 Encoding: UTF-8
-BugReports: https://github.com/KaiHsiangHu/iNEXT4steps/issues
+BugReports: https://github.com/KaiHsiangHu/iNEXT.4steps/issues
 LazyData: true
 RoxygenNote: 7.1.1
