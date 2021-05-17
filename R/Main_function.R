@@ -208,7 +208,8 @@ iNEXT.4steps <- function(data, diversity = c("TD", "PD", "FD"), datatype = "abun
     } else { ans <- list(summary = summary) }
 
   } else if (details == TRUE) {
-    tab = list("Sample Completeness" = SC.table, "iNEXT" = ifelse(diversity == 'FD' & FDtype == 'AUC', iNEXT.table[[1]], iNEXT.table[[2]]),
+    if (diversity == 'FD' & FDtype == 'AUC')  RE = iNEXT.table[[1]] else RE = iNEXT.table[[2]]
+    tab = list("Sample Completeness" = SC.table, "iNEXT" = RE,
                "Asymptotic Diversity" = qD.table, "Evenness" = Even.table)
 
     if (length(unique(SC.table$Community)) <= 8) {
