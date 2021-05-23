@@ -1,6 +1,6 @@
 #' iNEXT 4 steps
 #'
-#' \code{iNEXT.4steps}:\cr
+#' \code{iNEXT4steps}:\cr
 #' A complete (random sampling) biological analysis combined with four parts:\cr
 #' Step1: Sample Completeness.\cr
 #' Step2: Interpolation and Extrapolation.\cr
@@ -57,25 +57,25 @@
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
 #' data(Spider)
-#' out1 <- iNEXT.4steps(data = Spider, diversity = "TD", datatype = "abundance")
+#' out1 <- iNEXT4steps(data = Spider, diversity = "TD", datatype = "abundance")
 #' out1
 #' 
 #' ## Ex.2
 #' data(brazil)
 #' data(brazil_tree)
-#' out2 <- iNEXT.4steps(data = brazil, diversity = "PD", datatype = "abundance", PDtree = tree, nboot = 0)
+#' out2 <- iNEXT4steps(data = brazil, diversity = "PD", datatype = "abundance", PDtree = tree, nboot = 0)
 #' out2
 #' 
 #' ## Ex.3
 #' data(brazil)
 #' data(brazil_distM)
-#' out3 <- iNEXT.4steps(data = brazil, diversity = "FD", datatype = "abundance", FDdistM = distM, FDtype = 'single', nboot = 0)
+#' out3 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", FDdistM = distM, FDtype = 'single', nboot = 0)
 #' out3
 #' 
 #' ## Type (2) example for incidence based data (list of data.frame)
 #' ## Ex.1
 #' data(woody_incid)
-#' out <- iNEXT.4steps(data = woody_incid[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
+#' out <- iNEXT4steps(data = woody_incid[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
 #' out
 #' 
 #' }
@@ -85,7 +85,7 @@
 #' Quantifying sample completeness and comparing diversities among assemblages. Ecological Research.
 #' @export
 
-iNEXT.4steps <- function(data, diversity = c("TD", "PD", "FD"), datatype = "abundance", nT = NULL,
+iNEXT4steps <- function(data, diversity = c("TD", "PD", "FD"), datatype = "abundance", nT = NULL,
                          PDtree = NULL, PDtype = 'meanPD', FDdistM = NULL, FDtype = 'AUC',
                          nboot = 30, p_row = 2, p_col = 3, details = FALSE) {
   q = seq(0, 2, 0.25)
