@@ -347,8 +347,8 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
       })
   } else if (method == "Empirical") {
 
-    empqD = Obs3D(x, diversity = 'TD', q = q, datatype = datatype, nboot = 0)
-    empS = Obs3D(x, diversity = 'TD', q = 0, datatype = datatype, nboot = 0)
+    empqD = obs3D(x, diversity = 'TD', q = q, datatype = datatype, nboot = 0)
+    empS = obs3D(x, diversity = 'TD', q = 0, datatype = datatype, nboot = 0)
     
     out = lapply(E.class, function(i) {
       tmp = sapply(1:length(x), function(k) even.class(q, empqD[empqD$Assemblage == names(x)[k], "qD"], empS[empS$Assemblage == names(x)[k], "qD"], i, x[[k]]/sum(x[[k]])))

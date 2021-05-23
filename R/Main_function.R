@@ -20,12 +20,12 @@
 #' 'TD' = 'Taxonomic', 'PD' = 'Phylogenetic', and 'FD' = 'Functional'.
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
 #' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
-#' @param tree a phylo object describing the phylogenetic tree in Newick format for all observed species in the pooled assemblage. It is necessary when \code{diversity = 'PD'}.
+#' @param PDtree a phylo object describing the phylogenetic tree in Newick format for all observed species in the pooled assemblage. It is necessary when \code{diversity = 'PD'}.
 #' @param nT needed only when \code{datatype = "incidence_raw"}, a sequence of named nonnegative integers specifying the number of sampling units in each assemblage.
 #' If \code{names(nT) = NULL}, then assemblage are automatically named as "assemblage1", "assemblage2",..., etc.
 #' It is necessary when \code{diversity = 'PD'} and \code{datatype = "incidence_raw"}.
-#' @param PDtype desired phylogenetic diversity type: PDtype = "PD" for Chao et al. (2010) phylogenetic diversity and PDtype = "meanPD" for mean phylogenetic diversity (phylogenetic Hill number). It will be use when diversity = 'PD'. Default is "PD".
-#' @param distM a pair wise distance matrix for all pairs of observed species in the pooled assemblage. It will be use when \code{diversity = 'FD'}.
+#' @param PDtype desired phylogenetic diversity type: PDtype = "PD" for Chao et al. (2010) phylogenetic diversity and PDtype = "meanPD" for mean phylogenetic diversity (phylogenetic Hill number). It will be use when diversity = 'PD'. Default is "meanPD".
+#' @param FDdistM a pair wise distance matrix for all pairs of observed species in the pooled assemblage. It will be use when \code{diversity = 'FD'}.
 #' @param FDtype a binary selection for functional type. FDtype = "single" computes diversity under certain threshold. FDtype = "AUC" computes diversity which integrates several threshold between zero and one to get diversity. Default is "AUC".
 #' When you select 'single', then the threshold will be dmean.
 #' @param nboot an integer specifying the number of bootstrap replications, default is 30.\cr
@@ -63,13 +63,13 @@
 #' ## Ex.2
 #' data(brazil)
 #' data(brazil_tree)
-#' out2 <- iNEXT.4steps(data = brazil, diversity = "PD", datatype = "abundance", tree = tree, nboot = 0)
+#' out2 <- iNEXT.4steps(data = brazil, diversity = "PD", datatype = "abundance", PDtree = tree, nboot = 0)
 #' out2
 #' 
 #' ## Ex.3
 #' data(brazil)
 #' data(brazil_distM)
-#' out3 <- iNEXT.4steps(data = brazil, diversity = "FD", datatype = "abundance", distM = distM, FDtype = 'single', nboot = 0)
+#' out3 <- iNEXT.4steps(data = brazil, diversity = "FD", datatype = "abundance", FDdistM = distM, FDtype = 'single', nboot = 0)
 #' out3
 #' 
 #' ## Type (2) example for incidence based data (list of data.frame)
@@ -85,8 +85,8 @@
 #' Quantifying sample completeness and comparing diversities among assemblages. Ecological Research.
 #' @export
 
-iNEXT.4steps <- function(data, diversity = c("TD", "PD", "FD"), datatype = "abundance",
-                         tree = NULL, PDtype = 'PD', distM = NULL, FDtype = 'AUC', nT = NULL,
+iNEXT.4steps <- function(data, diversity = c("TD", "PD", "FD"), datatype = "abundance", nT = NULL,
+                         PDtree = NULL, PDtype = 'meanPD', FDdistM = NULL, FDtype = 'AUC',
                          nboot = 30, p_row = 2, p_col = 3, details = FALSE) {
   q = seq(0, 2, 0.25)
   if ((length(data) == 1) && (class(data) %in% c("numeric", "integer")))
@@ -97,9 +97,9 @@ iNEXT.4steps <- function(data, diversity = c("TD", "PD", "FD"), datatype = "abun
     stop("invalid details setting")
   if (pmatch(details, logic) == -1)
     stop("ambiguous details setting")
-  if ((diversity == "PD") && is.null(tree))
+  if ((diversity == "PD") && is.null(PDtree))
     stop("You should input tree data for Phylogenetic diversity.")
-  if ((diversity == "FD") && is.null(distM))
+  if ((diversity == "FD") && is.null(FDdistM))
     stop("You should input distance data for Functional diversity.")
 
   plot.names = c("(a) Sample completeness profiles",
@@ -115,12 +115,12 @@ iNEXT.4steps <- function(data, diversity = c("TD", "PD", "FD"), datatype = "abun
   SC.table <- SC(data, q = q, datatype, nboot, 0.95)
 
   ## iNEXT ##
-  iNEXT.table <- iNEXT3D(data, diversity = diversity, q = c(0, 1, 2), datatype = datatype, nboot = nboot, 
-                         tree = tree, PDtype = PDtype, distM = distM, FDtype = FDtype, nT = nT)
+  iNEXT.table <- iNEXT3D(data, diversity = diversity, q = c(0, 1, 2), datatype = datatype, nboot = nboot, nT = nT, 
+                         PDtree = PDtree, PDtype = PDtype, FDdistM = FDdistM, FDtype = FDtype)
   
   ## Asymptotic ##
-  qD.table <- rbind(Asy3D(data, diversity = diversity, q = q, datatype = datatype, nboot = nboot, tree = tree, PDtype = PDtype, distM = distM, FDtype = FDtype, nT = nT),
-                    Obs3D(data, diversity = diversity, q = q, datatype = datatype, nboot = nboot, tree = tree, PDtype = PDtype, distM = distM, FDtype = FDtype, nT = nT))
+  qD.table <- rbind(asy3D(data, diversity = diversity, q = q, datatype = datatype, nboot = nboot, nT = nT, PDtree = PDtree, PDtype = PDtype, FDdistM = FDdistM, FDtype = FDtype),
+                    obs3D(data, diversity = diversity, q = q, datatype = datatype, nboot = nboot, nT = nT, PDtree = PDtree, PDtype = PDtype, FDdistM = FDdistM, FDtype = FDtype))
   qD.table$s.e. = (qD.table[,4] - qD.table[,2])/qnorm(1 - (1 - 0.95)/2)
   
   ## Evenness ##
@@ -128,14 +128,8 @@ iNEXT.4steps <- function(data, diversity = c("TD", "PD", "FD"), datatype = "abun
   Cmax = Even.table[1]
 
   if (length(unique((Even.table[[2]]$Community)))>1) {
-    if (!(diversity == 'FD' & FDtype == 'AUC')) {
-      iNEXT.table[[2]]$size_based$Assemblage = factor(iNEXT.table[[2]]$size_based$Assemblage)
-      level = levels(iNEXT.table[[2]]$size_based$Assemblage)
-      
-    } else {
-      iNEXT.table[[1]]$size_based$Assemblage = factor(iNEXT.table[[1]]$size_based$Assemblage)
-      level = levels(iNEXT.table[[1]]$size_based$Assemblage)
-    }
+    iNEXT.table[[2]]$size_based$Assemblage = factor(iNEXT.table[[2]]$size_based$Assemblage)
+    level = levels(iNEXT.table[[2]]$size_based$Assemblage)
     
     SC.table$Assemblage = factor(SC.table$Assemblage, level)
     qD.table$Assemblage = factor(qD.table$Assemblage, level)
@@ -164,7 +158,7 @@ iNEXT.4steps <- function(data, diversity = c("TD", "PD", "FD"), datatype = "abun
             legend.margin = margin(0, 0, 0, 0),
             plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
 
-    asy.plot <- ggAsy3D(qD.table) +
+    asy.plot <- ggasy3D(qD.table) +
       labs(title = plot.names[3]) +
       theme(text = element_text(size = 12),
             plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
@@ -186,8 +180,8 @@ iNEXT.4steps <- function(data, diversity = c("TD", "PD", "FD"), datatype = "abun
     )
   } else { warning("The number of communities exceed eight. We don't show the figures.") }
   
-  estD = estimate3D(data, diversity = 'TD', q = c(0, 1, 2), datatype, base = "coverage", level = NULL, nboot = 0)
-  est3D = estimate3D(data, diversity = diversity, q = c(0, 1, 2), datatype, base = "coverage", level = NULL, nboot = 0, tree = tree, PDtype = PDtype, distM = distM, FDtype = FDtype, nT = nT)
+  estD = estimate3D(data, diversity = 'TD', q = c(0, 1, 2), datatype, base = "coverage", level = NULL, nboot = 0, nT = nT)
+  est3D = estimate3D(data, diversity = diversity, q = c(0, 1, 2), datatype, base = "coverage", level = NULL, nboot = 0, nT = nT, PDtree = PDtree, PDtype = PDtype, FDdistM = FDdistM, FDtype = FDtype)
   
   if (diversity == 'FD' & FDtype == 'AUC') summary_step2 = iNEXT.table[[2]] else summary_step2 = iNEXT.table[[3]]
   ##  Outpue_summary ##
