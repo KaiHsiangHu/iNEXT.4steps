@@ -16,22 +16,22 @@
 #' The data input format for incidence data must be raw detection/non-detection data. That is, data for each community/assemblage
 #' consist of a species-by-sampling-unit matrix. Users must first merge multiple-community data by species identity to obtain a pooled
 #' list of species; then the rows of the input data refer to this pooled list. \cr
-#' @param diversity a choice of three-level diversity: 
-#' 'TD' = 'Taxonomic', 'PD' = 'Phylogenetic', and 'FD' = 'Functional'.
-#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
-#' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
-#' @param PDtree a phylo object describing the phylogenetic tree in Newick format for all observed species in the pooled assemblage. It is necessary when \code{diversity = 'PD'}.
-#' @param nT needed only when \code{datatype = "incidence_raw"}, a sequence of named nonnegative integers specifying the number of sampling units in each assemblage.
-#' If \code{names(nT) = NULL}, then assemblage are automatically named as "assemblage1", "assemblage2",..., etc.
+#' @param diversity selection of diversity type: 'TD' = Taxonomic diversity, 'PD' = Phylogenetic diversity, and 'FD' = Functional diversity.
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).
+#' @param nboot an integer specifying the number of replications. If confidence interval is not desired, use 0 to skip this time-consuming step.
+#' @param nT needed only when \code{datatype = "incidence_raw"}, a sequence of named nonnegative integers specifying the number of sampling units in each assemblage. \cr
+#' If \code{names(nT) = NULL}, then assemblage are automatically named as "assemblage1", "assemblage2",..., etc. \cr
 #' It is necessary when \code{diversity = 'PD'} and \code{datatype = "incidence_raw"}.
-#' @param PDtype desired phylogenetic diversity type: PDtype = "PD" for Chao et al. (2010) phylogenetic diversity and PDtype = "meanPD" for mean phylogenetic diversity (phylogenetic Hill number). It will be use when diversity = 'PD'. Default is "meanPD".
+#' @param PDtree a phylo object describing the phylogenetic tree in Newick format for all observed species in the pooled assemblage. It is necessary when \code{diversity = 'PD'}.
+#' @param PDreftime Select a reference time point for \code{diversity = 'PD'}. Default is NULL.  
+#' @param PDtype Select phylogenetic diversity type: \code{PDtype = "PD"} for Chao et al. (2010) phylogenetic diversity and \code{PDtype = "meanPD"} for mean phylogenetic diversity (phylogenetic Hill number). It will be use when \code{diversity = 'PD'}. Default is \code{"meanPD"}.
 #' @param FDdistM a pair wise distance matrix for all pairs of observed species in the pooled assemblage. It will be use when \code{diversity = 'FD'}.
-#' @param FDtype a binary selection for functional type. FDtype = "single" computes diversity under certain threshold. FDtype = "AUC" computes diversity which integrates several threshold between zero and one to get diversity. Default is "AUC".
-#' When you select 'single', then the threshold will be dmean.
-#' @param nboot an integer specifying the number of bootstrap replications, default is 30.\cr
+#' @param FDtype a binary selection for FD. \code{FDtype = "tau_values"} computes diversity under certain threshold values. \code{FDtype = "AUC"} computes an overall FD which integrates all threshold values between zero and one. Default is \code{"AUC"}.
+#' @param FDtau a sequence between 0 and 1 specifying tau. If \code{NULL}, \code{threshold = } dmean. Default is \code{NULL}. It will be use when \code{diversity = 'FD'} and \code{FDtype = "tau_values"}.
 #' @param p_row number of row for 4steps figure, default = 2.
 #' @param p_col number of column for 4steps figure, default = 3.
 #' @param details a logical variable to determine whether do you want to print out the detailed value of 4 plots, default is \code{FALSE}.\cr
+#' 
 #' @import devtools
 #' @import ggplot2
 #' @import reshape2
@@ -63,13 +63,13 @@
 #' ## Ex.2
 #' data(brazil)
 #' data(brazil_tree)
-#' out2 <- iNEXT4steps(data = brazil, diversity = "PD", datatype = "abundance", PDtree = tree, nboot = 0)
+#' out2 <- iNEXT4steps(data = brazil, diversity = "PD", datatype = "abundance", nboot = 0, PDtree = tree)
 #' out2
 #' 
 #' ## Ex.3
 #' data(brazil)
 #' data(brazil_distM)
-#' out3 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", FDdistM = distM, FDtype = 'single', nboot = 0)
+#' out3 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", nboot = 0, FDdistM = distM, FDtype = 'tau_values')
 #' out3
 #' 
 #' ## Type (2) example for incidence based data (list of data.frame)
@@ -86,7 +86,7 @@
 #' @export
 
 iNEXT4steps <- function(data, diversity = c("TD", "PD", "FD"), datatype = "abundance", nT = NULL,
-                         PDtree = NULL, PDtype = 'meanPD', FDdistM = NULL, FDtype = 'AUC',
+                         PDtree = NULL, PDreftime = NULL, PDtype = 'meanPD', FDdistM = NULL, FDtype = 'AUC', FDtau = NULL,
                          nboot = 30, p_row = 2, p_col = 3, details = FALSE) {
   q = seq(0, 2, 0.25)
   if ((length(data) == 1) && (class(data) %in% c("numeric", "integer")))
@@ -116,11 +116,13 @@ iNEXT4steps <- function(data, diversity = c("TD", "PD", "FD"), datatype = "abund
 
   ## iNEXT ##
   iNEXT.table <- iNEXT3D(data, diversity = diversity, q = c(0, 1, 2), datatype = datatype, nboot = nboot, nT = nT, 
-                         PDtree = PDtree, PDtype = PDtype, FDdistM = FDdistM, FDtype = FDtype)
+                         PDtree = PDtree, PDreftime = PDreftime, PDtype = PDtype, FDdistM = FDdistM, FDtype = FDtype, FDtau = FDtau)
   
   ## Asymptotic ##
-  qD.table <- rbind(asy3D(data, diversity = diversity, q = q, datatype = datatype, nboot = nboot, nT = nT, PDtree = PDtree, PDtype = PDtype, FDdistM = FDdistM, FDtype = FDtype),
-                    obs3D(data, diversity = diversity, q = q, datatype = datatype, nboot = nboot, nT = nT, PDtree = PDtree, PDtype = PDtype, FDdistM = FDdistM, FDtype = FDtype))
+  qD.table <- rbind(asy3D(data, diversity = diversity, q = q, datatype = datatype, nboot = nboot, nT = nT, PDtree = PDtree, 
+                          PDreftime = PDreftime, PDtype = PDtype, FDdistM = FDdistM, FDtype = FDtype, FDtau = FDtau),
+                    obs3D(data, diversity = diversity, q = q, datatype = datatype, nboot = nboot, nT = nT, PDtree = PDtree, 
+                          PDreftime = PDreftime, PDtype = PDtype, FDdistM = FDdistM, FDtype = FDtype, FDtau = FDtau))
   qD.table$s.e. = (qD.table[,4] - qD.table[,2])/qnorm(1 - (1 - 0.95)/2)
   
   ## Evenness ##
