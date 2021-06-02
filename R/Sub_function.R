@@ -111,7 +111,7 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
       else {
         se = NA
       }
-      out <- data.frame(Order.q = q, Estimate.SC = dq,
+      out <- data.frame(Order.q = q, Estimate.SC = dq, s.e. = se,
                         SC.LCL = dq-qnorm(1-(1-conf)/2)*se, SC.UCL = dq+qnorm(1-(1-conf)/2)*se,
                         Assemblage = names(x)[i], Method = rep("Estimated", length(q)))
       out$SC.LCL[out$SC.LCL < 0] <- 0
@@ -135,7 +135,7 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
       else {
         se = NA
       }
-      out <- data.frame(Order.q = q, Estimate.SC = dq,
+      out <- data.frame(Order.q = q, Estimate.SC = dq, s.e. = se,
                         SC.LCL = dq-qnorm(1-(1-conf)/2)*se, SC.UCL = dq+qnorm(1-(1-conf)/2)*se,
                         Assemblage = names(x)[i], Method = rep("Estimated", length(q)))
       out$SC.LCL[out$SC.LCL < 0] <- 0

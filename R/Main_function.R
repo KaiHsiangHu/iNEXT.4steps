@@ -123,7 +123,6 @@ iNEXT4steps <- function(data, diversity = "TD", datatype = "abundance", nT = NUL
                           PDreftime = PDreftime, PDtype = PDtype, FDdistM = FDdistM, FDtype = FDtype, FDtau = FDtau),
                     obs3D(data, diversity = diversity, q = q, datatype = datatype, nboot = nboot, nT = nT, PDtree = PDtree, 
                           PDreftime = PDreftime, PDtype = PDtype, FDdistM = FDdistM, FDtype = FDtype, FDtau = FDtau))
-  qD.table$s.e. = (qD.table[,4] - qD.table[,2])/qnorm(1 - (1 - 0.95)/2)
   
   ## Evenness ##
   Even.table <- Evenness(data, q = q, datatype, "Estimated", nboot, E.class = 3)
@@ -199,8 +198,7 @@ iNEXT4steps <- function(data, diversity = "TD", datatype = "abundance", nT = NUL
 
     if (length(unique(SC.table$Community)) <= 8) {
       ans <- list(summary = summary,
-                  figure = list(SC.plot, size.RE.plot, asy.plot,
-                                cover.RE.plot, even.plot, steps.plot))
+                  figure = list(SC.plot, size.RE.plot, asy.plot, cover.RE.plot, even.plot, steps.plot))
     } else { ans <- list(summary = summary) }
 
   } else if (details == TRUE) {
@@ -210,8 +208,7 @@ iNEXT4steps <- function(data, diversity = "TD", datatype = "abundance", nT = NUL
 
     if (length(unique(SC.table$Community)) <= 8) {
       ans <- list(summary = summary,
-                  figure = list(SC.plot, size.RE.plot, asy.plot,
-                                cover.RE.plot, even.plot, steps.plot),
+                  figure = list(SC.plot, size.RE.plot, asy.plot, cover.RE.plot, even.plot, steps.plot),
                   details = tab)
     } else { ans <- list(summary = summary, details = tab)}
 
