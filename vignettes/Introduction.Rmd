@@ -1,11 +1,11 @@
 ---
-title: "A Quick Introduction to iNEXT4steps via Examples"
+title: "A Quick Introduction to iNEXT.4steps via Examples"
 author: "K. H. Hu, and Anne Chao"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
     vignette: >
-      %\VignetteIndexEntry{A Quick Introduction to iNEXT4steps via Examples}
+      %\VignetteIndexEntry{A Quick Introduction to iNEXT.4steps via Examples}
       %\VignetteEngine{knitr::rmarkdown}
       %\VignetteEncoding{UTF-8}
 ---
@@ -31,29 +31,28 @@ data("brazil_distM")
 </font>
 
 
-`iNEXT4steps` (iNterpolation and EXTrapolation four steps) is an original R package which  realized the biological process completely. In Chao, A., Y. Kubota, D. Zelený, C.-H. Chiu(2020),
-they proposed a complete biological analysis process:
+`iNEXT.4steps` (iNterpolation and EXTrapolation for four steps) is an original R package which provide an easy complete biological analysis computation. In Chao, A., Y. Kubota, D. Zelený, C.-H. Chiu(2020), they proposed a complete biological analysis process:
 
-`STEP1`. Sample completeness profiles
-`STEP2`. Asymptotic analysis
-`STEP3`. Non-asymptotic coverage-based rarefaction and extrapolation analysis
-`STEP4`. Evenness among species abundances.
+`STEP1`. Sample completeness profiles. \cr
+`STEP2`. Asymptotic analysis. \cr
+`STEP3`. Non-asymptotic coverage-based rarefaction and extrapolation analysis. \cr
+`STEP4`. Evenness among species abundances. \cr
 
 
-That’s the foundation of `iNEXT4steps` Here we will introduce functions about `STEP1`, `STEP4`, particularly. If you want to grasp `STEP1`, `STEP3`, then the related paper T.C. Hsieh, K. H. Ma, and Chao, A. (2016) will be the best choice for you.
+These are the foundation of `iNEXT.4steps` Here we will also introduce functions about `STEP1`, `STEP4`, particularly. If you want to grasp `STEP1`, `STEP3`, then the related paper ('iNEXT' or 'iNEXT.3D') T.C. Hsieh, K. H. Ma, and Chao, A. (2016) will be the best choice to you. 
 
-1. Sample‐size‐based R/E sampling curves: `iNEXT` computes diversity estimates for rarefied and extrapolated samples up to an appropriate size. This type of sampling curve plots the diversity estimates with respect to sample size.     
-2. Coverage‐based R/E sampling curves: `iNEXT` computes diversity estimates for rarefied and extrapolated samples with sample completeness (as measured by sample coverage) up to an appropriate coverage. This type of sampling curve plots the diversity estimates with respect to sample coverage. 
+1. Sample‐size‐based R/E sampling curves: `iNEXT` computes rarefied and extrapolated diversity estimates under a specified sample size. This type of diversity curve plots the estimated diversity with respect to sample size.     
+2. Coverage‐based R/E sampling curves: `iNEXT` computes rarefied and extrapolated diversity estimates under a spcified sample coverage. This type of diversity curve plots the estimated diversity with respect to sample coverage. 
 
-In the package, there are several functions for users to calculate the related biological statistics: `Sample Completeness`, `Evenness`, and the most comprehensive function `iNEXT4steps`. In this document, we provide a quick introduction demonstrating how to run these functions. Detailed information about these functions is provided in the `iNEXT4steps` guidelines, also available in [CRAN]. The theoretical basis about these biological statistics can be obtained from the following connection:
-(http://chao.stat.nthu.edu.tw/wordpress/publication-list/)
+In the package, we provide three functions for users to calculate the related biological statistics: `SC`, `Evenness`, and the most comprehensive function `iNEXT4steps`. In this document, we will give a quick introduction demonstrating how to run these functions. Detailed information about these function setting is provided in the `iNEXT.4steps` guideline, which is also available in [CRAN]. The theoretical basis about these biological statistics can be obtained from the following inference:
+(http://chao.stat.nthu.edu.tw/wordpress/paper/135.pdf)
 
-Some proposed theoretical references to each statistics:
-`Sample Completeness`: No.95 Chao, A. and Jost. L. (2012) .
-`Asymptotic Diversity`: No.109 Chao, A. and Jost, L. (2015).
-`Interplation and Extrapolation`: No.102 Chao, A., Gotelli, N. G., Hsieh, T. C. (2014).
-`Evenness`: No.133 Chao, A. and Ricotta, C. (2019).
-`iNEXT 4 steps`: No. 135 Chao, A., Y. Kubota, D. Zelený, C.-H. Chiu.
+Some proposed theoretical references to each statistics: \cr
+`Sample Completeness`: No.95 Chao, A. and Jost. L. (2012). \cr
+`Asymptotic Diversity`: No.109 Chao, A. and Jost, L. (2015). \cr
+`Interplation and Extrapolation`: No.102 Chao, A., Gotelli, N. G., Hsieh, T. C. (2014). \cr
+`Evenness`: No.133 Chao, A. and Ricotta, C. (2019). \cr
+`iNEXT 4 steps`: No. 135 Chao, A., Y. Kubota, D. Zelený, C.-H. Chiu. \cr
 
 
 ## SOFTWARE NEEDED TO RUN INEXT IN R
@@ -61,7 +60,7 @@ Some proposed theoretical references to each statistics:
 - Suggested: [RStudio IDE](https://www.rstudio.com/products/RStudio/#Desktop)
 
 ## HOW TO RUN INEXT:
-The `iNEXT4steps` package has not available on [CRAN]. But can be downloaded with a standard R installation procedure using the following commands. For a first‐time installation, an additional visualization extension package (`ggplot2`) must be loaded. 
+The `iNEXT.4steps` package has not available on [CRAN]. But you can download with a standard R installation procedure using the following commands. For a first‐time installation, an additional visualization extension package (`ggplot2`) must be loaded. 
 
 
 ```{r eval=FALSE}
@@ -72,7 +71,7 @@ The `iNEXT4steps` package has not available on [CRAN]. But can be downloaded wit
 install.packages('devtools')
 library(devtools)
 install_github('KaiHsiangHu/iNEXT.3D')
-install_github('KaiHsiangHu/iNEXT4.steps')
+install_github('KaiHsiangHu/iNEXT.4steps')
 
 ## import packages
 library(iNEXT.4steps)
@@ -81,25 +80,25 @@ library(ggplot2)
 
 **Remark**: In order to install `devtools` package, you should update R to the latest version. Also, to get `install_github` to work, you should install the `httr` package. 
 
-An online version of iNEXT4steps(https://kaihsiang-hu.shinyapps.io/iNEXT_4steps_Online/) is also available for users without an R background.
+An online version of iNEXT.4steps(https://chao.shinyapps.io/iNEXT_4steps/) is also available for users without an R background.
 
 
 
 **Simple steps brief**
-`Sample Completeness` represent the proportion of observed species in the population. Usually, the sampling data represents the abundant species in the population so that we will ignore the rare species. Here we will match Turing’s sample coverage to reconstruct the population percentage. Besides, sample completeness can correspond to order q, which is an weight index. When order q tends to zero, then we will give more weight to rare species. If order q tends to unity, then we will equally treat each species, which is also called sample coverage at unity. In contrast, if order q tends to larger than unity, we will give more weights to abundant species. By sample completeness, we can easily plot the estimated curve with respect to order q and associated 95% confidence interval.
+`Sample Completeness` represent the proportion of observed species in the population. Usually, the sampling data represents the abundant species in the population so that we will ignore the rare species. Here we will use Turing’s sample coverage theory to reconstruct the population distribution. Besides, sample completeness can correspond to order q, which is an weight index. When order q tends to zero, then we will give more weight to rare species. If order q tends to unity, then we will equally treat each species, which is also called sample coverage at unity. In contrast, if order q tends to larger than unity, we will give more weights to abundant species. By sample completeness, we can easily plot the estimated curve with respect to order q and associated 95% confidence interval.
 
 
-`Asymptotic Diversity (or called Hill numbers)` is a statistic which is used to represent the biological diversity. Its direct sense is the quantification amount of a assemblage. With this quantification amount, we can easily analysis several communities from different data sources. It usually matches order q to give different weights so that we can focus on rare species or abundant species. When we use observed data to calculate asymptotic diversity, we usually will get an underestimated value. In our package, we will provide an estimated statistic from Anne Chao (2015), which can copy a real population accurately. In addition, it can be related to order q index and associated 95% confidence interval.
+`Asymptotic Diversity (or called Hill numbers)` is a statistic which is used to represent the biological diversity. Its direct meaning is to quantify the non-homogeneous distribution into homogeneous distribution (species diversity). With this quantification criterian, we can easily analysis several communities from different data sources under objective measure. It usually matches order q to give different weights so that we can focus on rare species or abundant species only. When we use observed data to calculate empirical diversity, we usually get an underestimated value. In our package, we will provide an estimated statistic from Anne Chao (2015), which can imitate a real population accurately. In addition, it can be related to order q index and associated 95% confidence interval.
 
 
-`Interplation and Extrapolation (iNEXT)` focuses on three measures of Hill numbers of order q: species richness (q = 0), Shannon diversity (q = 1, the exponential of Shannon entropy), and Simpson diversity (q = 2, the inverse of Simpson concentration). For each diversity measures, iNEXT uses observed sample to compute expected diversity estimates and associated 95% confidence intervals according two different unit types of rarefaction and extrapolation (R/E):
-1.	Sample-size-based R/E sampling curves versus diversity in each order q.
-2.	Coverage-based R/E sampling curves versus diversity in each order q.
+`Interplation and Extrapolation (iNEXT)` focuses on three measures of Hill numbers of order q: species richness (q = 0), Shannon diversity (q = 1, the exponential of Shannon entropy), and Simpson diversity (q = 2, the inverse of Simpson concentration). For each diversity measures, iNEXT uses observed sample to compute expected diversity estimates and associated 95% confidence intervals according two different unit types of rarefaction and extrapolation (R/E): \cr
+1.	Sample-size-based R/E sampling curves versus diversity in each order q. \cr
+2.	Coverage-based R/E sampling curves versus diversity in each order q. \cr
 For more particular usage about iNEXT, you can refer to T.C. Hsieh, K. H. Ma, and Chao, A. (2016). We won’t introduce details of iNEXT latter.
 
 
-`Evenness` is an indicator used to represent whether a data is uniform or not. We have sorted five main classes according to different formulas. All of them are combination by species and diversity. In these five classes, they all have range from zero to one. When the value is close to zero, it means that the assemblage tends to uneven. On the contrary, when the value is close one, it means that the assemblage tends to even. Evenness can match different order q under each classes. When order q tends to zero, we will focus on rare species. In other sides, when order q tends to far from zero, then we will do more weights on abundant species. If we use observed sampling data to calculate Evenness, we usually have a biased value because of unobserved rare species. But if we try to use asymptotic diversity for calculating Evenness, then we may also get a biased value under order q near zero. Here, we propose a “standardized coverage” (named Cmax) as a judged crierion. Cmax means that we extrapolate the sampling data double reference sample size and choose the minimum corresponding coverage (q = 1) under these sample sizes.
-Under Cmax, we can guarantee the accuracy of Evenness. According to this criterion, we can plot the curves versus order q and associated 95% confidence interval.
+`Evenness` is an function to calculate whether a assemblage is uniform or not. We have sorted five main classes according to different transformation by species and diversity. In these five classes, they all have range from zero to one. When the value is close to zero, it means that the assemblage tends to uneven. On the contrary, when the value is close one, it means that the assemblage tends to even. Evenness can consider different order q under each classes. When order q tends to zero, we will focus on rare species. In other sides, when order q tends to far from zero, then we will do more weights on abundant species. If we use observed sampling data to calculate Evenness, we usually have a biased value because of unobserved rare species. But if we try to use asymptotic diversity for calculating Evenness, then we may also get a biased value under order q near zero. Here, we propose a “standardized coverage” (named `Cmax`) as a judged criterion. `Cmax` means that we computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes.
+Under Cmax, we can guarantee the accuracy of Evenness. According to this criterion, we can plot the Evenness curves versus order q and associated 95% confidence interval.
 
 
 
@@ -107,13 +106,12 @@ Under Cmax, we can guarantee the accuracy of Evenness. According to this criteri
 Before introducing functions, we define what the datatype may be classified.
 There are mainly two types of sampling data are supposed :
 `1.	Individual‐based abundance data (datatype="abundance"`): 
-Input data for each assemblage/site include samples species abundances in an observed sample of n individuals (“reference sample”). When there are N assemblages, input data consist of an S by N abundance matrix, or N lists of species abundances.
+Data with individual-based abundance data. In this case, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors.
 
 `2. Sampling-unit-based incidence data: There are two kinds of input data`.
 `(1)	Incidence‐frequency data (datatype = "incidence_freq")`:
-Input data for each assemblage consist of species sampling incidence frequencies. When there are N assemblages, input data consist of an S by N matrix, or N lists of species incidence frequencies. The first entry of each column or each list must be the total number of sampling units, followed by the species incidence frequencies.
-`(2)	Incidence‐raw data (datatype = "incidence_raw")`: for each assemblage, input data for a reference sample consist of a species‐by‐sampling‐unit matrix.
-When you select diversity type is 'TD', 'FD' or 'AUC', you can use `datatype = 'incidence_freq'`. And when you select diversity type is 'PD', you can only use `datatype = 'incidence_raw'`.
+Data with sampling-unit-based incidence frequencies data. In this case, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage.
+`(2)	Incidence‐raw data (datatype = "incidence_raw")`: Data with species by sampling-units incidence matrix (datatype = "incidence_raw") with all entries being 0 (non-detection) or 1 (detection). In this case, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
 
 
 
@@ -127,7 +125,7 @@ iNEXT4steps(data, diversity = "TD", datatype = "abundance", nboot = 50, nT = NUL
             p_row = 2, p_col = 3, details = FALSE)
 ```
 
-The arguments of this function are briefly described below, and will be explained in more details by illustrative examples in later text. This main function computes diversity estimates of order q, the sample coverage estimates and related statistics for K (if `knots=K`) evenly‐spaced knots (sample sizes) between size 1 and the `endpoint`, where the endpoint is described below. Each knot represents a particular sample size for which diversity estimates will be calculated. By default, endpoint = double the reference sample size (total sample size for abundance data; total sampling units for incidence data). For example, if `endpoint = 10`, `knot = 4`, diversity estimates will be computed for a sequence of samples with sizes (1, 4, 7, 10).  
+The arguments of this function are briefly described below, and will explain details by illustrative examples in later text. This main function computes diversity estimates of order q, the sample coverage estimates and related statistics for K (if `knots=K`) evenly‐spaced knots (sample sizes) between size 1 and the `endpoint`, where the endpoint is described below. Each knot represents a particular sample size for which diversity estimates will be calculated. By default, endpoint = double the reference sample size (total sample size for abundance data; total sampling units for incidence data). For example, if `endpoint = 10`, `knot = 4`, diversity estimates will be computed for a sequence of samples with sizes (1, 4, 7, 10).  
 <table style="width:100%;">
 <colgroup>
 <col width="20%">
@@ -274,7 +272,7 @@ If you want to use incidence-based data, you should use `datatype = "incidence_f
 ```{r}
 data(brazil)
 data(brazil_distM)
-out4 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", nboot = 20, FDdistM = distM)
+out4 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", nboot = 20, FDdistM = distM, FDtype = 'tau_values')
 out4$summary
 out4$figure[[6]]
 ```

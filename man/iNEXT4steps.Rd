@@ -44,7 +44,7 @@ iNEXT4steps(
 
 \item{FDtype}{(required only when \code{diversity = "FD"}), select FD type: \code{FDtype = "tau_values"} for FD under specified threshold values, or \code{FDtype = "AUC"} (area under the curve of tau-profile) for an overall FD which integrates all threshold values between zero and one. Default is \code{"AUC"}.}
 
-\item{FDtau}{(required only when \code{diversity = "FD"} and \code{FDtype = "tau_values"}), a numerical vector between 0 and 1 specifying tau values (threshold levels). If \code{NULL} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled assemblage (i.e., quadratic entropy).}
+\item{FDtau}{(required only when \code{diversity = "FD"} and \code{FDtype = "tau_values"}), a numerical value between 0 and 1 specifying tau values (threshold levels). If \code{NULL} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled assemblage (i.e., quadratic entropy).}
 
 \item{p_row}{row amount for 4 steps figure, default = 2.}
 
@@ -84,7 +84,7 @@ out2
 ## Ex.3
 data(brazil)
 data(brazil_distM)
-out3 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", nboot = 0, FDdistM = distM, FDtype = 'tau_values')
+out3 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", nboot = 0, FDdistM = distM, FDtype = 'tau_value')
 out3
 
 ## Type (2) example for incidence based data (list of data.frame)
