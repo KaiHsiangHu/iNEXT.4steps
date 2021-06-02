@@ -85,7 +85,7 @@
 #' Quantifying sample completeness and comparing diversities among assemblages. Ecological Research.
 #' @export
 
-iNEXT4steps <- function(data, diversity = c("TD", "PD", "FD"), datatype = "abundance", nT = NULL,
+iNEXT4steps <- function(data, diversity = "TD", datatype = "abundance", nT = NULL,
                          PDtree = NULL, PDreftime = NULL, PDtype = 'meanPD', FDdistM = NULL, FDtype = 'AUC', FDtau = NULL,
                          nboot = 30, p_row = 2, p_col = 3, details = FALSE) {
   q = seq(0, 2, 0.25)
