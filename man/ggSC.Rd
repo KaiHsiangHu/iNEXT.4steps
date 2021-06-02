@@ -19,13 +19,13 @@ a figure of estimated sample completeness with order q
 ## Type (1) example for abundance based data (data.frame)
 ## Ex.1
 data(Spider)
-out1 <- SC(x = Spider, datatype = "abundance")
+out1 <- SC(data = Spider, datatype = "abundance")
 ggSC(out1)
 
 ## Type (2) example for incidence based data (list of data.frame)
 ## Ex.2
 data(woody_incid)
-out2 <- SC(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
+out2 <- SC(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
 ggSC(out2)
 
 }

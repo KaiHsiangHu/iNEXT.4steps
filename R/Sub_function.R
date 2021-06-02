@@ -42,25 +42,26 @@ summary.deal <- function(table, step, Pielou = NULL) {
 #'
 #' \code{SC} Estimation of Sample Completeness with order q
 #'
-#' @param x a matrix/data.frame/list/vector of abundances-based/incidences-based species data.\cr
-#' @param q a integer vector for the order of Hill number\cr
-#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
-#' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
-#' @param nboot an integer specifying the number of bootstrap replications, default is 30.\cr
-#' @param conf  positive number < 1 specifying the level of confidence interval, default is 0.95.\cr\cr
+#' @param data (a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
+#' (b) For \code{datatype = "incidence_freq"}, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
+#' (c) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this 
+#' @param q a numerical vector specifying the diversity orders. Default is seq(0, 2, by = 0.2).
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection)
+#' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.
+#' @param conf a positive number < 1 specifying the level of confidence interval. Default is 0.95.
 #' @return a matrix of estimated sample completeness with order q: \cr\cr
 #'
 #' @examples
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
 #' data(Spider)
-#' out1 <- SC(x = Spider, datatype = "abundance")
+#' out1 <- SC(data = Spider, datatype = "abundance")
 #' out1
 #'
 #' ## Type (2) example for incidence based data (list of data.frame)
 #' ## Ex.2
 #' data(woody_incid)
-#' out2 <- SC(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' out2 <- SC(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
 #' out2
 #'
 #' @references
@@ -68,7 +69,7 @@ summary.deal <- function(table, step, Pielou = NULL) {
 #' Quantifying sample completeness and comparing diversities among assemblages.
 #' @export
 
-SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
+SC <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
                 conf = 0.95)
 {
   TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
@@ -77,34 +78,34 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
   if (pmatch(datatype, TYPE) == -1)
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
-  class_x <- class(x)[1]
+  class_x <- class(data)[1]
   if (datatype == "incidence_raw") {
     if (class_x == "list") {
-      x <- lapply(x, as.incfreq)
+      data <- lapply(data, as.incfreq)
     }
     else {
-      x <- as.incfreq(x)
+      data <- as.incfreq(data)
     }
     datatype <- "incidence"
   }
   if (datatype %in% c("incidence_freq", "incidence_raw"))
     datatype <- "incidence"
-  if (class(x) == "numeric" | class(x) == "integer") {
-    x <- list(data = x)
+  if (class(data) == "numeric" | class(data) == "integer") {
+    data <- list(data = data)
   }
-  if (class(x) == "data.frame" | class(x) == "matrix") {
-    datalist <- lapply(1:ncol(x), function(i) x[, i])
-    if (is.null(colnames(x)))
-      names(datalist) <- paste0("data", 1:ncol(x))
-    else names(datalist) <- colnames(x)
-    x <- datalist
+  if (class(data) == "data.frame" | class(data) == "matrix") {
+    datalist <- lapply(1:ncol(data), function(i) data[, i])
+    if (is.null(colnames(data)))
+      names(datalist) <- paste0("data", 1:ncol(data))
+    else names(datalist) <- colnames(data)
+    data <- datalist
   }
   if (datatype == "abundance") {
-    out <- lapply(1:length(x), function(i) {
-      dq <- sample_completeness(x[[i]], q, "abundance")
+    out <- lapply(1:length(data), function(i) {
+      dq <- sample_completeness(data[[i]], q, "abundance")
       if (nboot > 1) {
-        Prob.hat <- iNEXT.3D:::EstiBootComm.Ind(x[[i]])
-        Abun.Mat <- rmultinom(nboot, sum(x[[i]]), Prob.hat)
+        Prob.hat <- iNEXT.3D:::EstiBootComm.Ind(data[[i]])
+        Abun.Mat <- rmultinom(nboot, sum(data[[i]]), Prob.hat)
         se <- apply( matrix(apply(Abun.Mat,  2, function(xb) sample_completeness(xb, q, "abundance")), nrow=length(q)),
                 1, sd, na.rm = TRUE)
       }
@@ -113,7 +114,7 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
       }
       out <- data.frame(Order.q = q, Estimate.SC = dq, s.e. = se,
                         SC.LCL = dq-qnorm(1-(1-conf)/2)*se, SC.UCL = dq+qnorm(1-(1-conf)/2)*se,
-                        Assemblage = names(x)[i], Method = rep("Estimated", length(q)))
+                        Assemblage = names(data)[i], Method = rep("Estimated", length(q)))
       out$SC.LCL[out$SC.LCL < 0] <- 0
       out$SC.UCL[out$SC.UCL > 1] <- 1
       out
@@ -121,11 +122,11 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
     out <- do.call(rbind, out)
   }
   else if (datatype == "incidence") {
-    out <- lapply(1:length(x), function(i) {
-      dq <- sample_completeness(x[[i]], q, "incidence_freq")
+    out <- lapply(1:length(data), function(i) {
+      dq <- sample_completeness(data[[i]], q, "incidence_freq")
       if (nboot > 1) {
-        nT <- x[[i]][1]
-        Prob.hat <- iNEXT.3D:::EstiBootComm.Sam(x[[i]])
+        nT <- data[[i]][1]
+        Prob.hat <- iNEXT.3D:::EstiBootComm.Sam(data[[i]])
         Incid.Mat <- t(sapply(Prob.hat, function(p) rbinom(nboot, nT, p)))
         Incid.Mat <- matrix(c(rbind(nT, Incid.Mat)), ncol = nboot)
         
@@ -137,7 +138,7 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
       }
       out <- data.frame(Order.q = q, Estimate.SC = dq, s.e. = se,
                         SC.LCL = dq-qnorm(1-(1-conf)/2)*se, SC.UCL = dq+qnorm(1-(1-conf)/2)*se,
-                        Assemblage = names(x)[i], Method = rep("Estimated", length(q)))
+                        Assemblage = names(data)[i], Method = rep("Estimated", length(q)))
       out$SC.LCL[out$SC.LCL < 0] <- 0
       out$SC.UCL[out$SC.UCL > 1] <- 1
       out
@@ -241,13 +242,13 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
 #' data(Spider)
-#' out1 <- SC(x = Spider, datatype = "abundance")
+#' out1 <- SC(data = Spider, datatype = "abundance")
 #' ggSC(out1)
 #'
 #' ## Type (2) example for incidence based data (list of data.frame)
 #' ## Ex.2
 #' data(woody_incid)
-#' out2 <- SC(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' out2 <- SC(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
 #' ggSC(out2)
 #'
 #' @references
@@ -364,14 +365,15 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' This R code is for computing Figures 2, 3 and 4 of Chao and Ricotta (2019) paper.
 #' installed and loaded before running the scripts.
 
-#' @param x a matrix/data.frame/list/vector of abundances-based/incidences-based species data.\cr
-#' @param q a integer vector of the order of Hill number\cr
-#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
-#' sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr
+#' @param data (a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
+#' (b) For \code{datatype = "incidence_freq"}, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
+#' (c) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this 
+#' @param q a numerical vector specifying the diversity orders. Default is seq(0, 2, by = 0.2).
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection)
 #' @param method a binary calculation method with 'Estimated' or 'Empirical'\cr
-#' @param nboot an integer specifying the number of bootstrap replications, default is 30.\cr
-#' @param conf a positive number < 1 specifying the level of confidence interval, default is 0.95.\cr
-#' @param E.class a integer vector between 1 to 6
+#' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.
+#' @param conf a positive number < 1 specifying the level of confidence interval. Default is 0.95.
+#' @param E.class an integer vector between 1 to 6
 #' @param C a standardized coverage for calculating evenness index
 #' @return A list of estimated(empirical) evenness with order q.\cr
 #'         Different lists represents different classes of Evenness.\cr
@@ -384,20 +386,20 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
 #' data(Spider)
-#' out1 <- Evenness(x = Spider, datatype = "abundance")
+#' out1 <- Evenness(data = Spider, datatype = "abundance")
 #' out1
 #'
 #' ## Type (2) example for incidence based data (list of data.frame)
 #' ## Ex.2
 #' data(woody_incid)
-#' out2 <- Evenness(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' out2 <- Evenness(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
 #' out2
 #'
 #' @references
 #' Chao,A.and Ricotta,C.(2019).Quantifying evenness and linking it to diversity, beta diversity, and similarity.
 #' @export
 
-Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
+Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
                       nboot = 30, conf = 0.95, E.class = 1:5, C = NULL)
 {
   TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
@@ -406,7 +408,7 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
   if (pmatch(datatype, TYPE) == -1)
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
-  class_x <- class(x)[1]
+  class_x <- class(data)[1]
   if (datatype == "incidence") {
     stop("datatype=\"incidence\" was no longer supported after v2.0.8, \n         please try datatype=\"incidence_freq\".")
   }
@@ -425,34 +427,34 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
 
   if (datatype == "incidence_raw") {
     if (class_x == "list") {
-      x <- lapply(x, as.incfreq)
+      data <- lapply(data, as.incfreq)
     }
     else {
-      x <- as.incfreq(x)
+      data <- as.incfreq(data)
     }
     datatype <- "incidence"
   }
   if (datatype == "incidence_freq")
     datatype <- "incidence"
-  if (class(x) == "numeric" | class(x) == "integer") {
-    x <- list(data = x)
+  if (class(data) == "numeric" | class(data) == "integer") {
+    data <- list(data = data)
   }
-  if (class(x) == "data.frame" | class(x) == "matrix") {
-    datalist <- lapply(1:ncol(x), function(i) x[, i])
-    if (is.null(colnames(x)))
-      names(datalist) <- paste0("data", 1:ncol(x))
-    else names(datalist) <- colnames(x)
-    x <- datalist
+  if (class(data) == "data.frame" | class(data) == "matrix") {
+    datalist <- lapply(1:ncol(data), function(i) data[, i])
+    if (is.null(colnames(data)))
+      names(datalist) <- paste0("data", 1:ncol(data))
+    else names(datalist) <- colnames(data)
+    data <- datalist
   }
   
   
   if (datatype == "abundance") {
-    qD <- Evenness.profile(x, q, "abundance", method, E.class, C)
+    qD <- Evenness.profile(data, q, "abundance", method, E.class, C)
     qD <- map(qD, as.vector)
     
     if (nboot > 1) {
-      Prob.hat <- lapply(1:length(x), function(i) iNEXT.3D:::EstiBootComm.Ind(x[[i]]))
-      Abun.Mat <- lapply(1:length(x), function(i) rmultinom(nboot, sum(x[[i]]), Prob.hat[[i]]))
+      Prob.hat <- lapply(1:length(data), function(i) iNEXT.3D:::EstiBootComm.Ind(data[[i]]))
+      Abun.Mat <- lapply(1:length(data), function(i) rmultinom(nboot, sum(data[[i]]), Prob.hat[[i]]))
 
       error = apply( matrix(sapply(1:nboot, function(b) {
                     dat = lapply(1:length(Abun.Mat),function(j) Abun.Mat[[j]][,b])
@@ -470,25 +472,25 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
     }
 
     out <- lapply(1:length(E.class), function(k) {
-      tmp = data.frame(Order.q = rep(q, length(x)), Evenness = as.vector(qD[[k]]), s.e. = as.vector(se[[k]]),
+      tmp = data.frame(Order.q = rep(q, length(data)), Evenness = as.vector(qD[[k]]), s.e. = as.vector(se[[k]]),
                       Even.LCL = as.vector(qD[[k]] - qnorm(1-(1-conf)/2)*se[[k]]), Even.UCL = as.vector(qD[[k]] + qnorm(1-(1-conf)/2)*se[[k]]),
-                      Assemblage = rep(names(x), each=length(q)), Method = rep( method, length(q)*length(x))
+                      Assemblage = rep(names(data), each=length(q)), Method = rep( method, length(q)*length(data))
       )
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
     })
-    if (is.null(C) == TRUE) C = unique(estimate3D(x, diversity = 'TD', q = 0, datatype = "abundance", base = "coverage", nboot = 0)$goalSC)
+    if (is.null(C) == TRUE) C = unique(estimate3D(data, diversity = 'TD', q = 0, datatype = "abundance", base = "coverage", nboot = 0)$goalSC)
     if (method=="Estimated") {out <- append(C, out)}
 
   } else if (datatype == "incidence") {
-    qD <- Evenness.profile(x, q, "incidence_freq", method, E.class, C)
+    qD <- Evenness.profile(data, q, "incidence_freq", method, E.class, C)
     qD <- map(qD, as.vector)
     
     if (nboot > 1) {
-      nT <- lapply(1:length(x), function(i) x[[i]][1])
-      Prob.hat <- lapply(1:length(x), function(i) iNEXT.3D:::EstiBootComm.Sam(x[[i]]))
-      Incid.Mat <- lapply(1:length(x), function(i) t(sapply(Prob.hat[[i]], function(p) rbinom(nboot, nT[[i]], p))))
-      Incid.Mat <- lapply(1:length(x), function(i) matrix(c(rbind(nT[[i]], Incid.Mat[[i]])), ncol = nboot))
+      nT <- lapply(1:length(data), function(i) data[[i]][1])
+      Prob.hat <- lapply(1:length(data), function(i) iNEXT.3D:::EstiBootComm.Sam(data[[i]]))
+      Incid.Mat <- lapply(1:length(data), function(i) t(sapply(Prob.hat[[i]], function(p) rbinom(nboot, nT[[i]], p))))
+      Incid.Mat <- lapply(1:length(data), function(i) matrix(c(rbind(nT[[i]], Incid.Mat[[i]])), ncol = nboot))
 
       error = apply(  matrix(sapply(1:nboot, function(b) {
         dat = lapply(1:length(Incid.Mat),function(j) Incid.Mat[[j]][,b])
@@ -506,14 +508,14 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
     }
 
     out <- lapply(1:length(E.class), function(k) {
-      tmp = data.frame(Order.q = rep(q, length(x)), Evenness = as.vector(qD[[k]]), s.e. = as.vector(se[[k]]),
+      tmp = data.frame(Order.q = rep(q, length(data)), Evenness = as.vector(qD[[k]]), s.e. = as.vector(se[[k]]),
                        Even.LCL = as.vector(qD[[k]] - qnorm(1-(1-conf)/2)*se[[k]]), Even.UCL = as.vector(qD[[k]] + qnorm(1-(1-conf)/2)*se[[k]]),
-                       Assemblage = rep(names(x), each=length(q)), Method = rep(method, length(q)*length(x))
+                       Assemblage = rep(names(data), each=length(q)), Method = rep(method, length(q)*length(data))
       )
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
     })
-    if (is.null(C) == TRUE) C = unique(estimate3D(x, diversity = 'TD', q = 0, datatype = "incidence_freq", base = "coverage", nboot = 0)$goalSC)
+    if (is.null(C) == TRUE) C = unique(estimate3D(data, diversity = 'TD', q = 0, datatype = "incidence_freq", base = "coverage", nboot = 0)$goalSC)
     if (method == "Estimated") {out <- append(C, out)}
   }
 
@@ -538,13 +540,13 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
 #' data(Spider)
-#' out1 <- Evenness(x = Spider, datatype = "abundance")
+#' out1 <- Evenness(data = Spider, datatype = "abundance")
 #' ggEven(out1)
 #'
 #' ## Type (2) example for incidence based data (list of data.frame)
 #' ## Ex.2
 #' data(woody_incid)
-#' out2 <- Evenness(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' out2 <- Evenness(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
 #' ggEven(out2)
 #'
 #' @references

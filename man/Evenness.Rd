@@ -5,7 +5,7 @@
 \title{Evenness main function}
 \usage{
 Evenness(
-  x,
+  data,
   q = seq(0, 2, 0.2),
   datatype = "abundance",
   method = "Estimated",
@@ -16,20 +16,21 @@ Evenness(
 )
 }
 \arguments{
-\item{x}{a matrix/data.frame/list/vector of abundances-based/incidences-based species data.\cr}
+\item{data}{(a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
+(b) For \code{datatype = "incidence_freq"}, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
+(c) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this}
 
-\item{q}{a integer vector of the order of Hill number\cr}
+\item{q}{a numerical vector specifying the diversity orders. Default is seq(0, 2, by = 0.2).}
 
-\item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}),
-sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}).\cr}
+\item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection)}
 
 \item{method}{a binary calculation method with 'Estimated' or 'Empirical'\cr}
 
-\item{nboot}{an integer specifying the number of bootstrap replications, default is 30.\cr}
+\item{nboot}{a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.}
 
-\item{conf}{a positive number < 1 specifying the level of confidence interval, default is 0.95.\cr}
+\item{conf}{a positive number < 1 specifying the level of confidence interval. Default is 0.95.}
 
-\item{E.class}{a integer vector between 1 to 6}
+\item{E.class}{an integer vector between 1 to 6}
 
 \item{C}{a standardized coverage for calculating evenness index}
 }
@@ -53,13 +54,13 @@ installed and loaded before running the scripts.
 ## Type (1) example for abundance based data (data.frame)
 ## Ex.1
 data(Spider)
-out1 <- Evenness(x = Spider, datatype = "abundance")
+out1 <- Evenness(data = Spider, datatype = "abundance")
 out1
 
 ## Type (2) example for incidence based data (list of data.frame)
 ## Ex.2
 data(woody_incid)
-out2 <- Evenness(x = woody_incid[,c(1,4)], datatype = "incidence_freq")
+out2 <- Evenness(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
 out2
 
 }

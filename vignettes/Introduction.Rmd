@@ -19,7 +19,7 @@ options("width" = 200)
 if("ggthemes" %in% rownames(installed.packages()) == FALSE) {install.packages("ggthemes")}
 if("gridExtra" %in% rownames(installed.packages()) == FALSE) {install.packages("gridExtra")}
 devtools::load_all(".")
-#library(iNEXT3D)
+#library(iNEXT.3D)
 library(ggplot2)
 data("Spider")
 data("brazil")
@@ -66,16 +66,16 @@ The `iNEXT4steps` package has not available on [CRAN]. But can be downloaded wit
 
 ```{r eval=FALSE}
 ## install iNEXT package from CRAN
-# install.packages("iNEXT4steps")
+# install.packages("iNEXT.4steps")
 
 ## install the latest version from github
 install.packages('devtools')
 library(devtools)
-install_github('KaiHsiangHu/iNEXT')
-install_github('KaiHsiangHu/iNEXT4steps')
+install_github('KaiHsiangHu/iNEXT.3D')
+install_github('KaiHsiangHu/iNEXT4.steps')
 
 ## import packages
-library(iNEXT4steps)
+library(iNEXT.4steps)
 library(ggplot2)
 ```
 
@@ -122,7 +122,7 @@ When you select diversity type is 'TD', 'FD' or 'AUC', you can use `datatype = '
 We first describe the main function `iNEXT4steps()` with default arguments: 
 
 ```{r eval=FALSE}
-iNEXT4steps(data, class = c('TD', 'PD', 'FD', 'AUC'), datatype = "abundance", tree = NULL, distM = NULL, 
+iNEXT4steps(data, diversity = 'TD', datatype = "abundance", PDtree = NULL, FDdistM = NULL, 
             nT = NULL, nboot = 50, p_row = 2, p_col = 3, details = FALSE)
 ```
 
@@ -144,7 +144,7 @@ The arguments of this function are briefly described below, and will be explaine
 <td align="left">a <code>matrix</code>, <code>data.frame</code>, <code>lists</code> of species abundances, or <code>lists</code> of incidence frequencies (see data format/information ahead).</td>
 </tr>
 <tr class="even">
-<td align="center"><code>class</code></td>
+<td align="center"><code>diversity</code></td>
 <td align="left">a choice of three-level diversity: 'TD' = 'Taxonomic', 'PD' = 'Phylogenetic', and 'FD' = 'Functional' under certain threshold. Besides,'AUC' is the fourth choice which integrates several threshold functional diversity to get diversity.</td>
 </tr>
 <tr class="odd">
@@ -153,17 +153,17 @@ The arguments of this function are briefly described below, and will be explaine
 </tr>
 <tr class="even">
 <td align="center"><code>tree</code></td>
-<td align="left">a phylo object describing the phylogenetic tree in Newick format for all observed species in the pooled assemblage. It is necessary when \code{class = 'PD'}.</td>
+<td align="left">a phylo object describing the phylogenetic tree in Newick format for all observed species in the pooled assemblage. It is necessary when \code{diversity = 'PD'}.</td>
 </tr>
 <tr class="odd">
 <td align="center"><code>distM</code></td>
-<td align="left">a pair wise distance matrix for all pairs of observed species in the pooled assemblage. It will be use when \code{class = 'FD' or 'AUC'}.</td>
+<td align="left">a pair wise distance matrix for all pairs of observed species in the pooled assemblage. It will be use when \code{diversity = 'FD' or 'AUC'}.</td>
 </tr>
 <tr class="even">
 <td align="center"><code>nT</code></td>
 <td align="left">needed only when \code{datatype = "incidence_raw"}, a sequence of named nonnegative integers specifying the number of sampling units in each assemblage.
 If \code{names(nT) = NULL}, then assemblage are automatically named as "assemblage1", "assemblage2",..., etc.
-It is necessary when \code{class = 'PD'} and \code{datatype = "incidence_raw"}.</td>
+It is necessary when \code{diversity = 'PD'} and \code{datatype = "incidence_raw"}.</td>
 </tr>
 <tr class="odd">
 <td align="center"><code>nboot</code></td>
@@ -186,12 +186,12 @@ It is necessary when \code{class = 'PD'} and \code{datatype = "incidence_raw"}.<
 </table>
 
 
-Here data can be any class type, such as a list gathered by each vector, a data frame with each column versus a assemblage, a vector correspond to a assemblage. Besides, `datatype` means that you should certain what type your data is.
-Diversity classes can be classified into three attributes diversity: `Taxonomic diversity`, `Phylogenetic diversity`, and `Functional diversity`. So you should choose one `class` : `“TD”` means `”Taxonomic diversity”`, `“PD”` means `”Phylogenetic diversity”` under a certain reference time(root), and `“FD”` means `”Functional diversity”` under a certain threshold(dmean). For the `”Functional diversity”`, `"AUC"` is a conservative computation for functional diversity which integrate threshold between zero and union.
-Besides, when you choose `class = “PD”`, you should input `tree` data. 
+Here data can be any diversity type, such as a list gathered by each vector, a data frame with each column versus a assemblage, a vector correspond to a assemblage. Besides, `datatype` means that you should certain what type your data is.
+Diversity dimension can be classified into three attributes diversity: `Taxonomic diversity`, `Phylogenetic diversity`, and `Functional diversity`. So you should choose one `diversity` : `“TD”` means `”Taxonomic diversity”`, `“PD”` means `”Phylogenetic diversity”` under a certain reference time(root), and `“FD”` means `”Functional diversity”` under a certain threshold(dmean). For the `”Functional diversity”`, `"AUC"` is a conservative computation for functional diversity which integrate threshold between zero and union.
+Besides, when you choose `diversity = “PD”`, you should input `tree` data. 
 When you choose `'FD'`, you should also input `distM` data, which represents distance matrix.
 
-`datatype` has been introduced before. When the user use `class = "PD"` and `datatype = "incidence_raw"`, user should input `nT` for each assemblage which represents sampling units.
+`datatype` has been introduced before. When the user use `diversity = "PD"` and `datatype = "incidence_raw"`, user should input `nT` for each assemblage which represents sampling units.
 `nboot` are applied to confidence interval, which is estimated by re-sampling method: bootstrap with `nboot` times.
 Finally, `details` means a logical setting whether do you want to print out total information of five figures.
 
@@ -241,7 +241,7 @@ If you want to use incidence-based data, you should use `datatype = "incidence_r
 ```{r}
 data(brazil)
 data(brazil_tree)
-out3 <- iNEXT4steps(data = brazil, class = "PD", datatype = "abundance", tree = tree, nboot = 0)
+out3 <- iNEXT4steps(data = brazil, diversity = "PD", datatype = "abundance", tree = tree, nboot = 0)
 out3$summary
 out3$figure[[6]]
 ```
@@ -256,7 +256,7 @@ If you want to use incidence-based data, you should use `datatype = "incidence_f
 ```{r}
 data(brazil)
 data(brazil_distM)
-out4 <- iNEXT4steps(data = brazil, class = "FD", datatype = "abundance", distM = distM, nboot = 20)
+out4 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", distM = distM, nboot = 20)
 out4$summary
 out4$figure[[6]]
 ```
