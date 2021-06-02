@@ -49,6 +49,7 @@ summary.deal <- function(table, step, Pielou = NULL) {
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection)
 #' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.
 #' @param conf a positive number < 1 specifying the level of confidence interval. Default is 0.95.
+#' @param nT (required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc. 
 #' @return a matrix of estimated sample completeness with order q: \cr\cr
 #'
 #' @examples
@@ -70,7 +71,7 @@ summary.deal <- function(table, step, Pielou = NULL) {
 #' @export
 
 SC <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
-                conf = 0.95)
+                conf = 0.95, nT = NULL)
 {
   TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
   if (is.na(pmatch(datatype, TYPE)))
@@ -79,17 +80,7 @@ SC <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
   class_x <- class(data)[1]
-  if (datatype == "incidence_raw") {
-    if (class_x == "list") {
-      data <- lapply(data, as.incfreq)
-    }
-    else {
-      data <- as.incfreq(data)
-    }
-    datatype <- "incidence"
-  }
-  if (datatype %in% c("incidence_freq", "incidence_raw"))
-    datatype <- "incidence"
+  if (datatype == "incidence_raw") {data = iNEXT.3D:::as.incfreq(data, nT = nT); datatype = "incidence_freq"}
   if (class(data) == "numeric" | class(data) == "integer") {
     data <- list(data = data)
   }
@@ -121,7 +112,7 @@ SC <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
     })
     out <- do.call(rbind, out)
   }
-  else if (datatype == "incidence") {
+  else if (datatype == "incidence_freq") {
     out <- lapply(1:length(data), function(i) {
       dq <- sample_completeness(data[[i]], q, "incidence_freq")
       if (nboot > 1) {
@@ -373,6 +364,7 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' @param method a binary calculation method with 'Estimated' or 'Empirical'\cr
 #' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.
 #' @param conf a positive number < 1 specifying the level of confidence interval. Default is 0.95.
+#' @param nT (required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc. 
 #' @param E.class an integer vector between 1 to 6
 #' @param C a standardized coverage for calculating evenness index
 #' @return A list of estimated(empirical) evenness with order q.\cr
@@ -400,7 +392,7 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' @export
 
 Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
-                      nboot = 30, conf = 0.95, E.class = 1:5, C = NULL)
+                      nboot = 30, conf = 0.95, nT = NULL, E.class = 1:5, C = NULL)
 {
   TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
   if (is.na(pmatch(datatype, TYPE)))
@@ -425,17 +417,7 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
   if (sum(E.class %in% class) != length(E.class))
     stop("invalid E.class")
 
-  if (datatype == "incidence_raw") {
-    if (class_x == "list") {
-      data <- lapply(data, as.incfreq)
-    }
-    else {
-      data <- as.incfreq(data)
-    }
-    datatype <- "incidence"
-  }
-  if (datatype == "incidence_freq")
-    datatype <- "incidence"
+  if (datatype == "incidence_raw") {data = as.incfreq(data, nT = nT); datatype = "incidence_freq"}
   if (class(data) == "numeric" | class(data) == "integer") {
     data <- list(data = data)
   }
@@ -482,7 +464,7 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
     if (is.null(C) == TRUE) C = unique(estimate3D(data, diversity = 'TD', q = 0, datatype = "abundance", base = "coverage", nboot = 0)$goalSC)
     if (method=="Estimated") {out <- append(C, out)}
 
-  } else if (datatype == "incidence") {
+  } else if (datatype == "incidence_freq") {
     qD <- Evenness.profile(data, q, "incidence_freq", method, E.class, C)
     qD <- map(qD, as.vector)
     

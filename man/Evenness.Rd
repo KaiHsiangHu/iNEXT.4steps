@@ -11,6 +11,7 @@ Evenness(
   method = "Estimated",
   nboot = 30,
   conf = 0.95,
+  nT = NULL,
   E.class = 1:5,
   C = NULL
 )
@@ -29,6 +30,8 @@ Evenness(
 \item{nboot}{a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.}
 
 \item{conf}{a positive number < 1 specifying the level of confidence interval. Default is 0.95.}
+
+\item{nT}{(required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc.}
 
 \item{E.class}{an integer vector between 1 to 6}
 
