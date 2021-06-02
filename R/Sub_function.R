@@ -498,26 +498,16 @@ Evenness <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", method = "E
       Incid.Mat <- lapply(1:length(x), function(i) t(sapply(Prob.hat[[i]], function(p) rbinom(nboot, nT[[i]], p))))
       Incid.Mat <- lapply(1:length(x), function(i) matrix(c(rbind(nT[[i]], Incid.Mat[[i]])), ncol = nboot))
 
-      for (i in 1:length(Incid.Mat)) {
-        tmp = which(colSums(Incid.Mat[[i]][-1,]) == nT[[i]])
-        if (length(tmp) > 0)
-          Incid.Mat <- lapply(Incid.Mat, function(k) k[, -tmp])
-      }
-
-      if (ncol(Incid.Mat[[1]]) == 0) {
-        error = as.list(rep(0, length(E.class)))
-        warning("Insufficient data to compute bootstrap s.e.")
-      } else {
-        error = apply(  matrix(sapply(1:nboot, function(b) {
-          dat = lapply(1:length(Incid.Mat),function(j) Incid.Mat[[j]][,b])
-          names(dat) = paste("Site", 1:length(dat), sep="")
-          dat.qD = Evenness.profile(dat, q, "incidence_freq", method, E.class, C)
-          unlist(dat.qD)  }), nrow=length(q)*length(E.class)*length(Incid.Mat))
-          , 1, sd, na.rm = TRUE)
-
-        error = matrix(error, ncol=length(E.class))
-        se = split(error, col(error))
-      }
+      error = apply(  matrix(sapply(1:nboot, function(b) {
+        dat = lapply(1:length(Incid.Mat),function(j) Incid.Mat[[j]][,b])
+        names(dat) = paste("Site", 1:length(dat), sep="")
+        dat.qD = Evenness.profile(dat, q, "incidence_freq", method, E.class, C)
+        unlist(dat.qD)  }
+      ), nrow=length(q)*length(E.class)*length(Incid.Mat))
+      , 1, sd, na.rm = TRUE)
+      
+      error = matrix(error, ncol=length(E.class))
+      se = split(error, col(error))
 
     } else {
       se = lapply(1:length(E.class), function(x) NA)
