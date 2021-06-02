@@ -128,17 +128,9 @@ SC <- function (x, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
         Prob.hat <- iNEXT.3D:::EstiBootComm.Sam(x[[i]])
         Incid.Mat <- t(sapply(Prob.hat, function(p) rbinom(nboot, nT, p)))
         Incid.Mat <- matrix(c(rbind(nT, Incid.Mat)), ncol = nboot)
-        tmp <- which(colSums(Incid.Mat) == nT)
-        if (length(tmp) > 0)
-          Incid.Mat <- Incid.Mat[, -tmp]
-        if (ncol(Incid.Mat) == 0) {
-          se = 0
-          warning("Insufficient data to compute bootstrap s.e.")
-        }
-        else {
-          se <- apply( matrix(apply(Incid.Mat, 2, function(yb) sample_completeness(yb, q, "incidence_freq")), nrow=length(q)),
-                   1, sd, na.rm = TRUE)
-        }
+        
+        se <- apply( matrix(apply(Incid.Mat, 2, function(yb) sample_completeness(yb, q, "incidence_freq")), nrow=length(q)),
+                     1, sd, na.rm = TRUE)
       }
       else {
         se = NA
