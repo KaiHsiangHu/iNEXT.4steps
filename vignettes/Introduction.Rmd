@@ -33,26 +33,36 @@ data("brazil_distM")
 
 `iNEXT.4steps` (iNterpolation and EXTrapolation for four steps) is an original R package which provide an easy complete biological analysis computation. In Chao, A., Y. Kubota, D. Zelený, C.-H. Chiu(2020), they proposed a complete biological analysis process:
 
-`STEP1`. Sample completeness profiles. \cr
-`STEP2`. Asymptotic analysis. \cr
-`STEP3`. Non-asymptotic coverage-based rarefaction and extrapolation analysis. \cr
-`STEP4`. Evenness among species abundances. \cr
+* `STEP1`. Sample completeness profiles. 
+
+* `STEP2`. Asymptotic analysis. 
+
+* `STEP3`. Non-asymptotic coverage-based rarefaction and extrapolation analysis. 
+
+* `STEP4`. Evenness among species abundances. 
 
 
-These are the foundation of `iNEXT.4steps` Here we will also introduce functions about `STEP1`, `STEP4`, particularly. If you want to grasp `STEP1`, `STEP3`, then the related paper ('iNEXT' or 'iNEXT.3D') T.C. Hsieh, K. H. Ma, and Chao, A. (2016) will be the best choice to you. 
+These are the foundation of `iNEXT.4steps` Here we will also introduce functions about `STEP1`, `STEP4`, particularly. If you want to grasp `STEP1`, `STEP3`, then the related paper  T.C. Hsieh, K. H. Ma, and Chao, A. (2016) or the packages (`iNEXT` or `iNEXT.3D`) will be the best choice to you. 
+
+`iNEXT` (or `iNEXT.3D`) contains two major parts:
 
 1. Sample‐size‐based R/E sampling curves: `iNEXT` computes rarefied and extrapolated diversity estimates under a specified sample size. This type of diversity curve plots the estimated diversity with respect to sample size.     
 2. Coverage‐based R/E sampling curves: `iNEXT` computes rarefied and extrapolated diversity estimates under a spcified sample coverage. This type of diversity curve plots the estimated diversity with respect to sample coverage. 
 
-In the package, we provide three functions for users to calculate the related biological statistics: `SC`, `Evenness`, and the most comprehensive function `iNEXT4steps`. In this document, we will give a quick introduction demonstrating how to run these functions. Detailed information about these function setting is provided in the `iNEXT.4steps` guideline, which is also available in [CRAN]. The theoretical basis about these biological statistics can be obtained from the following inference:
+In the package, we provide other four functions for users to calculate the related biological statistics: `SC` and `Evenness`, and their plot functions: `ggSC` and `ggEven`. The most comprehensive function `iNEXT4steps` gathers `iNEXT3D`, `Asy3D`, `Obs3D`, `SC` and `Evenness` into a figure. In this document, we will give a quick introduction demonstrating how to run these functions. Detailed information about these function settings is provided in the `iNEXT.4steps` guideline, which is also available in [CRAN]. The theoretical basis about these biological statistics can be obtained from the following inference:
 (http://chao.stat.nthu.edu.tw/wordpress/paper/135.pdf)
 
-Some proposed theoretical references to each statistics: \cr
-`Sample Completeness`: No.95 Chao, A. and Jost. L. (2012). \cr
-`Asymptotic Diversity`: No.109 Chao, A. and Jost, L. (2015). \cr
-`Interplation and Extrapolation`: No.102 Chao, A., Gotelli, N. G., Hsieh, T. C. (2014). \cr
-`Evenness`: No.133 Chao, A. and Ricotta, C. (2019). \cr
-`iNEXT 4 steps`: No. 135 Chao, A., Y. Kubota, D. Zelený, C.-H. Chiu. \cr
+Some proposed theoretical references to each statistics:
+
+- `Sample Completeness`: No.95 Chao, A. and Jost. L. (2012).
+
+- `Asymptotic Diversity`: No.109 Chao, A. and Jost, L. (2015). 
+
+- `Interplation and Extrapolation`: No.102 Chao, A., Gotelli, N. G., Hsieh, T. C. (2014). 
+
+- `Evenness`: No.133 Chao, A. and Ricotta, C. (2019). 
+
+- `iNEXT 4 steps`: No. 135 Chao, A., Y. Kubota, D. Zelený, C.-H. Chiu. 
 
 
 ## SOFTWARE NEEDED TO RUN INEXT IN R
@@ -60,7 +70,7 @@ Some proposed theoretical references to each statistics: \cr
 - Suggested: [RStudio IDE](https://www.rstudio.com/products/RStudio/#Desktop)
 
 ## HOW TO RUN INEXT:
-The `iNEXT.4steps` package has not available on [CRAN]. But you can download with a standard R installation procedure using the following commands. For a first‐time installation, an additional visualization extension package (`ggplot2`) must be loaded. 
+The `iNEXT.4steps` package has not be available on [CRAN]. But you can download with a standard R installation procedure using the following commands. For a first‐time installation, an additional visualization extension package (`ggplot2`) must be loaded. 
 
 
 ```{r eval=FALSE}
@@ -80,38 +90,47 @@ library(ggplot2)
 
 **Remark**: In order to install `devtools` package, you should update R to the latest version. Also, to get `install_github` to work, you should install the `httr` package. 
 
-An online version of iNEXT.4steps(https://chao.shinyapps.io/iNEXT_4steps/) is also available for users without an R background.
+An online version of iNEXT.4steps(https://chao.shinyapps.io/iNEXT_4steps/) is also available for users without R background.
 
 
 
 **Simple steps brief**
-`Sample Completeness` represent the proportion of observed species in the population. Usually, the sampling data represents the abundant species in the population so that we will ignore the rare species. Here we will use Turing’s sample coverage theory to reconstruct the population distribution. Besides, sample completeness can correspond to order q, which is an weight index. When order q tends to zero, then we will give more weight to rare species. If order q tends to unity, then we will equally treat each species, which is also called sample coverage at unity. In contrast, if order q tends to larger than unity, we will give more weights to abundant species. By sample completeness, we can easily plot the estimated curve with respect to order q and associated 95% confidence interval.
+
+`Sample Completeness` represent the proportion of observed species in the population. Usually, the sampling data represents the abundant species in the population so that we will ignore the rare species. Here we will use Turing’s sample coverage theory to reconstruct the population proportion Besides, sample completeness can correspond to order q, which is an weight index. When order q tends to zero, then we will give more weight to rare species. If order q tends to unity, then we will equally treat each species, which is also called sample coverage at unity. In contrast, if order q tends to larger than unity, we will give more weights to abundant species. By sample completeness, we can easily plot the estimated curve with respect to order q and associated 95% confidence interval.
 
 
-`Asymptotic Diversity (or called Hill numbers)` is a statistic which is used to represent the biological diversity. Its direct meaning is to quantify the non-homogeneous distribution into homogeneous distribution (species diversity). With this quantification criterian, we can easily analysis several communities from different data sources under objective measure. It usually matches order q to give different weights so that we can focus on rare species or abundant species only. When we use observed data to calculate empirical diversity, we usually get an underestimated value. In our package, we will provide an estimated statistic from Anne Chao (2015), which can imitate a real population accurately. In addition, it can be related to order q index and associated 95% confidence interval.
+`Asymptotic Diversity (or called Hill numbers)` is a statistic which is used to represent the biological diversity. Its direct meaning is to transform the non-homogeneous distribution into homogeneous distribution (species diversity). With this quantification criterian, we can easily analysis several communities for different data sources in an objective measure. It usually matches order q to give different weights so that we can focus on rare species or abundant species only. When we use observed data to calculate empirical diversity, we usually get an underestimated value. In our package, we will provide an estimated statistic from Anne Chao (2015), which can imitate a real population accurately. In addition, it can be related to order q index and associated 95% confidence interval.
 
 
-`Interplation and Extrapolation (iNEXT)` focuses on three measures of Hill numbers of order q: species richness (q = 0), Shannon diversity (q = 1, the exponential of Shannon entropy), and Simpson diversity (q = 2, the inverse of Simpson concentration). For each diversity measures, iNEXT uses observed sample to compute expected diversity estimates and associated 95% confidence intervals according two different unit types of rarefaction and extrapolation (R/E): \cr
-1.	Sample-size-based R/E sampling curves versus diversity in each order q. \cr
-2.	Coverage-based R/E sampling curves versus diversity in each order q. \cr
+`Interplation and Extrapolation (iNEXT)` focuses on three measures of order q: species richness (q = 0), Shannon diversity (q = 1, the exponential of Shannon entropy), and Simpson diversity (q = 2, the inverse of Simpson concentration). For each diversity measures, iNEXT uses observed sample to compute expected diversity estimates and associated 95% confidence intervals according two different unit types of rarefaction and extrapolation (R/E):
+
+1.	Sample-size-based R/E sampling curves versus diversity in each order q.
+
+2.	Coverage-based R/E sampling curves versus diversity in each order q. 
+
 For more particular usage about iNEXT, you can refer to T.C. Hsieh, K. H. Ma, and Chao, A. (2016). We won’t introduce details of iNEXT latter.
 
 
-`Evenness` is an function to calculate whether a assemblage is uniform or not. We have sorted five main classes according to different transformation by species and diversity. In these five classes, they all have range from zero to one. When the value is close to zero, it means that the assemblage tends to uneven. On the contrary, when the value is close one, it means that the assemblage tends to even. Evenness can consider different order q under each classes. When order q tends to zero, we will focus on rare species. In other sides, when order q tends to far from zero, then we will do more weights on abundant species. If we use observed sampling data to calculate Evenness, we usually have a biased value because of unobserved rare species. But if we try to use asymptotic diversity for calculating Evenness, then we may also get a biased value under order q near zero. Here, we propose a “standardized coverage” (named `Cmax`) as a judged criterion. `Cmax` means that we computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes.
+`Evenness` is an function to calculate whether a assemblage is uniform or not. We have sorted five main classes according to different transformation by species and diversity. In these five classes, they all have range from zero to one. When the value is close to zero, it means that the assemblage tends to uneven. On the contrary, when the value is close one, it means that the assemblage tends to even. Evenness can consider different order q under each classes. When order q tends to zero, we will focus on rare species. In other sides, when order q tends to far from zero, then we will do more weights on abundant species. If we use observed sampling data to calculate Evenness, we usually have a biased value because of unobserved rare species. But if we try to use asymptotic diversity for calculating Evenness, then we may also get a biased value when order q is near zero. Here, we propose a “standardized coverage” (named `Cmax`) as a judged criterion. `Cmax` means that we computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes.
 Under Cmax, we can guarantee the accuracy of Evenness. According to this criterion, we can plot the Evenness curves versus order q and associated 95% confidence interval.
 
 
 
 **DATA FORMAT/INFORMATION**
-Before introducing functions, we define what the datatype may be classified.
-There are mainly two types of sampling data are supposed :
-`1.	Individual‐based abundance data (datatype="abundance"`): 
-Data with individual-based abundance data. In this case, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors.
 
-`2. Sampling-unit-based incidence data: There are two kinds of input data`.
+Before introducing functions, we define what the datatype may be classified. 
+
+There are mainly two types of sampling data are supposed : 
+
+`1.	Individual‐based abundance data (datatype="abundance"`): 
+Data with individual-based abundance data. In this case, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. 
+
+`2. Sampling-unit-based incidence data: There are two kinds of input data`. 
+
 `(1)	Incidence‐frequency data (datatype = "incidence_freq")`:
-Data with sampling-unit-based incidence frequencies data. In this case, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage.
-`(2)	Incidence‐raw data (datatype = "incidence_raw")`: Data with species by sampling-units incidence matrix (datatype = "incidence_raw") with all entries being 0 (non-detection) or 1 (detection). In this case, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
+Data with sampling-unit-based incidence frequencies data. In this case, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. 
+
+`(2)	Incidence‐raw data (datatype = "incidence_raw")`: Data with species by sampling-units incidence matrix (datatype = "incidence_raw") with all entries being 0 (non-detection) or 1 (detection). In this case, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (`nT`, see below) must be input. 
 
 
 
@@ -125,7 +144,7 @@ iNEXT4steps(data, diversity = "TD", datatype = "abundance", nboot = 50, nT = NUL
             p_row = 2, p_col = 3, details = FALSE)
 ```
 
-The arguments of this function are briefly described below, and will explain details by illustrative examples in later text. This main function computes diversity estimates of order q, the sample coverage estimates and related statistics for K (if `knots=K`) evenly‐spaced knots (sample sizes) between size 1 and the `endpoint`, where the endpoint is described below. Each knot represents a particular sample size for which diversity estimates will be calculated. By default, endpoint = double the reference sample size (total sample size for abundance data; total sampling units for incidence data). For example, if `endpoint = 10`, `knot = 4`, diversity estimates will be computed for a sequence of samples with sizes (1, 4, 7, 10).  
+The arguments of this function are briefly described below, and will explain details by illustrative examples in later text. 
 <table style="width:100%;">
 <colgroup>
 <col width="20%">
@@ -140,18 +159,19 @@ The arguments of this function are briefly described below, and will explain det
 <tbody>
 <tr class="odd">
 <td align="center"><code>data</code></td>
-<td align="left"(a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
-(b) For \code{datatype = "incidence_freq"}, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
-(c) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
+<td align="left">
+(a) For `datatype = "abundance"`, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
+(b) For `datatype = "incidence_freq"`, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
+(c) For `datatype = "incidence_raw"`, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
 </td>
 </tr>
 <tr class="even">
 <td align="center"><code>diversity</code></td>
-<td align="left">selection of diversity type: \code{'TD'} = Taxonomic diversity, \code{'PD'} = Phylogenetic diversity, and \code{'FD'} = Functional diversity.</td>
+<td align="left">selection of diversity type: `TD` = Taxonomic diversity, `PD` = Phylogenetic diversity, and `FD` = Functional diversity.</td>
 </tr>
 <tr class="odd">
 <td align="center"><code>datatype</code></td>
-<td align="left">data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection)</td>
+<td align="left">data type of input data: individual-based abundance data (`datatype = "abundance"`), sampling-unit-based incidence frequencies data (`datatype = "incidence_freq"`), or species by sampling-units incidence matrix (`datatype = "incidence_raw"`) with all entries being 0 (non-detection) or 1 (detection)</td>
 </tr>
 <tr class="even">
 <td align="center"><code>nboot</code></td>
@@ -159,35 +179,35 @@ The arguments of this function are briefly described below, and will explain det
 </tr>
 <tr class="odd">
 <td align="center"><code>nT</code></td>
-<td align="left">(required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc.</td>
+<td align="left">(required only when `datatype = "incidence_raw"` and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc.</td>
 </tr>
 <tr class="even">
 <td align="center"><code>PDtree</code></td>
-<td align="left">(required only when \code{diversity = "PD"}), a phylogenetic tree in Newick format for all observed species in the pooled assemblage.</td>
+<td align="left">(required only when `diversity = "PD"`), a phylogenetic tree in Newick format for all observed species in the pooled assemblage.</td>
 </tr>
 <tr class="odd">
 <td align="center"><code>PDreftime</code></td>
-<td align="left">(required only when \code{diversity = "PD"}), a vector of numerical values specifying reference times for PD. Default is \code{NULL} (i.e., the age of the root of PDtree).</td>
+<td align="left">(required only when `diversity = "PD"`), a vector of numerical values specifying reference times for PD. Default is `NULL` (i.e., the age of the root of PDtree).</td>
 </tr>
 <tr class="even">
 <td align="center"><code>PDtype</code></td>
-<td align="left">(required only when \code{diversity = "PD"}), select PD type: \code{PDtype = "PD"} (effective total branch length) or \code{PDtype = "meanPD"} (effective number of equally divergent lineages). Default is \code{"meanPD"}, where \code{meanPD = PD/tree depth}.</td>
+<td align="left">(required only when `diversity = "PD"`), select PD type: `PDtype = "PD"` (effective total branch length) or `PDtype = "meanPD"` (effective number of equally divergent lineages). Default is `meanPD`, where `meanPD = PD/tree depth`.</td>
 </tr>
 <tr class="odd">
 <td align="center"><code>FDdistM</code></td>
-<td align="left">(required only when \code{diversity = "FD"}), a species pairwise distance matrix for all species in the pooled assemblage.</td>
+<td align="left">(required only when `diversity = "FD"`), a species pairwise distance matrix for all species in the pooled assemblage.</td>
 </tr>
 <tr class="even">
 <td align="center"><code>FDtype</code></td>
-<td align="left">(required only when \code{diversity = "FD"}), select FD type: \code{FDtype = "tau_values"} for FD under specified threshold values, or \code{FDtype = "AUC"} (area under the curve of tau-profile) for an overall FD which integrates all threshold values between zero and one. Default is \code{"AUC"}.</td>
+<td align="left">(required only when `diversity = "FD"`), select FD type: `FDtype = "tau_values"` for FD under specified threshold values, or `FDtype = "AUC"` (area under the curve of tau-profile) for an overall FD which integrates all threshold values between zero and one. Default is `AUC`.</td>
 </tr>
 <tr class="odd">
 <td align="center"><code>FDtau</code></td>
-<td align="left">(required only when \code{diversity = "FD"} and \code{FDtype = "tau_values"}), a numerical vector between 0 and 1 specifying tau values (threshold levels). If \code{NULL} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled assemblage (i.e., quadratic entropy).</td>
+<td align="left">(required only when `diversity = "FD"` and `FDtype = "tau_values"`), a numerical vector between 0 and 1 specifying tau values (threshold levels). If `NULL` (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled assemblage (i.e., quadratic entropy).</td>
 </tr>
 <tr class="even">
 <td align="center"><code>p_row</code></td>
-<td align="left">row amount for 4 steps figure, default = 2.</td>
+<td align="left">row number for 4 steps figure, default = 2.</td>
 </tr>
 <tr class="odd">
 <td align="center"><code>p_col</code></td>
@@ -203,41 +223,43 @@ The arguments of this function are briefly described below, and will explain det
 
 
 Here data can be any diversity type, such as a list gathered by each vector, a data frame with each column versus a assemblage, a vector correspond to a assemblage. Besides, `datatype` means that you should certain what type your data is.
-Diversity dimension can be classified into three attributes diversity: `Taxonomic diversity`, `Phylogenetic diversity`, and `Functional diversity`. So you should choose one `diversity` : `“TD”` means `”Taxonomic diversity”`, `“PD”` means `”Phylogenetic diversity”` under a certain reference time(root), and `“FD”` means `”Functional diversity”` under a certain threshold(dmean). For the `”Functional diversity”`, `"AUC"` is a conservative computation for functional diversity which integrate threshold between zero and union.
-Besides, when you choose `diversity = “PD”`, you should input `tree` data. 
-When you choose `'FD'`, you should also input `distM` data, which represents distance matrix.
+Diversity dimension can be classified into three attributes diversity: 'Taxonomic diversity', 'Phylogenetic diversity', and 'Functional diversity'. So you should choose one `diversity` : `TD` means 'Taxonomic diversity', `PD` means 'Phylogenetic diversity' under a certain reference time(root), and `FD` means 'Functional diversity'. For the `”Functional diversity”`, `FDtype = "AUC"` is a conservative computation for functional diversity which integrate threshold between zero and one. And `FDtype = "tau_values"` computes functional diversity under certain threshold.
+Besides, when you choose `diversity = “PD”`, you should input `PDtree` data. 
+When you choose `'FD'`, you should also input `FDdistM` data, which represents distance matrix.
 
-`datatype` has been introduced before. When the user use `diversity = "PD"` and `datatype = "incidence_raw"`, user should input `nT` for each assemblage which represents sampling units.
+`datatype` has been introduced before. When the user use `datatype = "incidence_raw"` and class of data is 'data.frame' or 'matrix', user should input `nT` for each assemblage which represents sampling units.
 `nboot` are applied to confidence interval, which is estimated by re-sampling method: bootstrap with `nboot` times.
 Finally, `details` means a logical setting whether do you want to print out total information of five figures.
 
-The output of `iNEXT4steps` will have three parts (if you sets details = TRUE), `$summary`, `$figure`, and `$details`. It may spend you much time to calculate five figures if your data is large or you set too much times of `nboot.`
+The output of `iNEXT4steps` will have three parts (if you sets `details = TRUE`): `$summary`, `$figure`, and `$details`. It may take you much time to calculate five figures if your data is large or you set a large number of `nboot.`
 
 
 ## Taxonomic Diversity ##
-`“abundance Data”` usually indicated a random sampling source, and the species are uniformly distributed all over the area. If your data belongs to a gathering assemblage, such as a kind of plant usually near each other instead of uniformly distributed, then we will propose you use `datatype = “incidence_freq”` nor `datatype = “abundance”` So we can classify biology easily in following rule: `datatype = “abundance”` for animals and `datatype = “incidence”` for plants.
+`“abundance Data”` usually indicated a random sampling source, and the individuals spread uniformly all over the area. If the species in your data has gathering effect, such as a kind of plant usually live near each other instead of spreading uniformly, then we will propose `datatype = “incidence_freq”` or `datatype = “incidence_raw”`. So user can follow a rule: `datatype = “abundance”` for animals and `datatype = “incidence”` for plants.
 First, we try to calculate taxonomic diversity for `Spider`
 
 ## Abundance-based ##
 
-```{r}
+```{r align="center"}
 data(Spider)
 out1 <- iNEXT4steps(data = Spider, diversity = "TD", datatype = "abundance")
 out1$summary
 out1$figure[[6]]
 ```
 
-`$summary` list all biological index according to Chao, A ., Y. Kubota, D. Zelený, C.-H. Chiu (2020). There are four parts corresponding to each step in the paper. They analysis and explain biological data from different and superimposed side. So users can easily compare difference between each assemblages.
-`$figure` visualize the statistics by continuous curves. From the above five figures, we provide a standard analysis process from figure (a) to figure (e). Except that figure (c) contains empirical statistics, all the other figures are estimated statistics. You can understand these estimated statistics through reference paper in the final page.
-$details contains four parts: `Sample Completeness`, `iNEXT`, `Asymptotic Diversity`, `Evenness`.
-Each meanings will be introduced in the individual function latter (except iNEXT). If you are interested in `iNEXT` output, T.C. Hsieh, K. H. Ma, and Chao, A. (2016) will be your best choice.
+`$summary` lists all biological index according to Chao, A ., Y. Kubota, D. Zelený, C.-H. Chiu (2020). There are four parts corresponding to each step in the paper. They analysis and explain biological data from different and superimposed side. So users can easily compare difference between each assemblages. 
+
+`$figure` visualize the statistics by continuous curves. From the above five figures, we provide a standard analysis process from figure (a) to figure (e). Except that figure (c) contains empirical statistics, all the other figures are estimated statistics. You can understand these estimated statistics through reference paper in the final page. 
+
+`$details` contains four parts: `Sample Completeness`, `iNEXT`, `Asymptotic Diversity`, `Empirical Diversity`, `Evenness`. \cr
+Each meanings will be introduced in the individual function latter (except figure (b) and fugure (d)). If you are interested in `iNEXT` output, T.C. Hsieh, K. H. Ma, and Chao, A. (2016) will be your best choice.
 
 
 ## Incidence-based ##
-Incidence data usually match by incident sampling. We split an area into several the same-size small area and only care whether the species is observed or not. According to this sampling method, our incidence data has value “zero” and “one” only except first row. Be careful, you should input your total sampling units (plots) in the first row.
-In the past, there are `“incidence_freq”` and `“incidence_raw”` two types for incidence data. `“incidence_freq”` belongs to taxonomic diversity and functional diversity. `“incidence_raw”` belongs to phylogenetic diversity.
+Incidence data usually match by incidence-sampling-units. We split an area into several the same-size area and only care whether the species is detected or non-detected. According to this sampling method, `incidence_raw` data has value “zero” and “one”. And `incidence_freq` data is the total frequency incidence in each assemblage. You should input your total sampling units (plots number) in the first row. \cr
+*Mark:* The phylogenetic diversity can only select `datatype = “incidence_raw”` for incidence-based data.
 
-```{r}
+```{r align="center"}
 data(woody_incid)
 out2 <- iNEXT4steps(data = woody_incid[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
 out2$summary
@@ -246,15 +268,17 @@ out2$figure[[6]]
 
 
 ## Phylogenetic Diversity ##
-Next, we want to caluculate `Phylogenetic diversity`. Here we provide `“abundance”` data : `“brazil”` as our example. `“brazil”` data has two main community: "Edge", "Interior". 
-Beside, we also provide phylogenetic tree data paired distance matrix of `“brazil”` data. User can match these to fit phylogenetic diversity or functional diversity.
-Phylogenetic diversity needs phylogenetic structure data, which is related to evalution history. We can choose a historic time as end of evalution. Then phylogenetic diversity will adapt timely range from now to indicator.
+Next, we want to calculate `Phylogenetic diversity`. Here we provide `“abundance”` data : `“brazil”` as our example. `“brazil”` data has two main communities: "Edge", "Interior". \cr
+Here we provide phylogenetic tree data pair-wise distance matrix of `“brazil”` data. User can match these to fit phylogenetic diversity or functional diversity. \cr
+Phylogenetic diversity needs a tree data which has newick-format, which is related to evolution history. We can choose a historic time `PDreftime` as beginning of evolution. Then phylogenetic diversity will be calculated in a time range from now to `PDreftime`
+
 If user don’t input tree data, the error will jumped out. So if user don’t have tree data, taxonomic diversity will be your best choice.
+
 According following R code, we can get similar output with taxonomic diversity.
 
 If you want to use incidence-based data, you should use `datatype = "incidence_raw"` with incidence raw data.
 
-```{r}
+```{r align="center"}
 data(brazil)
 data(brazil_tree)
 out3 <- iNEXT4steps(data = brazil, diversity = "PD", datatype = "abundance", nboot = 0, PDtree = tree)
@@ -264,17 +288,240 @@ out3$figure[[6]]
 
 
 ## Functional Diversity ##
-Next, we use distance matrix of `brazil` data to calculate functional diversity. If user don’t input distance matrix, than the error will jump out. Distance matrix is a paired square matrix which means the distance between any two species. The value in distance matrix has range from zero to one. Much higher the value is, much different the species is. Opposite relation can be applied, too. Apparently, if the value is “0”, it means the same species in the criterian. (“0” appears in the diagonal term)
-So, without distance matrix, taxonomic diversity will be you best choose.
+Next, we use distance matrix of `brazil` data to calculate functional diversity. If user doesn’t input distance matrix, than the error will jump out. Distance matrix is a species pairwise matrix which means the distance between any two species. The value in distance matrix has range from zero to one. The higher the value is, the more different the species is. If the value is “0”, it means the same species in the criterion. (“0” appears in the diagonal term)
 
-If you want to use incidence-based data, you should use `datatype = "incidence_freq"` with incidence frequency data.
+So, without distance matrix, taxonomic diversity will be you best choose. 
+User can select `FDtau` to decide a threshold which can express the difference distance in any two species. If `FDtau` is small, then all species will be seemed as different species. If `FDtau` is large, then all species will be seemed as the same species.
 
-```{r}
+```{r align="center"}
 data(brazil)
 data(brazil_distM)
 out4 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", nboot = 20, FDdistM = distM, FDtype = 'tau_values')
 out4$summary
 out4$figure[[6]]
+```
+
+## MAIN FUNCTION: SC()
+
+Funciton `SC()` provides a easy way to compute estimated sample completeness with order q. It has default arguments: 
+
+```{r eval=FALSE}
+SC(data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30, conf = 0.95, nT = NULL)
+```
+
+<table style="width:100%;">
+<colgroup>
+<col width="20%">
+<col width="80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Argument</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><code>data</code></td>
+<td align="left">
+(a) For `datatype = "abundance"`, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
+(b) For `datatype = "incidence_freq"`, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
+(c) For `datatype = "incidence_raw"`, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
+</td>
+</tr>
+<tr class="even">
+<td align="center"><code>q</code></td>
+<td align="left">a numerical vector specifying the diversity orders. Default is seq(0, 2, by = 0.2).</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>datatype</code></td>
+<td align="left">data type of input data: individual-based abundance data (`datatype = "abundance"`), sampling-unit-based incidence frequencies data (`datatype = "incidence_freq"`), or species by sampling-units incidence matrix (`datatype = "incidence_raw"`) with all entries being 0 (non-detection) or 1 (detection)</td>
+</tr>
+<tr class="even">
+<td align="center"><code>nboot</code></td>
+<td align="left">a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>conf</code></td>
+<td align="left">a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.</td>
+</tr>
+<tr class="even">
+<td align="center"><code>nT</code></td>
+<td align="left">(required only when `datatype = "incidence_raw"` and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc.</td>
+</tr>
+
+</tbody>
+</table>
+
+## MAIN FUNCTION: ggSC()
+
+We also provides a realized function `ggSC` to plot the output from `SC()`:
+
+```{r eval=FALSE}
+ggSC(output)
+```
+
+<table style="width:100%;">
+<colgroup>
+<col width="20%">
+<col width="80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Argument</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><code>output</code></td>
+<td align="left">a table generated from function `SC`.
+</td>
+
+</tbody>
+</table>
+
+
+There are two simple example for funciton `SC` and function `ggSC`, one for abundance-based and the other for incidence-based data. 
+
+## Abundance-based ##
+
+We use data Spider to calculate abundance-based sample completeness and plot it.
+
+```{r fig.width = 7, fig.height = 5}
+data(Spider)
+out1 <- SC(data = Spider, datatype = "abundance")
+ggSC(out1)
+```
+
+
+## Incidence-based ##
+
+We use data woody to calculate incidence-based sample completeness and plot it.
+
+```{r fig.width = 7, fig.height = 5}
+data(woody_incid)
+out2 <- SC(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
+ggSC(out2)
+```
+
+
+
+## MAIN FUNCTION: Evenness()
+
+We describe the main function `Evenness()` with default arguments: 
+
+```{r eval=FALSE}
+Evenness(data, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
+         nboot = 30, conf = 0.95, nT = NULL, E.class = 1:5, C = NULL)
+```
+
+<table style="width:100%;">
+<colgroup>
+<col width="20%">
+<col width="80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Argument</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><code>data</code></td>
+<td align="left">
+(a) For `datatype = "abundance"`, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
+(b) For `datatype = "incidence_freq"`, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
+(c) For `datatype = "incidence_raw"`, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
+</td>
+</tr>
+<tr class="even">
+<td align="center"><code>q</code></td>
+<td align="left">a numerical vector specifying the diversity orders. Default is seq(0, 2, by = 0.2).</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>datatype</code></td>
+<td align="left">data type of input data: individual-based abundance data (`datatype = "abundance"`), sampling-unit-based incidence frequencies data (`datatype = "incidence_freq"`), or species by sampling-units incidence matrix (`datatype = "incidence_raw"`) with all entries being 0 (non-detection) or 1 (detection)</td>
+</tr>
+<tr class="even">
+<td align="center"><code>method</code></td>
+<td align="left">a binary calculation method with 'Estimated' or 'Empirical'.</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>nboot</code></td>
+<td align="left">a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.</td>
+</tr>
+<tr class="even">
+<td align="center"><code>conf</code></td>
+<td align="left">a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>nT</code></td>
+<td align="left">(required only when `datatype = "incidence_raw"` and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc.</td>
+</tr>
+<tr class="even">
+<td align="center"><code>E.class</code></td>
+<td align="left">an integer vector between 1 to 5. There are five transformation for evenness in Chao, A. and Ricotta, C. (2019). Default is 1:5.</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>C</code></td>
+<td align="left">a standardized coverage for calculating evenness index. It is used when `method = 'Estimated'`. If `NULL`, `C = Cmax`.</td>
+</tr>
+
+</tbody>
+</table>
+
+## MAIN FUNCTION: ggEven()
+
+We provide a function `ggEven()` to plot the output from `Evenness()`.
+
+```{r eval=FALSE}
+ggEven(output)
+```
+
+<table style="width:100%;">
+<colgroup>
+<col width="20%">
+<col width="80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Argument</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><code>output</code></td>
+<td align="left">a table generated from function `Evenness`.
+</td>
+
+</tbody>
+</table>
+
+There are two simple example for funciton `Evenness` and function `ggEven`, one for abundance-based and the other for incidence-based data. 
+
+## Abundance-based ##
+
+We use data Spider to calculate abundance-based evenness and plot it.
+
+```{r fig.width = 8, fig.height = 6}
+data(Spider)
+out1 <- Evenness(data = Spider, datatype = "abundance")
+ggEven(out1)
+```
+
+
+## Incidence-based ##
+
+We use data woody to calculate incidence-based evenness and plot it.
+
+
+```{r fig.width = 8, fig.height = 6}
+data(woody_incid)
+out2 <- Evenness(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
+ggEven(out2)
 ```
 
 

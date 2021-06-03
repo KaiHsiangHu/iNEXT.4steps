@@ -361,12 +361,12 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' (c) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this 
 #' @param q a numerical vector specifying the diversity orders. Default is seq(0, 2, by = 0.2).
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection)
-#' @param method a binary calculation method with 'Estimated' or 'Empirical'\cr
+#' @param method a binary calculation method with 'Estimated' or 'Empirical'.\cr
 #' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.
 #' @param conf a positive number < 1 specifying the level of confidence interval. Default is 0.95.
 #' @param nT (required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc. 
-#' @param E.class an integer vector between 1 to 6
-#' @param C a standardized coverage for calculating evenness index
+#' @param E.class an integer vector between 1 to 5
+#' @param C a standardized coverage for calculating evenness index. It is used when \code{method = 'Estimated'}. If \code{NULL}, \code{C = Cmax}.
 #' @return A list of estimated(empirical) evenness with order q.\cr
 #'         Different lists represents different classes of Evenness.\cr
 #'         Each list is combined with order.q and sites.\cr

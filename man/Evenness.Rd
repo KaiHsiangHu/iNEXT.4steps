@@ -25,7 +25,7 @@ Evenness(
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection)}
 
-\item{method}{a binary calculation method with 'Estimated' or 'Empirical'\cr}
+\item{method}{a binary calculation method with 'Estimated' or 'Empirical'.\cr}
 
 \item{nboot}{a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.}
 
@@ -33,9 +33,9 @@ Evenness(
 
 \item{nT}{(required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc.}
 
-\item{E.class}{an integer vector between 1 to 6}
+\item{E.class}{an integer vector between 1 to 5}
 
-\item{C}{a standardized coverage for calculating evenness index}
+\item{C}{a standardized coverage for calculating evenness index. It is used when \code{method = 'Estimated'}. If \code{NULL}, \code{C = Cmax}.}
 }
 \value{
 A list of estimated(empirical) evenness with order q.\cr
