@@ -46,7 +46,7 @@ iNEXT4steps(
 
 \item{FDtau}{(required only when \code{diversity = "FD"} and \code{FDtype = "tau_values"}), a numerical value between 0 and 1 specifying tau values (threshold levels). If \code{NULL} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled assemblage (i.e., quadratic entropy).}
 
-\item{p_row}{row amount for 4 steps figure, default = 2.}
+\item{p_row}{row number for 4 steps figure, default = 2.}
 
 \item{p_col}{column number for 4 steps figure, default = 3.}
 

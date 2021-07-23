@@ -20,7 +20,7 @@
 #' @param FDdistM (required only when \code{diversity = "FD"}), a species pairwise distance matrix for all species in the pooled assemblage. 
 #' @param FDtype (required only when \code{diversity = "FD"}), select FD type: \code{FDtype = "tau_values"} for FD under specified threshold values, or \code{FDtype = "AUC"} (area under the curve of tau-profile) for an overall FD which integrates all threshold values between zero and one. Default is \code{"AUC"}.  
 #' @param FDtau (required only when \code{diversity = "FD"} and \code{FDtype = "tau_values"}), a numerical value between 0 and 1 specifying tau values (threshold levels). If \code{NULL} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled assemblage (i.e., quadratic entropy). 
-#' @param p_row row amount for 4 steps figure, default = 2.
+#' @param p_row row number for 4 steps figure, default = 2.
 #' @param p_col column number for 4 steps figure, default = 3.
 #' @param details a logical variable to decide whether do you want to print out the detailed value for each plots, default is \code{FALSE}.
 #' 
@@ -164,11 +164,11 @@ iNEXT4steps <- function(data, diversity = "TD", datatype = "abundance", nboot = 
             plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
 
     legend.p = get_legend(SC.plot + theme(legend.direction = "vertical"))
-    steps.plot = ggarrange(SC.plot + guides(color = FALSE, fill = FALSE),
-                           size.RE.plot,
-                           asy.plot + guides(color = FALSE, fill = FALSE),
-                           cover.RE.plot,
-                           even.plot + guides(color = FALSE, fill = FALSE),
+    steps.plot = ggarrange(SC.plot       + guides(color = FALSE, fill = FALSE),
+                           size.RE.plot  + guides(color = FALSE, fill = FALSE, shape = FALSE),
+                           asy.plot      + guides(color = FALSE, fill = FALSE),
+                           cover.RE.plot + guides(color = FALSE, fill = FALSE, shape = FALSE),
+                           even.plot     + guides(color = FALSE, fill = FALSE),
                            legend.p, nrow = p_row, ncol = p_col
     )
   } else { warning("The number of communities exceed eight. We don't show the figures.") }
