@@ -84,7 +84,7 @@ out2
 ## Ex.3
 data(brazil)
 data(brazil_distM)
-out3 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", nboot = 0, FDdistM = distM, FDtype = 'tau_value')
+out3 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", nboot = 0, FDdistM = distM, FDtype = 'tau_values')
 out3
 
 ## Type (2) example for incidence based data (list of data.frame)
