@@ -120,7 +120,7 @@ iNEXT4steps <- function(data, diversity = "TD", datatype = "abundance", nboot = 
   Even.table <- Evenness(data, q = q, datatype = datatype, method = "Estimated", nboot = nboot, conf = 0.95, nT = nT, E.class = 3)
   Cmax = Even.table[1]
 
-  if (length(unique((Even.table[[2]]$Community)))>1) {
+  if (length(unique((Even.table[[2]]$Assemblage)))>1) {
     iNEXT.table[[2]]$size_based$Assemblage = factor(iNEXT.table[[2]]$size_based$Assemblage)
     level = levels(iNEXT.table[[2]]$size_based$Assemblage)
     
@@ -130,7 +130,7 @@ iNEXT4steps <- function(data, diversity = "TD", datatype = "abundance", nboot = 
   }
 
   ## 5 figures ##
-  if (length(unique(SC.table$Community)) <= 8) {
+  if (length(unique(SC.table$Assemblage)) <= 8) {
     SC.plot <- ggSC(SC.table) +
       labs(title = plot.names[1]) +
       theme(text = element_text(size = 12),
@@ -188,7 +188,7 @@ iNEXT4steps <- function(data, diversity = "TD", datatype = "abundance", nboot = 
   ##  Output ##
   if (details == FALSE) {
 
-    if (length(unique(SC.table$Community)) <= 8) {
+    if (length(unique(SC.table$Assemblage)) <= 8) {
       ans <- list(summary = summary,
                   figure = list(SC.plot, size.RE.plot, asy.plot, cover.RE.plot, even.plot, steps.plot))
     } else { ans <- list(summary = summary) }
@@ -198,7 +198,7 @@ iNEXT4steps <- function(data, diversity = "TD", datatype = "abundance", nboot = 
     tab = list("Sample Completeness" = SC.table, "iNEXT" = RE,
                "Asymptotic Diversity" = qD.table, "Evenness" = Even.table)
 
-    if (length(unique(SC.table$Community)) <= 8) {
+    if (length(unique(SC.table$Assemblage)) <= 8) {
       ans <- list(summary = summary,
                   figure = list(SC.plot, size.RE.plot, asy.plot, cover.RE.plot, even.plot, steps.plot),
                   details = tab)
