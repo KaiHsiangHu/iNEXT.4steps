@@ -11,6 +11,7 @@
 #' (b) For \code{datatype = "incidence_freq"}, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
 #' (c) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
 #' @param diversity selection of diversity type: \code{'TD'} = Taxonomic diversity, \code{'PD'} = Phylogenetic diversity, and \code{'FD'} = Functional diversity.
+#' @param q a numerical vector specifying the diversity orders. Default is seq(0, 2, by = 0.2).
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection)
 #' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.
 #' @param nT (required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc. 
@@ -77,10 +78,9 @@
 #' Quantifying sample completeness and comparing diversities among assemblages. Ecological Research.
 #' @export
 
-iNEXT4steps <- function(data, diversity = "TD", datatype = "abundance", nboot = 50, nT = NULL,
+iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.25), datatype = "abundance", nboot = 50, nT = NULL,
                          PDtree = NULL, PDreftime = NULL, PDtype = 'meanPD', FDdistM = NULL, FDtype = 'AUC', FDtau = NULL,
                          p_row = 2, p_col = 3, details = FALSE) {
-  q = seq(0, 2, 0.25)
   if ((length(data) == 1) && (class(data) %in% c("numeric", "integer")))
     stop("Error: Your data does not have enough information.")
   
