@@ -154,12 +154,12 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
     n = sum(x)
     f1 = sum(x==1); f2 = sum(x==2)
     A = ifelse(f2>0,2*f2/((n-1)*f1+2*f2),ifelse(f1>0,2/((n-1)*(f1-1)+2),1))
-
+    
     sc.abund = function(q){
       if (q==0){
         S_obs = length(x)
         f0_hat = ifelse(f2==0, ((n-1)/n)*(f1*(f1-1)/2), ((n-1)/n)*((f1^2)/(2*f2)))
-        c_hat = S_obs/(S_obs+ceiling(f0_hat))
+        c_hat = S_obs/(S_obs + f0_hat)
         return(c_hat)
       } else if (q==1){
         c_hat = 1-(f1/n)*(1-A)
