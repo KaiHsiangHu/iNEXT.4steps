@@ -176,10 +176,9 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.25), datatype = 
   estD = estimate3D(data, diversity = 'TD', q = c(0, 1, 2), datatype, base = "coverage", level = NULL, nboot = 0, nT = nT)
   est3D = estimate3D(data, diversity = diversity, q = c(0, 1, 2), datatype, base = "coverage", level = NULL, nboot = 0, nT = nT, PDtree = PDtree, PDtype = PDtype, FDdistM = FDdistM, FDtype = FDtype)
   
-  if (diversity == 'FD' & FDtype == 'AUC') summary_step2 = iNEXT.table[[2]] else summary_step2 = iNEXT.table[[3]]
   ##  Outpue_summary ##
   summary = list(summary.deal(SC.table, 1),
-                 summary_step2,
+                 iNEXT.table[[3]],
                  summary.deal(est3D, 3),
                  summary.deal(Even.table, 4, estD)
   )
@@ -194,8 +193,7 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.25), datatype = 
     } else { ans <- list(summary = summary) }
 
   } else if (details == TRUE) {
-    if (diversity == 'FD' & FDtype == 'AUC')  RE = iNEXT.table[[1]] else RE = iNEXT.table[[2]]
-    tab = list("Sample Completeness" = SC.table, "iNEXT" = RE,
+    tab = list("Sample Completeness" = SC.table, "iNEXT" = iNEXT.table[[2]],
                "Asymptotic Diversity" = qD.table, "Evenness" = Even.table)
 
     if (length(unique(SC.table$Assemblage)) <= 8) {
