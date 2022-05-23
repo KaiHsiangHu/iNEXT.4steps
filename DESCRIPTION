@@ -15,7 +15,7 @@ Description: iNEXT.4steps provides a simple function to create a complete analys
              (You can find the paper(No.135) from Chao proffessor's website:
              http://chao.stat.nthu.edu.tw/wordpress/publication-list/).
 License: GPL (>= 3)
-Depends: R (>= 4)
+Depends: R (>= 4.0)
 Imports: devtools,
          ggplot2,
          reshape2,
