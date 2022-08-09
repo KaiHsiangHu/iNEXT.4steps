@@ -3,7 +3,7 @@
 \name{ggEven}
 \alias{ggEven}
 \title{ggplot for Evenness
-\code{ggEven} The figure for estimation of Evenness with order q\cr}
+\code{ggEven} the \code{\link[ggplot2]{ggplot}} extension for \code{\link{Evenness}} Object to plot evenness with order q\cr}
 \usage{
 ggEven(output)
 }
@@ -15,7 +15,7 @@ a figure of estimated sample completeness with order q\cr
 }
 \description{
 ggplot for Evenness
-\code{ggEven} The figure for estimation of Evenness with order q\cr
+\code{ggEven} the \code{\link[ggplot2]{ggplot}} extension for \code{\link{Evenness}} Object to plot evenness with order q\cr
 }
 \examples{
 ## Type (1) example for abundance based data (data.frame)

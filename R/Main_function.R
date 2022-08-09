@@ -11,8 +11,8 @@
 #' (b) For \code{datatype = "incidence_freq"}, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
 #' (c) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
 #' @param diversity selection of diversity type: \code{'TD'} = Taxonomic diversity, \code{'PD'} = Phylogenetic diversity, and \code{'FD'} = Functional diversity.
-#' @param q a numerical vector specifying the diversity orders. Default is seq(0, 2, by = 0.2).
-#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection)
+#' @param q a numerical vector specifying the diversity orders. Default is c(0, 1, 2).
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).
 #' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.
 #' @param nT (required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc. 
 #' @param PDtree (required only when \code{diversity = "PD"}), a phylogenetic tree in Newick format for all observed species in the pooled assemblage. 
@@ -20,7 +20,7 @@
 #' @param PDtype (required only when \code{diversity = "PD"}), select PD type: \code{PDtype = "PD"} (effective total branch length) or \code{PDtype = "meanPD"} (effective number of equally divergent lineages). Default is \code{"meanPD"}, where \code{meanPD = PD/tree depth}.
 #' @param FDdistM (required only when \code{diversity = "FD"}), a species pairwise distance matrix for all species in the pooled assemblage. 
 #' @param FDtype (required only when \code{diversity = "FD"}), select FD type: \code{FDtype = "tau_values"} for FD under specified threshold values, or \code{FDtype = "AUC"} (area under the curve of tau-profile) for an overall FD which integrates all threshold values between zero and one. Default is \code{"AUC"}.  
-#' @param FDtau (required only when \code{diversity = "FD"} and \code{FDtype = "tau_values"}), a numerical value between 0 and 1 specifying tau values (threshold levels). If \code{NULL} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled assemblage (i.e., quadratic entropy). 
+#' @param FDtau (required only when \code{diversity = "FD"} and \code{FDtype = "tau_values"}), a numerical vector between 0 and 1 specifying tau values (threshold levels). If \code{NULL} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled assemblage (i.e., quadratic entropy). 
 #' @param p_row row number for 4 steps figure, default = 2.
 #' @param p_col column number for 4 steps figure, default = 3.
 #' @param details a logical variable to decide whether do you want to print out the detailed value for each plots, default is \code{FALSE}.
@@ -31,9 +31,6 @@
 #' @import dplyr
 #' @import ggpubr
 #' @import purrr
-#' @import ape
-#' @import tidytree
-#' @import phyclust
 #' @import iNEXT.3D
 #' @importFrom stats qnorm
 #' @importFrom stats rbinom
@@ -79,8 +76,9 @@
 #' @export
 
 iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.25), datatype = "abundance", nboot = 50, nT = NULL,
-                         PDtree = NULL, PDreftime = NULL, PDtype = 'meanPD', FDdistM = NULL, FDtype = 'AUC', FDtau = NULL,
-                         p_row = 2, p_col = 3, details = FALSE) {
+                        PDtree = NULL, PDreftime = NULL, PDtype = 'meanPD', FDdistM = NULL, FDtype = 'AUC', FDtau = NULL,
+                        p_row = 2, p_col = 3, details = FALSE) 
+{
   if ((length(data) == 1) && (class(data) %in% c("numeric", "integer")))
     stop("Error: Your data does not have enough information.")
   
@@ -171,7 +169,7 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.25), datatype = 
                            even.plot     + guides(color = FALSE, fill = FALSE),
                            legend.p, nrow = p_row, ncol = p_col
     )
-  } else { warning("The number of communities exceed eight. We don't show the figures.") }
+  } else { warning("The number of communities exceeds eight. We don't show the figures.") }
   
   estD = estimate3D(data, diversity = 'TD', q = c(0, 1, 2), datatype, base = "coverage", level = NULL, nboot = 0, nT = nT)
   est3D = estimate3D(data, diversity = diversity, q = c(0, 1, 2), datatype, base = "coverage", level = NULL, nboot = 0, nT = nT, PDtree = PDtree, PDtype = PDtype, FDdistM = FDdistM, FDtype = FDtype)

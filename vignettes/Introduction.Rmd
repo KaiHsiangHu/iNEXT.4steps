@@ -19,7 +19,7 @@ options("width" = 200)
 if("ggthemes" %in% rownames(installed.packages()) == FALSE) {install.packages("ggthemes")}
 if("gridExtra" %in% rownames(installed.packages()) == FALSE) {install.packages("gridExtra")}
 devtools::load_all(".")
-#library(iNEXT.3D)
+library(iNEXT.4steps)
 library(ggplot2)
 data("Spider")
 data("brazil")
@@ -42,27 +42,33 @@ data("brazil_distM")
 * `STEP4`. Evenness among species abundances. 
 
 
-These are the foundation of `iNEXT.4steps` Here we will also introduce functions about `STEP1`, `STEP4`, particularly. If you want to grasp `STEP1`, `STEP3`, then the related paper  T.C. Hsieh, K. H. Ma, and Chao, A. (2016) or the packages (`iNEXT` or `iNEXT.3D`) will be the best choice to you. 
+These are the foundation of `iNEXT.4steps` Here we will also introduce functions about `STEP1`, `STEP4`, particularly. If you want to grasp `STEP1`, `STEP3`, then the related paper  T.C. Hsieh, K. H. Ma, and Chao, A. (2016) or the packages (`iNEXT.3D`) will be the best choice to you. 
 
-`iNEXT` (or `iNEXT.3D`) contains two major parts:
+`iNEXT.3D` contains two major parts:
 
-1. Sample‐size‐based R/E sampling curves: `iNEXT` computes rarefied and extrapolated diversity estimates under a specified sample size. This type of diversity curve plots the estimated diversity with respect to sample size.     
-2. Coverage‐based R/E sampling curves: `iNEXT` computes rarefied and extrapolated diversity estimates under a spcified sample coverage. This type of diversity curve plots the estimated diversity with respect to sample coverage. 
+1. Sample-size-based R/E sampling curves: `iNEXT` computes rarefied and extrapolated diversity estimates under a specified sample size. This type of diversity curve plots the estimated diversity with respect to sample size.     
+2. Coverage-based R/E sampling curves: `iNEXT` computes rarefied and extrapolated diversity estimates under a spcified sample coverage. This type of diversity curve plots the estimated diversity with respect to sample coverage. 
 
 In the package, we provide other four functions for users to calculate the related biological statistics: `SC` and `Evenness`, and their plot functions: `ggSC` and `ggEven`. The most comprehensive function `iNEXT4steps` gathers `iNEXT3D`, `Asy3D`, `Obs3D`, `SC` and `Evenness` into a figure. In this document, we will give a quick introduction demonstrating how to run these functions. Detailed information about these function settings is provided in the `iNEXT.4steps` guideline, which is also available in [CRAN]. The theoretical basis about these biological statistics can be obtained from the following inference:
 (http://chao.stat.nthu.edu.tw/wordpress/paper/135.pdf)
 
-Some proposed theoretical references to each statistics:
+Some proposed theoretical references to each step:
 
-- `Sample Completeness`: No.95 Chao, A. and Jost. L. (2012).
+- `Sample Completeness`: Chao, A. and Jost. L. (2012) Coverage-based rarefaction and extrapolation: standardizing samples by completeness rather than size. Ecology, 93, 2533-2547.
 
-- `Asymptotic Diversity`: No.109 Chao, A. and Jost, L. (2015). 
+- `Asymptotic Diversity`: Chao, A. and Jost, L. (2015). Estimating diversity and entropy profiles via discovery rates of new species. Methods in Ecology and Evolution, 6, 873-882. 
 
-- `Interplation and Extrapolation`: No.102 Chao, A., Gotelli, N. G., Hsieh, T. C. (2014). 
+- `Interplation and Extrapolation`: Chao, A., Gotelli, N. G., Hsieh, T. C., Sander, E. L., Ma, K. H., Colwell, R. K. and Ellison, A. M. (2014). Rarefaction and extrapolation with Hill numbers: a framework for sampling and estimation in species biodiversity studies. Ecological Monographs 84, 45-67. 
 
-- `Evenness`: No.133 Chao, A. and Ricotta, C. (2019). 
+- `Evenness`: Chao, A. and Ricotta, C. (2019). Quantifying evenness and linking it to diversity, beta diversity, and similarity. Ecology, 100(12), e02852.
 
-- `iNEXT 4 steps`: No. 135 Chao, A., Y. Kubota, D. Zelený, C.-H. Chiu. 
+- `iNEXT 4 steps`: Chao, A., Y. Kubota, D. Zelený, C.-H. Chiu, C.-F. Li, B. Kusumoto, M. Yasuhara, S. Thorn, C.-L. Wei, M. J. Costello, and R. K. Colwell (2020). Quantifying sample completeness and comparing diversities among assemblages. Ecological Research, 35, 292-314.
+
+
+## HOW TO CITE iNEXT
+If you publish your work based on the results from the `iNEXT.4steps` package, you should make references to the following methodology paper (Chao et al. 2020):
+
+- Chao, A., Y. Kubota, D. Zelený, C.-H. Chiu, C.-F. Li, B. Kusumoto, M. Yasuhara, S. Thorn, C.-L. Wei, M. J. Costello, and R. K. Colwell (2020). Quantifying sample completeness and comparing diversities among assemblages. Ecological Research, 35, 292-314.
 
 
 ## SOFTWARE NEEDED TO RUN INEXT IN R
@@ -70,18 +76,17 @@ Some proposed theoretical references to each statistics:
 - Suggested: [RStudio IDE](https://www.rstudio.com/products/RStudio/#Desktop)
 
 ## HOW TO RUN INEXT:
-The `iNEXT.4steps` package has not be available on [CRAN]. But you can download with a standard R installation procedure using the following commands. For a first‐time installation, an additional visualization extension package (`ggplot2`) must be loaded. 
+The `iNEXT.4steps` package is available from [CRAN](??) and can be downloaded with a standard R installation procedure or can be downloaded from Anne Chao's [iNEXT_github](https://github.com/AnneChao/iNEXT.4steps) using the following commands. For a first‐time installation, an additional visualization extension package (`ggplot2`) must be installed and loaded. 
 
 
 ```{r eval=FALSE}
-## install iNEXT package from CRAN
-# install.packages("iNEXT.4steps")
+## install iNEXT.4steps package from CRAN
+install.packages("iNEXT.4steps")
 
 ## install the latest version from github
 install.packages('devtools')
 library(devtools)
-install_github('KaiHsiangHu/iNEXT.3D')
-install_github('KaiHsiangHu/iNEXT.4steps')
+install_github('AnneChao/iNEXT.4steps')
 
 ## import packages
 library(iNEXT.4steps)
@@ -117,21 +122,13 @@ Under Cmax, we can guarantee the accuracy of Evenness. According to this criteri
 
 
 **DATA FORMAT/INFORMATION**
+Three types of data are supported:
 
-Before introducing functions, we define what the datatype may be classified. 
+1. Individual‐based abundance data (`datatype="abundance"`): Input data for each assemblage/site include species abundances in an empirical sample of n individuals (“reference sample”). When there are N assemblages, input data consist of an S by N abundance matrix, or N lists of species abundances.  
 
-There are mainly two types of sampling data are supposed : 
-
-`1.	Individual‐based abundance data (datatype="abundance"`): 
-Data with individual-based abundance data. In this case, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. 
-
-`2. Sampling-unit-based incidence data: There are two kinds of input data`. 
-
-`(1)	Incidence‐frequency data (datatype = "incidence_freq")`:
-Data with sampling-unit-based incidence frequencies data. In this case, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. 
-
-`(2)	Incidence‐raw data (datatype = "incidence_raw")`: Data with species by sampling-units incidence matrix (datatype = "incidence_raw") with all entries being 0 (non-detection) or 1 (detection). In this case, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (`nT`, see below) must be input. 
-
+2. Sampling-unit-based incidence data: There are two kinds of input data.  
+  (a) Incidence-raw data (`datatype="incidence_raw"`): for each assemblage, input data for a reference sample consisting of a species-by-sampling-unit matrix; each element in the raw matrix is 1 for a detection, and 0 otherwise. When there are N assemblages, input data consist of N lists of raw matrices, and each matrix is a species-by-sampling-unit matrix.  
+  (b) Incidence-frequency data (`datatype="incidence_freq"`): input data for each assemblage consist of species sample incidence frequencies (i.e., row sums of the corresponding incidence raw matrix). When there are N assemblages, input data consist of an (S+1) by N matrix, or N lists of species incidence frequencies. The first entry of each column/list must be the total number of sampling units, followed by the species incidence frequencies.
 
 
 ## MAIN FUNCTION: iNEXT4steps()
@@ -215,7 +212,7 @@ The arguments of this function are briefly described below, and will explain det
 </tr>
 <tr class="even">
 <td align="center"><code>details</code></td>
-<td align="left">a logical variable to decide whether do you want to print out the detailed value for each plots, default is \code{FALSE}.</td>
+<td align="left">a logical variable to decide whether do you want to print out the detailed value for each plots, default is `FALSE`.</td>
 </tr>
 
 </tbody>
@@ -281,7 +278,7 @@ If you want to use incidence-based data, you should use `datatype = "incidence_r
 ```{r align="center"}
 data(brazil)
 data(brazil_tree)
-out3 <- iNEXT4steps(data = brazil, diversity = "PD", datatype = "abundance", nboot = 0, PDtree = tree)
+out3 <- iNEXT4steps(data = brazil, diversity = "PD", datatype = "abundance", nboot = 0, PDtree = brazil_tree)
 out3$summary
 out3$figure[[6]]
 ```
@@ -296,7 +293,7 @@ User can select `FDtau` to decide a threshold which can express the difference d
 ```{r align="center"}
 data(brazil)
 data(brazil_distM)
-out4 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", nboot = 20, FDdistM = distM, FDtype = 'tau_values')
+out4 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", nboot = 20, FDdistM = brazil_distM, FDtype = 'tau_values')
 out4$summary
 out4$figure[[6]]
 ```
@@ -527,24 +524,23 @@ ggEven(out2)
 
 
 ## License
-The `iNEXT.4steps` package is licensed under the GPLv3. To help refine `iNEXT.4steps`, your comments or feedbacks would be welcome (please send them to Anne Chao or report an issue on iNEXT.4steps github [reop](https://github.com/KaiHsiangHu/iNEXT.4steps)). 
+The iNEXT.4steps package is licensed under the GPLv3. To help refine `iNEXT.4steps`, your comments or feedback would be welcome (please send them to Anne Chao or report an issue on the iNEXT.4steps github [iNEXT.4steps_github](https://github.com/AnneChao/iNEXT.4steps). 
 
 ## References
+- Chao, A., Chiu, C.-H., Hsieh, T. C., Davis, T., Nipperess, D., and Faith, D. (2015) Rarefaction and extrapolation of phylogenetic diversity. Methods in Ecology and Evolution, 6, 380-388.
+
+- Chao, A., Chiu, C.-H., and Jost, L. (2014). Unifying species diversity, phylogenetic diversity, functional diversity, and related similarity/differentiation measures through Hill numbers. Annual Reviews of Ecology, Evolution, and Systematics, 45, 297-324. 
+
+- Chao, A., Chiu, C.-H., Villéger, S., Sun, I.-F., Thorn, S., Lin, Y.-C., Chiang, J. M. and Sherwin, W. B. (2019). An attribute-diversity approach to functional diversity, functional beta diversity, and related (dis)similarity measures. Ecological Monographs, 89, e01343. 10.1002/ecm.1343.
+
+- Chao, A., Gotelli, N. G., Hsieh, T. C., Sander, E. L., Ma, K. H., Colwell, R. K. and Ellison, A. M. (2014). Rarefaction and extrapolation with Hill numbers: a framework for sampling and estimation in species biodiversity studies. Ecological Monographs 84, 45-67.
+
 - Chao, A. and Jost. L. (2012) Coverage-based rarefaction and extrapolation: standardizing samples by completeness rather than size. Ecology, 93, 2533-2547.
 
 - Chao, A. and Jost, L. (2015). Estimating diversity and entropy profiles via discovery rates of new species. Methods in Ecology and Evolution, 6, 873-882.
-
-- Chao, A., Gotelli, N. G., Hsieh, T. C., Sander, E. L., Ma, K. H., Colwell, R. K. and Ellison, A. M. (2014). Rarefaction and extrapolation with Hill numbers: a framework for sampling and estimation in species biodiversity studies. Ecological Monographs 84, 45-67.
 
 - Chao, A. and Ricotta, C. (2019). Quantifying evenness and linking it to diversity, beta diversity, and similarity. Ecology, 100(12), e02852.
 
 - Chao, A., Y. Kubota, D. Zelený, C.-H. Chiu, C.-F. Li, B. Kusumoto, M. Yasuhara, S. Thorn, C.-L. Wei, M. J. Costello, and R. K. Colwell (2020). Quantifying sample completeness and comparing diversities among assemblages. Ecological Research, 35, 292-314.
 
-- Chao, A., Chiu, C.-H., Villéger, S., Sun, I.-F., Thorn, S., Lin, Y.-C., Chiang, J. M. and Sherwin, W. B. (2019). An attribute-diversity approach to functional diversity, functional beta diversity, and related (dis)similarity measures. Ecological Monographs, 89, e01343. 10.1002/ecm.1343.
-
-- Chao, A., Chiu, C.-H., and Jost, L. (2014). Unifying species diversity, phylogenetic diversity, functional diversity, and related similarity/differentiation measures through Hill numbers. Annual Reviews of Ecology, Evolution, and Systematics, 45, 297-324. 
-
-- Chao, A., Chiu, C.-H., Hsieh, T. C., Davis, T., Nipperess, D., and Faith, D. (2015) Rarefaction and extrapolation of phylogenetic diversity. Methods in Ecology and Evolution, 6, 380-388.
-
-- T.C. Hsieh, K. H. Ma, and Chao, A. (2016). iNEXT: An R package for rarefaction and extrapolation of species diversity (Hill numbers). Methods in Ecology and Evolution, 7, 1451-1456.
 

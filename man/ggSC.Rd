@@ -13,7 +13,7 @@ ggSC(output)
 a figure of estimated sample completeness with order q
 }
 \description{
-\code{ggSC} The figure for estimation of Sample Completeness with order q
+\code{ggSC} the \code{\link[ggplot2]{ggplot}} extension for \code{\link{SC}} Object to plot sample completeness with order q
 }
 \examples{
 ## Type (1) example for abundance based data (data.frame)
