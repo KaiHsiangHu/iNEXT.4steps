@@ -15,7 +15,7 @@ summary.deal <- function(table, step, Pielou = NULL) {
     colnames(out)[-1] = paste("q = ", c(0,1,2), sep="")
   }
   if (step == 3){
-    tmp = table[,c(1, 6, 7)]
+    tmp = table[,c(1, 5, 6)]
     C = round(min(table$SC), 3)
     out = dcast(tmp, Assemblage ~ Order.q, value.var = colnames(tmp)[3])
     colnames(out) = c(paste("maxC = ", C, sep = ""),
@@ -331,8 +331,8 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
       })
   } else if (method == "Empirical") {
 
-    empqD = obs3D(x, diversity = 'TD', q = q, datatype = datatype, nboot = 0)
-    empS = obs3D(x, diversity = 'TD', q = 0, datatype = datatype, nboot = 0)
+    empqD = AO3D(x, diversity = 'TD', q = q, datatype = datatype, nboot = 0, method = 'Empirical')
+    empS = AO3D(x, diversity = 'TD', q = 0, datatype = datatype, nboot = 0, method = 'Empirical')
     
     out = lapply(E.class, function(i) {
       tmp = sapply(1:length(x), function(k) even.class(q, empqD[empqD$Assemblage == names(x)[k], "qD"], empS[empS$Assemblage == names(x)[k], "qD"], i, x[[k]]/sum(x[[k]])))
@@ -461,7 +461,7 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
     })
-    if (is.null(C) == TRUE) C = unique(estimate3D(data, diversity = 'TD', q = 0, datatype = "abundance", base = "coverage", nboot = 0)$goalSC)
+    if (is.null(C) == TRUE) C = unique(estimate3D(data, diversity = 'TD', q = 0, datatype = "abundance", base = "coverage", nboot = 0)$SC)
     if (method=="Estimated") {out <- append(C, out)}
 
   } else if (datatype == "incidence_freq") {
@@ -497,7 +497,7 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
     })
-    if (is.null(C) == TRUE) C = unique(estimate3D(data, diversity = 'TD', q = 0, datatype = "incidence_freq", base = "coverage", nboot = 0)$goalSC)
+    if (is.null(C) == TRUE) C = unique(estimate3D(data, diversity = 'TD', q = 0, datatype = "incidence_freq", base = "coverage", nboot = 0)$SC)
     if (method == "Estimated") {out <- append(C, out)}
   }
 

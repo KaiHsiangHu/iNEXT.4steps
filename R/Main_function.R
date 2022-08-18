@@ -109,10 +109,8 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.25), datatype = 
                          PDtree = PDtree, PDreftime = PDreftime, PDtype = PDtype, FDdistM = FDdistM, FDtype = FDtype, FDtau = FDtau)
   
   ## Asymptotic ##
-  qD.table <- rbind(asy3D(data, diversity = diversity, q = q, datatype = datatype, nboot = nboot, nT = nT, PDtree = PDtree, 
-                          PDreftime = PDreftime, PDtype = PDtype, FDdistM = FDdistM, FDtype = FDtype, FDtau = FDtau),
-                    obs3D(data, diversity = diversity, q = q, datatype = datatype, nboot = nboot, nT = nT, PDtree = PDtree, 
-                          PDreftime = PDreftime, PDtype = PDtype, FDdistM = FDdistM, FDtype = FDtype, FDtau = FDtau))
+  qD.table <- AO3D(data, diversity = diversity, q = q, datatype = datatype, nboot = nboot, nT = nT, PDtree = PDtree, 
+                   PDreftime = PDreftime, PDtype = PDtype, FDdistM = FDdistM, FDtype = FDtype, FDtau = FDtau)
   
   ## Evenness ##
   Even.table <- Evenness(data, q = q, datatype = datatype, method = "Estimated", nboot = nboot, conf = 0.95, nT = nT, E.class = 3)
@@ -149,7 +147,7 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.25), datatype = 
             legend.margin = margin(0, 0, 0, 0),
             plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
 
-    asy.plot <- ggasy3D(qD.table) +
+    AO.plot <- ggAO3D(qD.table) +
       labs(title = plot.names[3]) +
       theme(text = element_text(size = 12),
             plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
@@ -164,7 +162,7 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.25), datatype = 
     legend.p = get_legend(SC.plot + theme(legend.direction = "vertical"))
     steps.plot = ggarrange(SC.plot       + guides(color = FALSE, fill = FALSE),
                            size.RE.plot  + guides(color = FALSE, fill = FALSE, shape = FALSE),
-                           asy.plot      + guides(color = FALSE, fill = FALSE),
+                           AO.plot      + guides(color = FALSE, fill = FALSE),
                            cover.RE.plot + guides(color = FALSE, fill = FALSE, shape = FALSE),
                            even.plot     + guides(color = FALSE, fill = FALSE),
                            legend.p, nrow = p_row, ncol = p_col
@@ -187,7 +185,7 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.25), datatype = 
 
     if (length(unique(SC.table$Assemblage)) <= 8) {
       ans <- list(summary = summary,
-                  figure = list(SC.plot, size.RE.plot, asy.plot, cover.RE.plot, even.plot, steps.plot))
+                  figure = list(SC.plot, size.RE.plot, AO.plot, cover.RE.plot, even.plot, steps.plot))
     } else { ans <- list(summary = summary) }
 
   } else if (details == TRUE) {
@@ -196,7 +194,7 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.25), datatype = 
 
     if (length(unique(SC.table$Assemblage)) <= 8) {
       ans <- list(summary = summary,
-                  figure = list(SC.plot, size.RE.plot, asy.plot, cover.RE.plot, even.plot, steps.plot),
+                  figure = list(SC.plot, size.RE.plot, AO.plot, cover.RE.plot, even.plot, steps.plot),
                   details = tab)
     } else { ans <- list(summary = summary, details = tab)}
 
