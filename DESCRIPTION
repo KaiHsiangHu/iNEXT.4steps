@@ -11,7 +11,7 @@ Description: iNEXT.4steps provides a simple function to create a complete analys
              Step3: Non-asymptotic coverage-based rarefaction and extrapolation analysis.
              Step4: Evenness among species abundances.
              You can input some easy setting to change the calculations.
-             The result contains a summary table and a figure.
+             The result contains a summary table and a figures.
              (You can find the paper(No.135) from Chao proffessor's website:
              http://chao.stat.nthu.edu.tw/wordpress/publication-list/).
 License: GPL (>= 3)

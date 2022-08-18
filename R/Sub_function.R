@@ -126,7 +126,7 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 #' @param data (a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
 #' (b) For \code{datatype = "incidence_freq"}, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
 #' (c) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
-#' @param q a numerical vector specifying the diversity orders. Default is c(0, 1, 2).
+#' @param q a numerical vector specifying the diversity orders. Default is (0, 0.2, 0.4,...,2).
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).
 #' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.
 #' @param conf a positive number < 1 specifying the level of confidence interval. Default is 0.95.
@@ -151,7 +151,7 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 #' Quantifying sample completeness and comparing diversities among assemblages.
 #' @export
 
-SC <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
+SC <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
                 conf = 0.95, nT = NULL)
 {
   TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
@@ -359,19 +359,19 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' @param data (a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
 #' (b) For \code{datatype = "incidence_freq"}, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
 #' (c) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
-#' @param q a numerical vector specifying the diversity orders. Default is c(0, 1, 2).
+#' @param q a numerical vector specifying the diversity orders. Default is (0, 0.2, 0.4,...,2).
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).
 #' @param method a binary calculation method with 'Estimated' or 'Empirical'.\cr
 #' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.
 #' @param conf a positive number < 1 specifying the level of confidence interval. Default is 0.95.
 #' @param nT (required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc. 
 #' @param E.class an integer vector between 1 to 5
-#' @param C a standardized coverage for calculating estimated evenness. It is used when \code{method = 'Estimated'}. If \code{NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes..
+#' @param C a standardized coverage for calculating estimated evenness. It is used when \code{method = 'Estimated'}. If \code{NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (C = Cmax).
 #' @return A list of estimated(empirical) evenness with order q.\cr
-#'         Different lists represents different classes of Evenness.\cr
+#'         Different lists represent different classes of Evenness.\cr
 #'         Each list is combined with order.q and sites.\cr
 #'         If "method" is estimated, then fist list will be named "C" which means the
-#'         maximum standardized coverage between all double reference sample size.\cr\cr
+#'         maximum standardized coverage among all double reference sample size.\cr\cr
 #' \code{$summary} individual summary of 4 steps of data. \cr\cr
 #'
 #' @examples
@@ -392,7 +392,7 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' @export
 
 Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
-                      nboot = 30, conf = 0.95, nT = NULL, E.class = 1:5, C = NULL)
+                      nboot = 50, conf = 0.95, nT = NULL, E.class = 1:5, C = NULL)
 {
   TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
   if (is.na(pmatch(datatype, TYPE)))
@@ -516,7 +516,7 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
 #' \code{ggEven} the \code{\link[ggplot2]{ggplot}} extension for \code{\link{Evenness}} Object to plot evenness with order q\cr
 #'
 #' @param output a table generated from Evenness function\cr
-#' @return a figure of estimated sample completeness with order q\cr
+#' @return a figure of estimated evenness with order q\cr
 #'
 #' @examples
 #' ## Type (1) example for abundance based data (data.frame)

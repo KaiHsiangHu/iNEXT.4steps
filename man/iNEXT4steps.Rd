@@ -7,7 +7,7 @@
 iNEXT4steps(
   data,
   diversity = "TD",
-  q = seq(0, 2, 0.25),
+  q = seq(0, 2, 0.2),
   datatype = "abundance",
   nboot = 50,
   nT = NULL,
@@ -29,7 +29,7 @@ iNEXT4steps(
 
 \item{diversity}{selection of diversity type: \code{'TD'} = Taxonomic diversity, \code{'PD'} = Phylogenetic diversity, and \code{'FD'} = Functional diversity.}
 
-\item{q}{a numerical vector specifying the diversity orders. Default is c(0, 1, 2).}
+\item{q}{a numerical vector specifying the diversity orders. Default is (0, 0.2, 0.4,...,2).}
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).}
 
@@ -56,7 +56,7 @@ iNEXT4steps(
 \item{details}{a logical variable to decide whether do you want to print out the detailed value for each plots, default is \code{FALSE}.}
 }
 \value{
-a list of two of objects: \cr\cr
+a list of three of objects: \cr\cr
 \code{$summary} individual summary of 4 steps of data. \cr\cr
 \code{$figure} 5 figures of analysis process. \cr\cr
 \code{$details} the information for generating \code{figure}. \cr
@@ -65,10 +65,10 @@ If you need it, you should key in \code{details = TRUE}. \cr\cr
 \description{
 \code{iNEXT4steps}:\cr
 A complete (random sampling) biological analysis combined with four parts:\cr
-Step1: Sample Completeness.\cr
-Step2: Interpolation and Extrapolation.\cr
-Step3: Asymptotic diversity.\cr
-Step4: Evenness.\cr
+Step 1. Sample completeness profiles\cr
+Step 2. Asymptotic analysis\cr
+Step 3. Non-asymptotic coverage-based rarefaction and extrapolation\cr
+Step 4. Evenness among species abundances\cr
 }
 \examples{
 \dontrun{
@@ -81,13 +81,15 @@ out1
 ## Ex.2
 data(brazil)
 data(brazil_tree)
-out2 <- iNEXT4steps(data = brazil, diversity = "PD", datatype = "abundance", nboot = 0, PDtree = brazil_tree)
+out2 <- iNEXT4steps(data = brazil, diversity = "PD", datatype = "abundance", 
+                    nboot = 0, PDtree = brazil_tree)
 out2
 
 ## Ex.3
 data(brazil)
 data(brazil_distM)
-out3 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", nboot = 0, FDdistM = brazil_distM, FDtype = 'tau_values')
+out3 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", 
+                    nboot = 0, FDdistM = brazil_distM, FDtype = 'tau_values')
 out3
 
 ## Type (2) example for incidence based data (list of data.frame)

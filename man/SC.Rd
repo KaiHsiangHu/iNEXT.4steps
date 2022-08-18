@@ -8,7 +8,7 @@ SC(
   data,
   q = seq(0, 2, 0.2),
   datatype = "abundance",
-  nboot = 30,
+  nboot = 50,
   conf = 0.95,
   nT = NULL
 )
@@ -18,7 +18,7 @@ SC(
 (b) For \code{datatype = "incidence_freq"}, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
 (c) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input.}
 
-\item{q}{a numerical vector specifying the diversity orders. Default is c(0, 1, 2).}
+\item{q}{a numerical vector specifying the diversity orders. Default is (0, 0.2, 0.4,...,2).}
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).}
 

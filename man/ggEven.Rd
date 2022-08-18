@@ -11,7 +11,7 @@ ggEven(output)
 \item{output}{a table generated from Evenness function\cr}
 }
 \value{
-a figure of estimated sample completeness with order q\cr
+a figure of estimated evenness with order q\cr
 }
 \description{
 ggplot for Evenness

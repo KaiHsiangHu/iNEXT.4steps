@@ -2,16 +2,16 @@
 #'
 #' \code{iNEXT4steps}:\cr
 #' A complete (random sampling) biological analysis combined with four parts:\cr
-#' Step1: Sample Completeness.\cr
-#' Step2: Interpolation and Extrapolation.\cr
-#' Step3: Asymptotic diversity.\cr
-#' Step4: Evenness.\cr
+#' Step 1. Sample completeness profiles\cr
+#' Step 2. Asymptotic analysis\cr
+#' Step 3. Non-asymptotic coverage-based rarefaction and extrapolation\cr
+#' Step 4. Evenness among species abundances\cr
 #' 
 #' @param data (a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
 #' (b) For \code{datatype = "incidence_freq"}, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
 #' (c) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
 #' @param diversity selection of diversity type: \code{'TD'} = Taxonomic diversity, \code{'PD'} = Phylogenetic diversity, and \code{'FD'} = Functional diversity.
-#' @param q a numerical vector specifying the diversity orders. Default is c(0, 1, 2).
+#' @param q a numerical vector specifying the diversity orders. Default is (0, 0.2, 0.4,...,2).
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).
 #' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.
 #' @param nT (required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc. 
@@ -36,7 +36,7 @@
 #' @importFrom stats rbinom
 #' @importFrom stats rmultinom
 #' @importFrom stats sd
-#' @return a list of two of objects: \cr\cr
+#' @return a list of three of objects: \cr\cr
 #' \code{$summary} individual summary of 4 steps of data. \cr\cr
 #' \code{$figure} 5 figures of analysis process. \cr\cr
 #' \code{$details} the information for generating \code{figure}. \cr
@@ -53,13 +53,15 @@
 #' ## Ex.2
 #' data(brazil)
 #' data(brazil_tree)
-#' out2 <- iNEXT4steps(data = brazil, diversity = "PD", datatype = "abundance", nboot = 0, PDtree = brazil_tree)
+#' out2 <- iNEXT4steps(data = brazil, diversity = "PD", datatype = "abundance", 
+#'                     nboot = 0, PDtree = brazil_tree)
 #' out2
 #' 
 #' ## Ex.3
 #' data(brazil)
 #' data(brazil_distM)
-#' out3 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", nboot = 0, FDdistM = brazil_distM, FDtype = 'tau_values')
+#' out3 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", 
+#'                     nboot = 0, FDdistM = brazil_distM, FDtype = 'tau_values')
 #' out3
 #' 
 #' ## Type (2) example for incidence based data (list of data.frame)
@@ -75,7 +77,7 @@
 #' Quantifying sample completeness and comparing diversities among assemblages. Ecological Research.
 #' @export
 
-iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.25), datatype = "abundance", nboot = 50, nT = NULL,
+iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50, nT = NULL,
                         PDtree = NULL, PDreftime = NULL, PDtype = 'meanPD', FDdistM = NULL, FDtype = 'AUC', FDtau = NULL,
                         p_row = 2, p_col = 3, details = FALSE) 
 {
