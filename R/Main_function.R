@@ -81,7 +81,7 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
                         PDtree = NULL, PDreftime = NULL, PDtype = 'meanPD', FDdistM = NULL, FDtype = 'AUC', FDtau = NULL,
                         p_row = 2, p_col = 3, details = FALSE) 
 {
-  if ((length(data) == 1) && (class(data) %in% c("numeric", "integer")))
+  if ((length(data) == 1) && (inherits(data, c("numeric", "integer"))))
     stop("Error: Your data does not have enough information.")
   
   logic = c("TRUE", "FALSE")

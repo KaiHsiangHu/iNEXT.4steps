@@ -160,12 +160,11 @@ SC <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
   if (pmatch(datatype, TYPE) == -1)
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
-  class_x <- class(data)[1]
   if (datatype == "incidence_raw") {data = iNEXT.3D:::as.incfreq(data, nT = nT); datatype = "incidence_freq"}
-  if (class(data) == "numeric" | class(data) == "integer") {
+  if (inherits(data, c("numeric", "integer"))) {
     data <- list(data = data)
   }
-  if (class(data) == "data.frame" | class(data) == "matrix") {
+  if (inherits(data, c("data.frame", "matrix"))) {
     datalist <- lapply(1:ncol(data), function(i) data[, i])
     if (is.null(colnames(data)))
       names(datalist) <- paste0("data", 1:ncol(data))
@@ -325,7 +324,7 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 
     out = lapply(E.class, function(i) {
       tmp = sapply(1:length(x), function(k) even.class(q, estqD[estqD$Assemblage == names(x)[k], "qD"], estS[estS$Assemblage == names(x)[k], "qD"], i, x[[k]]/sum(x[[k]])))
-      if (class(tmp)[1] %in% c("numeric","integer")) {tmp = t(as.matrix(tmp, nrow = 1))}
+      if (inherits(tmp, c("numeric","integer"))) {tmp = t(as.matrix(tmp, nrow = 1))}
       rownames(tmp) = q
       tmp
       })
@@ -336,7 +335,7 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
     
     out = lapply(E.class, function(i) {
       tmp = sapply(1:length(x), function(k) even.class(q, empqD[empqD$Assemblage == names(x)[k], "qD"], empS[empS$Assemblage == names(x)[k], "qD"], i, x[[k]]/sum(x[[k]])))
-      if (class(tmp)[1] %in% c("numeric","integer")) {tmp = t(as.matrix(tmp, nrow = 1))}
+      if (inherits(tmp, c("numeric","integer"))) {tmp = t(as.matrix(tmp, nrow = 1))}
       rownames(tmp) = q
       tmp
     })
@@ -400,7 +399,6 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
   if (pmatch(datatype, TYPE) == -1)
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
-  class_x <- class(data)[1]
   if (datatype == "incidence") {
     stop("datatype=\"incidence\" was no longer supported after v2.0.8, \n         please try datatype=\"incidence_freq\".")
   }
@@ -418,10 +416,10 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
     stop("invalid E.class")
 
   if (datatype == "incidence_raw") {data = iNEXT.3D:::as.incfreq(data, nT = nT); datatype = "incidence_freq"}
-  if (class(data) == "numeric" | class(data) == "integer") {
+  if (inherits(data, c("numeric", "integer"))) {
     data <- list(data = data)
   }
-  if (class(data) == "data.frame" | class(data) == "matrix") {
+  if (inherits(data, c("data.frame", "matrix"))) {
     datalist <- lapply(1:ncol(data), function(i) data[, i])
     if (is.null(colnames(data)))
       names(datalist) <- paste0("data", 1:ncol(data))
@@ -560,7 +558,7 @@ ggEven <- function(output) {
     guides(linetype = guide_legend(keywidth = 2.5))
   
   if (length(output) != 1) fig = fig +
-    facet_wrap( ~ class) +
+    facet_wrap(. ~ class) +
     theme(strip.text.x = element_text(size = 12, colour = "purple", face = "bold"))
   
   return(fig)
