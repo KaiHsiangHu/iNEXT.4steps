@@ -104,7 +104,7 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
                   "STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis",
                   "STEP4. Evenness among species abundances")
   ## SC ##
-  SC.table <- SC(data, q = q, datatype = datatype, nboot = nboot, conf = 0.95, nT = nT)
+  SC.table <- Completeness(data, q = q, datatype = datatype, nboot = nboot, conf = 0.95, nT = nT)
 
   ## iNEXT ##
   iNEXT.table <- iNEXT3D(data, diversity = diversity, q = c(0, 1, 2), datatype = datatype, nboot = nboot, nT = nT, 
@@ -129,7 +129,7 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
 
   ## 5 figures ##
   if (length(unique(SC.table$Assemblage)) <= 8) {
-    SC.plot <- ggSC(SC.table) +
+    SC.plot <- ggCompleteness(SC.table) +
       labs(title = plot.names[1]) +
       theme(text = element_text(size = 12),
             plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
@@ -155,7 +155,7 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
             plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
             plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
 
-    even.plot <- ggEven(Even.table) +
+    even.plot <- ggEvenness(Even.table) +
       labs(title = plot.names[5]) +
       theme(text = element_text(size = 12),
             plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),

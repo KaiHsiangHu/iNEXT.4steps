@@ -118,10 +118,10 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 }
 
 
-# SC -------------------------------------------------------------------
+# Completeness -------------------------------------------------------------------
 #' Sample Completeness main function
 #'
-#' \code{SC} Estimation of Sample Completeness with order q
+#' \code{Completeness} Estimation of Sample Completeness with order q
 #'
 #' @param data (a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
 #' (b) For \code{datatype = "incidence_freq"}, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
@@ -137,13 +137,13 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
 #' data(Spider)
-#' out1 <- SC(data = Spider, datatype = "abundance")
+#' out1 <- Completeness(data = Spider, datatype = "abundance")
 #' out1
 #'
 #' ## Type (2) example for incidence based data (list of data.frame)
 #' ## Ex.2
 #' data(woody_incid)
-#' out2 <- SC(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' out2 <- Completeness(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
 #' out2
 #'
 #' @references
@@ -151,7 +151,7 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 #' Quantifying sample completeness and comparing diversities among assemblages.
 #' @export
 
-SC <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
+Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
                 conf = 0.95, nT = NULL)
 {
   TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
@@ -220,33 +220,33 @@ SC <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
 }
 
 
-# ggSC -------------------------------------------------------------------
+# ggCompleteness -------------------------------------------------------------------
 #' ggplot for Sample Completeness
 #'
-#' \code{ggSC} the \code{\link[ggplot2]{ggplot}} extension for \code{\link{SC}} Object to plot sample completeness with order q
+#' \code{ggCompleteness} the \code{\link[ggplot2]{ggplot}} extension for \code{\link{Completeness}} Object to plot sample completeness with order q
 #'
-#' @param output a table generated from SC function
+#' @param output a table generated from Completeness function
 #' @return a figure of estimated sample completeness with order q
 #'
 #' @examples
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
 #' data(Spider)
-#' out1 <- SC(data = Spider, datatype = "abundance")
-#' ggSC(out1)
+#' out1 <- Completeness(data = Spider, datatype = "abundance")
+#' ggCompleteness(out1)
 #'
 #' ## Type (2) example for incidence based data (list of data.frame)
 #' ## Ex.2
 #' data(woody_incid)
-#' out2 <- SC(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
-#' ggSC(out2)
+#' out2 <- Completeness(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' ggCompleteness(out2)
 #'
 #' @references
 #' Chao,A.,Y.Kubota,D.Zelený,C.-H.Chiu.
 #' Quantifying sample completeness and comparing diversities among assemblages.
 #' @export
 
-ggSC <- function(output) {
+ggCompleteness <- function(output) {
   cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
                      "#330066", "#CC79A7", "#0072B2", "#D55E00"))
   ggplot(output, aes(x = Order.q, y = Estimate.SC, colour = Assemblage))+
@@ -508,10 +508,10 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
 
 
 
-# ggEven -------------------------------------------------------------------
+# ggEvenness -------------------------------------------------------------------
 #' ggplot for Evenness
 #
-#' \code{ggEven} the \code{\link[ggplot2]{ggplot}} extension for \code{\link{Evenness}} Object to plot evenness with order q\cr
+#' \code{ggEvenness} the \code{\link[ggplot2]{ggplot}} extension for \code{\link{Evenness}} Object to plot evenness with order q\cr
 #'
 #' @param output a table generated from Evenness function\cr
 #' @return a figure of estimated evenness with order q\cr
@@ -521,19 +521,19 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
 #' ## Ex.1
 #' data(Spider)
 #' out1 <- Evenness(data = Spider, datatype = "abundance")
-#' ggEven(out1)
+#' ggEvenness(out1)
 #'
 #' ## Type (2) example for incidence based data (list of data.frame)
 #' ## Ex.2
 #' data(woody_incid)
 #' out2 <- Evenness(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
-#' ggEven(out2)
+#' ggEvenness(out2)
 #'
 #' @references
 #' Chao,A.and Ricotta,C.(2019).Quantifying evenness and linking it to diversity, beta diversity, and similarity.
 #' @export
 
-ggEven <- function(output) {
+ggEvenness <- function(output) {
   if (names(output[1]) == "Coverage")  output = output[-1]
   cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
                      "#330066", "#CC79A7", "#0072B2", "#D55E00"))
