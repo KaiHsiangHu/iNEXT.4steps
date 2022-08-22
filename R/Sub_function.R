@@ -1,4 +1,3 @@
-# summary.deal -------------------------------------------------------------------
 # Generate the summary table from the deatils of each function.
 #
 # \code{summary.deal} Generate the summary table of four lists from the deatils of each function.
@@ -37,7 +36,6 @@ summary.deal <- function(table, step, Pielou = NULL) {
 }
 
 
-# sample_completeness -------------------------------------------------------------------
 # \code{sample_completeness} Estimation of Sample Completeness with order q
 #
 # @param x a vector of data
@@ -118,7 +116,6 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 }
 
 
-# Completeness -------------------------------------------------------------------
 #' Sample Completeness main function
 #'
 #' \code{Completeness} Estimation of Sample Completeness with order q
@@ -220,7 +217,6 @@ Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboo
 }
 
 
-# ggCompleteness -------------------------------------------------------------------
 #' ggplot for Sample Completeness
 #'
 #' \code{ggCompleteness} the \code{\link[ggplot2]{ggplot}} extension for \code{\link{Completeness}} Object to plot sample completeness with order q
@@ -267,7 +263,6 @@ ggCompleteness <- function(output) {
 }
 
 
-# even.class -------------------------------------------------------------------
 # Calculate six classes for Evenness
 #
 # @param q a integer vector for the order of Hill number
@@ -306,7 +301,6 @@ even.class = function(q, qD, S, E.class, pi) {
 }
 
 
-# Evenness.profile -------------------------------------------------------------------
 # \code{Evenness.profile} Estimation or Empirical of Evenness with order q
 #
 # @param x a data.frame, a vector, or a list for data.
@@ -346,7 +340,6 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 }
 
 
-# Evenness -------------------------------------------------------------------
 #' Evenness main function
 #'
 #' \code{Evenness} Estimation (Empirical) of Evenness with order q
@@ -459,8 +452,11 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
     })
-    if (is.null(C) == TRUE) C = unique(estimate3D(data, diversity = 'TD', q = 0, datatype = "abundance", base = "coverage", nboot = 0)$SC)
-    if (method=="Estimated") {out <- append(C, out)}
+    
+    if (method=="Estimated") {
+      if (is.null(C) == TRUE) C = sapply(data, function(x) iNEXT.3D:::Coverage(x, "abundance", 2*sum(x))) %>% min
+      out <- append(C, out)
+      }
 
   } else if (datatype == "incidence_freq") {
     qD <- Evenness.profile(data, q, "incidence_freq", method, E.class, C)
@@ -495,8 +491,11 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
     })
-    if (is.null(C) == TRUE) C = unique(estimate3D(data, diversity = 'TD', q = 0, datatype = "incidence_freq", base = "coverage", nboot = 0)$SC)
-    if (method == "Estimated") {out <- append(C, out)}
+    
+    if (method == "Estimated") {
+      if (is.null(C) == TRUE) C = sapply(data, function(x) iNEXT.3D:::Coverage(x, "incidence_freq", 2*x[1])) %>% min
+      out <- append(C, out)
+      }
   }
 
   if (method=="Estimated") {
@@ -508,7 +507,6 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
 
 
 
-# ggEvenness -------------------------------------------------------------------
 #' ggplot for Evenness
 #
 #' \code{ggEvenness} the \code{\link[ggplot2]{ggplot}} extension for \code{\link{Evenness}} Object to plot evenness with order q\cr
