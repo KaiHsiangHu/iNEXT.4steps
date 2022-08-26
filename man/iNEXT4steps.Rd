@@ -17,8 +17,6 @@ iNEXT4steps(
   FDdistM = NULL,
   FDtype = "AUC",
   FDtau = NULL,
-  p_row = 2,
-  p_col = 3,
   details = FALSE
 )
 }
@@ -49,11 +47,11 @@ iNEXT4steps(
 
 \item{FDtau}{(required only when \code{diversity = "FD"} and \code{FDtype = "tau_values"}), a numerical vector between 0 and 1 specifying tau values (threshold levels). If \code{NULL} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled assemblage (i.e., quadratic entropy).}
 
+\item{details}{a logical variable to decide whether do you want to print out the detailed value for each plots, default is \code{FALSE}.}
+
 \item{p_row}{row number for 4 steps figure, default = 2.}
 
 \item{p_col}{column number for 4 steps figure, default = 3.}
-
-\item{details}{a logical variable to decide whether do you want to print out the detailed value for each plots, default is \code{FALSE}.}
 }
 \value{
 a list of three of objects: \cr\cr

@@ -79,7 +79,7 @@
 
 iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50, nT = NULL,
                         PDtree = NULL, PDreftime = NULL, PDtype = 'meanPD', FDdistM = NULL, FDtype = 'AUC', FDtau = NULL,
-                        p_row = 2, p_col = 3, details = FALSE) 
+                        details = FALSE) 
 {
   if ((length(data) == 1) && (inherits(data, c("numeric", "integer"))))
     stop("Error: Your data does not have enough information.")
@@ -94,11 +94,11 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
   if ((diversity == "FD") && is.null(FDdistM))
     stop("You should input distance data for Functional diversity.")
 
-  plot.names = c("(a) Sample completeness profiles",
-                 "(b) Size-based rarefaction/extrapolation",
-                 "(c) Asymptotic and empirical diversity profiles",
-                 "(d) Coverage-based rarefaction/extrapolation",
-                 "(e) Evenness profiles")
+  plot.names = c("(a) STEP1.\n Sample completeness profiles",
+                 "(b) STEP2(i).\n Size-based rarefaction/extrapolation",
+                 "(c) STEP2(ii).\n Asymptotic and empirical diversity profiles",
+                 "(d) STEP3.\n Coverage-based rarefaction/extrapolation",
+                 "(e) STEP4.\n Evenness profiles")
   table.names = c("STEP1. Sample completeness profiles",
                   "STEP2. Asymptotic analysis",
                   "STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis",
@@ -167,7 +167,7 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
                            AO.plot      + guides(color = FALSE, fill = FALSE),
                            cover.RE.plot + guides(color = FALSE, fill = FALSE, shape = FALSE),
                            even.plot     + guides(color = FALSE, fill = FALSE),
-                           legend.p, nrow = p_row, ncol = p_col
+                           legend.p, nrow = 3, ncol = 2
     )
   } else { warning("The number of communities exceeds eight. We don't show the figures.") }
   
@@ -176,7 +176,9 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
   
   ##  Outpue_summary ##
   summary = list(summary.deal(SC.table, 1),
-                 iNEXT.table[[3]],
+                 (iNEXT.table[[3]] %>%  
+                    lapply(FUN = function(x) if(is.numeric(x)) round(x,3)
+                                               else x) %>% data.frame()),
                  summary.deal(est3D, 3),
                  summary.deal(Even.table, 4, estD)
   )
@@ -218,13 +220,17 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
 summary.deal <- function(table, step, Pielou = NULL) {
   if (step == 1) {
     tmp = (table %>% filter(Order.q %in% c(0,1,2)))[, c("Order.q", "Estimate.SC", "Assemblage")]
-    out = dcast(tmp, Assemblage ~ Order.q, value.var = "Estimate.SC")
+    out = dcast(tmp, Assemblage ~ Order.q, value.var = "Estimate.SC") %>% 
+      lapply(FUN = function(x) if(is.numeric(x)) round(x,3)
+                     else x) %>% data.frame()
     colnames(out)[-1] = paste("q = ", c(0,1,2), sep="")
   }
   if (step == 3){
     tmp = table[,c(1, 5, 6)]
     C = round(min(table$SC), 3)
-    out = dcast(tmp, Assemblage ~ Order.q, value.var = colnames(tmp)[3])
+    out = dcast(tmp, Assemblage ~ Order.q, value.var = colnames(tmp)[3]) %>% 
+      lapply(FUN = function(x) if(is.numeric(x)) round(x,3)
+             else x) %>% data.frame()
     colnames(out) = c(paste("maxC = ", C, sep = ""),
                       paste("q = ", c(0, 1, 2), sep = ""))
   }
@@ -238,6 +244,7 @@ summary.deal <- function(table, step, Pielou = NULL) {
     S = (Pielou %>% filter(Order.q == 0))[,c("Assemblage", "qD")]
     out[,1] = sapply(rownames(out), function(x) log(D[D$Assemblage == x,"qD"])/log(S[S$Assemblage == x,"qD"]))
     colnames(out) = c("Pielou J'", paste("q = ", c(1,2), sep=""))
+    out <- round(out,3)
   }
   
   return(out)
@@ -517,7 +524,7 @@ even.class = function(q, qD, S, E.class, pi) {
 # @param method a binary calculation method with 'Estimated' or 'Empirical'
 # @param E.class a integer vector between 1 to 6
 # @param C a standardized coverage for calculating evenness index
-# @return a list of estimated(empirical) evenness with order q, each list is combined with a matrix
+# @return a list of estimated(or empirical) evenness with order q, each list is combined with a matrix
 
 Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), method, E.class, C = NULL) {
   if (method == "Estimated") {
@@ -532,8 +539,8 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
     })
   } else if (method == "Empirical") {
     
-    empqD = AO3D(x, diversity = 'TD', q = q, datatype = datatype, nboot = 0, method = 'Empirical')
-    empS = AO3D(x, diversity = 'TD', q = 0, datatype = datatype, nboot = 0, method = 'Empirical')
+    empqD = AO3D(x, diversity = 'TD', q = q, datatype = datatype, nboot = 0, method = 'Observed')
+    empS = AO3D(x, diversity = 'TD', q = 0, datatype = datatype, nboot = 0, method = 'Observed')
     
     out = lapply(E.class, function(i) {
       tmp = sapply(1:length(x), function(k) even.class(q, empqD[empqD$Assemblage == names(x)[k], "qD"], empS[empS$Assemblage == names(x)[k], "qD"], i, x[[k]]/sum(x[[k]])))
