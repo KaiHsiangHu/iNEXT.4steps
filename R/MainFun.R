@@ -21,8 +21,6 @@
 #' @param FDdistM (required only when \code{diversity = "FD"}), a species pairwise distance matrix for all species in the pooled assemblage. 
 #' @param FDtype (required only when \code{diversity = "FD"}), select FD type: \code{FDtype = "tau_values"} for FD under specified threshold values, or \code{FDtype = "AUC"} (area under the curve of tau-profile) for an overall FD which integrates all threshold values between zero and one. Default is \code{"AUC"}.  
 #' @param FDtau (required only when \code{diversity = "FD"} and \code{FDtype = "tau_values"}), a numerical vector between 0 and 1 specifying tau values (threshold levels). If \code{NULL} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled assemblage (i.e., quadratic entropy). 
-#' @param p_row row number for 4 steps figure, default = 2.
-#' @param p_col column number for 4 steps figure, default = 3.
 #' @param details a logical variable to decide whether do you want to print out the detailed value for each plots, default is \code{FALSE}.
 #' 
 #' @import devtools
@@ -66,8 +64,8 @@
 #' 
 #' ## Type (2) example for incidence based data (list of data.frame)
 #' ## Ex.1
-#' data(woody_incid)
-#' out <- iNEXT4steps(data = woody_incid[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
+#' data(woody_plants)
+#' out <- iNEXT4steps(data = woody_plants[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
 #' out
 #' 
 #' }
@@ -95,8 +93,8 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
     stop("You should input distance data for Functional diversity.")
 
   plot.names = c("(a) STEP1.\n Sample completeness profiles",
-                 "(b) STEP2(i).\n Size-based rarefaction/extrapolation",
-                 "(c) STEP2(ii).\n Asymptotic and empirical diversity profiles",
+                 "(b) STEP2.1.\n Size-based rarefaction/extrapolation",
+                 "(c) STEP2.2.\n Asymptotic and empirical diversity profiles",
                  "(d) STEP3.\n Coverage-based rarefaction/extrapolation",
                  "(e) STEP4.\n Evenness profiles")
   table.names = c("STEP1. Sample completeness profiles",
@@ -177,7 +175,7 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
   ##  Outpue_summary ##
   summary = list(summary.deal(SC.table, 1),
                  (iNEXT.table[[3]] %>%  
-                    lapply(FUN = function(x) if(is.numeric(x)) round(x,3)
+                    lapply(FUN = function(x) if(is.numeric(x)) round(x,2)
                                                else x) %>% data.frame()),
                  summary.deal(est3D, 3),
                  summary.deal(Even.table, 4, estD)
@@ -221,7 +219,7 @@ summary.deal <- function(table, step, Pielou = NULL) {
   if (step == 1) {
     tmp = (table %>% filter(Order.q %in% c(0,1,2)))[, c("Order.q", "Estimate.SC", "Assemblage")]
     out = dcast(tmp, Assemblage ~ Order.q, value.var = "Estimate.SC") %>% 
-      lapply(FUN = function(x) if(is.numeric(x)) round(x,3)
+      lapply(FUN = function(x) if(is.numeric(x)) round(x,2)
                      else x) %>% data.frame()
     colnames(out)[-1] = paste("q = ", c(0,1,2), sep="")
   }
@@ -229,9 +227,9 @@ summary.deal <- function(table, step, Pielou = NULL) {
     tmp = table[,c(1, 5, 6)]
     C = round(min(table$SC), 3)
     out = dcast(tmp, Assemblage ~ Order.q, value.var = colnames(tmp)[3]) %>% 
-      lapply(FUN = function(x) if(is.numeric(x)) round(x,3)
+      lapply(FUN = function(x) if(is.numeric(x)) round(x,2)
              else x) %>% data.frame()
-    colnames(out) = c(paste("maxC = ", C, sep = ""),
+    colnames(out) = c(paste("Cmax = ", C, sep = ""),
                       paste("q = ", c(0, 1, 2), sep = ""))
   }
   if (step == 4){
@@ -244,7 +242,7 @@ summary.deal <- function(table, step, Pielou = NULL) {
     S = (Pielou %>% filter(Order.q == 0))[,c("Assemblage", "qD")]
     out[,1] = sapply(rownames(out), function(x) log(D[D$Assemblage == x,"qD"])/log(S[S$Assemblage == x,"qD"]))
     colnames(out) = c("Pielou J'", paste("q = ", c(1,2), sep=""))
-    out <- round(out,3)
+    out <- round(out,2)
   }
   
   return(out)
@@ -354,8 +352,8 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 #'
 #' ## Type (2) example for incidence based data (list of data.frame)
 #' ## Ex.2
-#' data(woody_incid)
-#' out2 <- Completeness(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' data(woody_plants)
+#' out2 <- Completeness(data = woody_plants[,c(1,4)], datatype = "incidence_freq")
 #' out2
 #'
 #' @references
@@ -448,8 +446,8 @@ Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboo
 #'
 #' ## Type (2) example for incidence based data (list of data.frame)
 #' ## Ex.2
-#' data(woody_incid)
-#' out2 <- Completeness(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' data(woody_plants)
+#' out2 <- Completeness(data = woody_plants[,c(1,4)], datatype = "incidence_freq")
 #' ggCompleteness(out2)
 #'
 #' @references
@@ -521,10 +519,10 @@ even.class = function(q, qD, S, E.class, pi) {
 # @param x a data.frame, a vector, or a list for data.
 # @param q a integer vector for the order of Hill number.
 # @param datatype a binary choose with 'abundance' or 'incidence_freq'
-# @param method a binary calculation method with 'Estimated' or 'Empirical'
+# @param method a binary calculation method with 'Estimated' or 'Observed'
 # @param E.class a integer vector between 1 to 6
 # @param C a standardized coverage for calculating evenness index
-# @return a list of estimated(or empirical) evenness with order q, each list is combined with a matrix
+# @return a list of estimated(Observed) evenness with order q, each list is combined with a matrix
 
 Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), method, E.class, C = NULL) {
   if (method == "Estimated") {
@@ -537,7 +535,7 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
       rownames(tmp) = q
       tmp
     })
-  } else if (method == "Empirical") {
+  } else if (method == "Observed") {
     
     empqD = AO3D(x, diversity = 'TD', q = q, datatype = datatype, nboot = 0, method = 'Observed')
     empS = AO3D(x, diversity = 'TD', q = 0, datatype = datatype, nboot = 0, method = 'Observed')
@@ -557,7 +555,7 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 
 #' Evenness main function
 #'
-#' \code{Evenness} Estimation (Empirical) of Evenness with order q
+#' \code{Evenness} Estimation (Observed) of Evenness with order q
 #'
 #' R scipts "Evenness" for Chao and Ricotta (2019) Ecology paper.
 #' This R code is for computing Figures 2, 3 and 4 of Chao and Ricotta (2019) paper.
@@ -568,13 +566,13 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' (c) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
 #' @param q a numerical vector specifying the diversity orders. Default is (0, 0.2, 0.4,...,2).
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).
-#' @param method a binary calculation method with 'Estimated' or 'Empirical'.\cr
+#' @param method a binary calculation method with 'Estimated' or 'Observed'.\cr
 #' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.
 #' @param conf a positive number < 1 specifying the level of confidence interval. Default is 0.95.
 #' @param nT (required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc. 
 #' @param E.class an integer vector between 1 to 5
 #' @param C a standardized coverage for calculating estimated evenness. It is used when \code{method = 'Estimated'}. If \code{NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (C = Cmax).
-#' @return A list of estimated(empirical) evenness with order q.\cr
+#' @return A list of estimated(observed) evenness with order q.\cr
 #'         Different lists represent different classes of Evenness.\cr
 #'         Each list is combined with order.q and sites.\cr
 #'         If "method" is estimated, then fist list will be named "C" which means the
@@ -590,8 +588,8 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #'
 #' ## Type (2) example for incidence based data (list of data.frame)
 #' ## Ex.2
-#' data(woody_incid)
-#' out2 <- Evenness(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' data(woody_plants)
+#' out2 <- Evenness(data = woody_plants[,c(1,4)], datatype = "incidence_freq")
 #' out2
 #'
 #' @references
@@ -611,7 +609,7 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
     stop("datatype=\"incidence\" was no longer supported after v2.0.8, \n         please try datatype=\"incidence_freq\".")
   }
   
-  kind <- c("Estimated", "Empirical")
+  kind <- c("Estimated", "Observed")
   if (length(method) > 1)
     stop("only one calculation method")
   if (is.na(pmatch(method, kind)))
@@ -715,7 +713,7 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
   
   if (method=="Estimated") {
     names(out) = c("Coverage", paste("E", E.class, sep = ""))
-  } else if (method=="Empirical") {names(out) = paste("E", E.class, sep = "")}
+  } else if (method=="Observed") {names(out) = paste("E", E.class, sep = "")}
   
   return(out)
 }
@@ -738,8 +736,8 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
 #'
 #' ## Type (2) example for incidence based data (list of data.frame)
 #' ## Ex.2
-#' data(woody_incid)
-#' out2 <- Evenness(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
+#' data(woody_plants)
+#' out2 <- Evenness(data = woody_plants[,c(1,4)], datatype = "incidence_freq")
 #' ggEvenness(out2)
 #'
 #' @references

@@ -48,10 +48,6 @@ iNEXT4steps(
 \item{FDtau}{(required only when \code{diversity = "FD"} and \code{FDtype = "tau_values"}), a numerical vector between 0 and 1 specifying tau values (threshold levels). If \code{NULL} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled assemblage (i.e., quadratic entropy).}
 
 \item{details}{a logical variable to decide whether do you want to print out the detailed value for each plots, default is \code{FALSE}.}
-
-\item{p_row}{row number for 4 steps figure, default = 2.}
-
-\item{p_col}{column number for 4 steps figure, default = 3.}
 }
 \value{
 a list of three of objects: \cr\cr
@@ -92,8 +88,8 @@ out3
 
 ## Type (2) example for incidence based data (list of data.frame)
 ## Ex.1
-data(woody_incid)
-out <- iNEXT4steps(data = woody_incid[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
+data(woody_plants)
+out <- iNEXT4steps(data = woody_plants[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
 out
 
 }

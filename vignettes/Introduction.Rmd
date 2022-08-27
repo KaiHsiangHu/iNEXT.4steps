@@ -13,7 +13,7 @@ output:
 knitr::opts_chunk$set(collapse = TRUE, comment = "", 
                       fig.retina = 2,
                       fig.align = 'center',
-                      fig.width = 12, fig.height = 8,
+                      fig.width = 12, fig.height = 10.5,
                       warning = FALSE, message = FALSE)
 options("width" = 200)
 if("ggthemes" %in% rownames(installed.packages()) == FALSE) {install.packages("ggthemes")}
@@ -51,7 +51,7 @@ These are the foundation of `iNEXT.4steps`. Here we will introduce functions abo
 2. Coverage-based R/E sampling curves: `iNEXT3D` computes rarefied and extrapolated <font color=#FF6781>Taxonomic, Phylogenetic or Functional</font> diversity estimates under a specified sample coverage. This type of diversity curve plots the estimated diversity with respect to sample coverage. 
 
 
-In the package, we provide other four functions for users to calculate <font color=#FF6781>and visualize the related biological statistics: `SC` and `Evenness`, for calculation. `ggSC` and `ggEven`, for visualization .</font> The most comprehensive function `iNEXT4steps` gathers `iNEXT3D`, `Asy3D`, `Obs3D`, `SC` and `Evenness` into a figure. In this document, we will give a quick introduction demonstrating how to run these functions. Detailed information about these function settings is provided in the `iNEXT.4steps` Manual, which is also available in [CRAN](https://cran.r-project.org/package=iNEXT.4steps). The theoretical basis about these biological statistics can be obtained from the following inference:
+In the package, we provide other four functions for users to calculate <font color=#FF6781>and visualize the related biological statistics: `Completeness` and `Evenness`, for calculation. `ggCompleteness` and `ggEvenness`, for visualization .</font> The most comprehensive function `iNEXT4steps` gathers `iNEXT3D`, `AO3D`, `Completeness` and `Evenness` into a figure. In this document, we will give a quick introduction demonstrating how to run these functions. Detailed information about these function settings is provided in the `iNEXT.4steps` Manual, which is also available in [CRAN](https://cran.r-project.org/package=iNEXT.4steps). The theoretical basis about these biological statistics can be obtained from the following inference:
 (http://chao.stat.nthu.edu.tw/wordpress/paper/135.pdf)
 
 Some proposed theoretical references to each step:
@@ -136,7 +136,7 @@ iNEXT4steps(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "abundance",
             nboot = 50, nT = NULL,
             PDtree = NULL, PDreftime = NULL, PDtype = "meanPD",
             FDdistM = NULL, FDtype = "AUC", FDtau = NULL,
-            p_row = 2, p_col = 3, details = FALSE
+            details = FALSE
 )
 ```
 
@@ -167,7 +167,7 @@ The arguments of this function are briefly described below, and will explain det
 </tr>
 <tr class="odd">
 <td align="center"><code>q</code></td>
-<td align="left"><font color=#FF6781>a numerical vector specifying the diversity orders. Default is `seq(0, 2, 0.2)`</font>.</td>
+<td align="left"><font color=#FF6781>a numerical vector specifying the diversity orders. Default is (0,0.2,0.4,...,2)</font>.</td>
 </tr>
 <tr class="even">
 <td align="center"><code>datatype</code></td>
@@ -206,14 +206,6 @@ The arguments of this function are briefly described below, and will explain det
 <td align="left">(required only when `diversity = "FD"` and `FDtype = "tau_values"`), a numerical vector between 0 and 1 specifying tau values (threshold levels). If `NULL` (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled assemblage (i.e., quadratic entropy).</td>
 </tr>
 <tr class="odd">
-<td align="center"><code>p_row</code></td>
-<td align="left">row number for 4 steps figure, default = 2.</td>
-</tr>
-<tr class="even">
-<td align="center"><code>p_col</code></td>
-<td align="left">column number for 4 steps figure, default = 3.</td>
-</tr>
-<tr class="odd">
 <td align="center"><code>details</code></td>
 <td align="left">a logical variable to decide whether do you want to print out the detailed value for each plots, default is `FALSE`.</td>
 </tr>
@@ -238,9 +230,18 @@ The output of `iNEXT4steps` will have three parts (if you sets `details = TRUE`)
 `“abundance Data”` usually indicated a random sampling source, and the individuals spread uniformly all over the area. If the species in your data has gathering effect, such as a kind of plant usually live near each other instead of spreading uniformly, then we will propose `datatype = “incidence_freq”` or `datatype = “incidence_raw”`. So user can follow a rule: `datatype = “abundance”` for animals and `datatype = “incidence”` for plants.
 First, we try to calculate taxonomic diversity for `Spider`
 
+### Spider abundance-based data ###
+
+These data were sampled in a mountain forest ecosystem in the Bavarian Forest National Park, Germany (Thorn et al. 2016, 2017).
+A total of 12 experimental plots were established in "closed forest" stands (6 plots) and "open forest" stands with naturally occurring gaps and edges (6 plots) to assess the effects of microclimate on communities of epigeal (ground-dwelling) spiders.
+Epigeal spiders were sampled over three years with four pitfall traps in each plot, yielding a total of 3171 individuals belonging to 85 species recorded in the pooled habitat.
+
+Data Source : A mountain forest ecosystem in the Bavarian Forest National Park, Germany (Thorn et al. 2016, 2017).
+
+
 ## Abundance-based ##
 
-```{r align="center", out.width="100%"}
+```{r align="center",out.width="100%"}
 data(Spider)
 out1 <- iNEXT4steps(data = Spider, diversity = "TD", datatype = "abundance")
 out1$summary
@@ -259,9 +260,17 @@ Each meaning will be introduced in the individual function latter (except figure
 Incidence data usually match by incidence-sampling-units. We split an area into several the same-size area and only care whether the species is detected or non-detected. According to this sampling method, `incidence_raw` data has value “zero” and “one”. And `incidence_freq` data is the total frequency incidence in each assemblage. You should input your total sampling units (plots number) in the first row. \cr
 *Remark:* The phylogenetic diversity can only select `datatype = “incidence_raw”` for incidence-based data.
 
+### Woody plants incidence-based data ###
+
+The datasets considered here are a subset of The National Vegetation Database of Taiwan (AS-TW-001), sampled between 2003 and 2007 within the first national vegetation inventory project (Chiou et al. 2009).
+Over 3600 vegetation plots, each 20x20-m in area, were set up in various locations in Taiwan, and all woody plant individuals taller than 2 meters were recorded in each plot.
+For illustration here, we selected only plots belonging to two vegetation types (according to Li et al. 2013): Pyrenaria-Machilus subtropical winter monsoon forest and Chamaecyparis montane mixed cloud forest, sampled in the northern part of Taiwan (in ecoregions 7 and 8 according to Su 1985).
+
+Data Source : The National Vegetation Database of Taiwan (AS-TW-001).
+
 ```{r align="center", out.width="100%"}
-data(woody_incid)
-out2 <- iNEXT4steps(data = woody_incid[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
+data(woody_plants)
+out2 <- iNEXT4steps(data = woody_plants[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
 out2$summary
 out2$figure[[6]]
 ```
@@ -281,7 +290,7 @@ If you want to use incidence-based data, you should use `datatype = "incidence_r
 ```{r align="center", out.width="100%"}
 data(brazil)
 data(brazil_tree)
-out3 <- iNEXT4steps(data = brazil, diversity = "PD", datatype = "abundance", nboot = 0, PDtree = brazil_tree)
+out3 <- iNEXT4steps(data = brazil, diversity = "PD", datatype = "abundance", nboot = 20, PDtree = brazil_tree)
 out3$summary
 out3$figure[[6]]
 ```
@@ -301,12 +310,12 @@ out4$summary
 out4$figure[[6]]
 ```
 
-## MAIN FUNCTION: SC()
+## MAIN FUNCTION: Completeness()
 
-Function `SC()` provides a easy way to compute estimated sample completeness with order q. It has default arguments: 
+Function `Completeness()` provides a easy way to compute estimated sample completeness with order q. It has default arguments: 
 
 ```{r eval=FALSE}
-SC(data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50, conf = 0.95, nT = NULL)
+Completeness(data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50, conf = 0.95, nT = NULL)
 ```
 
 <table style="width:100%;">
@@ -331,7 +340,7 @@ SC(data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50, conf = 0.95, nT
 </tr>
 <tr class="even">
 <td align="center"><code>q</code></td>
-<td align="left">a numerical vector specifying the diversity orders. Default is `seq(0, 2, by = 0.2)`.</td>
+<td align="left">a numerical vector specifying the diversity orders. Default is (0,0.2,0.4,...,2).</td>
 </tr>
 <tr class="odd">
 <td align="center"><code>datatype</code></td>
@@ -353,12 +362,12 @@ SC(data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50, conf = 0.95, nT
 </tbody>
 </table>
 
-## MAIN FUNCTION: ggSC()
+## MAIN FUNCTION: ggCompleteness()
 
-We also provides a realized function `ggSC` to plot the output from `SC()`:
+We also provides a realized function `ggCompleteness` to plot the output from `Completeness()`:
 
 ```{r eval=FALSE}
-ggSC(output)
+ggCompleteness(output)
 ```
 
 <table style="width:100%;">
@@ -375,23 +384,23 @@ ggSC(output)
 <tbody>
 <tr class="odd">
 <td align="center"><code>output</code></td>
-<td align="left">a table generated from function `SC`.
+<td align="left">a table generated from function `Completeness`.
 </td>
 
 </tbody>
 </table>
 
 
-There are two simple example for funciton `SC` and function `ggSC`, one for abundance-based and the other for incidence-based data. 
+There are two simple example for funciton `Completeness` and function `ggCompleteness`, one for abundance-based and the other for incidence-based data. 
 
 ## Abundance-based ##
 
 We use data Spider to calculate abundance-based sample completeness and plot it.
 
-```{r out.width="100%"}
+```{r out.width="70%",fig.height=8}
 data(Spider)
-out1 <- SC(data = Spider, datatype = "abundance")
-ggSC(out1)
+out1 <- Completeness(data = Spider, datatype = "abundance")
+ggCompleteness(out1)
 ```
 
 
@@ -399,10 +408,10 @@ ggSC(out1)
 
 We use data woody to calculate incidence-based sample completeness and plot it.
 
-```{r out.width="100%"}
-data(woody_incid)
-out2 <- SC(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
-ggSC(out2)
+```{r out.width="70%",fig.height=8}
+data(woody_plants)
+out2 <- Completeness(data = woody_plants[,c(1,4)], datatype = "incidence_freq")
+ggCompleteness(out2)
 ```
 
 
@@ -438,7 +447,7 @@ Evenness(data, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
 </tr>
 <tr class="even">
 <td align="center"><code>q</code></td>
-<td align="left">a numerical vector specifying the diversity orders. Default is seq(0, 2, by = 0.2).</td>
+<td align="left">a numerical vector specifying the diversity orders. Default is (0,0.2,0.4,...,2).</td>
 </tr>
 <tr class="odd">
 <td align="center"><code>datatype</code></td>
@@ -472,12 +481,12 @@ Evenness(data, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
 </tbody>
 </table>
 
-## MAIN FUNCTION: ggEven()
+## MAIN FUNCTION: ggEvenness()
 
-We provide a function `ggEven()` to plot the output from `Evenness()`.
+We provide a function `ggEvenness()` to plot the output from `Evenness()`.
 
 ```{r eval=FALSE}
-ggEven(output)
+ggEvenness(output)
 ```
 
 <table style="width:100%;">
@@ -500,16 +509,16 @@ ggEven(output)
 </tbody>
 </table>
 
-There are two simple example for funciton `Evenness` and function `ggEven`, one for abundance-based and the other for incidence-based data. 
+There are two simple example for funciton `Evenness` and function `ggEvenness`, one for abundance-based and the other for incidence-based data. 
 
 ## Abundance-based ##
 
 We use data Spider to calculate abundance-based evenness and plot it.
 
-```{r out.width="100%"}
+```{r out.width="100%",fig.height=8}
 data(Spider)
 out1 <- Evenness(data = Spider, datatype = "abundance")
-ggEven(out1)
+ggEvenness(out1)
 ```
 
 
@@ -518,10 +527,10 @@ ggEven(out1)
 We use data woody to calculate incidence-based evenness and plot it.
 
 
-```{r out.width="100%"}
-data(woody_incid)
-out2 <- Evenness(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
-ggEven(out2)
+```{r out.width="100%",fig.height=8}
+data(woody_plants)
+out2 <- Evenness(data = woody_plants[,c(1,4)], datatype = "incidence_freq")
+ggEvenness(out2)
 ```
 
 

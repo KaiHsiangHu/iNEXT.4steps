@@ -24,8 +24,8 @@ ggCompleteness(out1)
 
 ## Type (2) example for incidence based data (list of data.frame)
 ## Ex.2
-data(woody_incid)
-out2 <- Completeness(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
+data(woody_plants)
+out2 <- Completeness(data = woody_plants[,c(1,4)], datatype = "incidence_freq")
 ggCompleteness(out2)
 
 }

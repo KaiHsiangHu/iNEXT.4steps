@@ -25,7 +25,7 @@ Evenness(
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).}
 
-\item{method}{a binary calculation method with 'Estimated' or 'Empirical'.\cr}
+\item{method}{a binary calculation method with 'Estimated' or 'Observed'.\cr}
 
 \item{nboot}{a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.}
 
@@ -38,7 +38,7 @@ Evenness(
 \item{C}{a standardized coverage for calculating estimated evenness. It is used when \code{method = 'Estimated'}. If \code{NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (C = Cmax).}
 }
 \value{
-A list of estimated(empirical) evenness with order q.\cr
+A list of estimated(observed) evenness with order q.\cr
         Different lists represent different classes of Evenness.\cr
         Each list is combined with order.q and sites.\cr
         If "method" is estimated, then fist list will be named "C" which means the
@@ -46,7 +46,7 @@ A list of estimated(empirical) evenness with order q.\cr
 \code{$summary} individual summary of 4 steps of data. \cr\cr
 }
 \description{
-\code{Evenness} Estimation (Empirical) of Evenness with order q
+\code{Evenness} Estimation (Observed) of Evenness with order q
 }
 \details{
 R scipts "Evenness" for Chao and Ricotta (2019) Ecology paper.
@@ -62,8 +62,8 @@ out1
 
 ## Type (2) example for incidence based data (list of data.frame)
 ## Ex.2
-data(woody_incid)
-out2 <- Evenness(data = woody_incid[,c(1,4)], datatype = "incidence_freq")
+data(woody_plants)
+out2 <- Evenness(data = woody_plants[,c(1,4)], datatype = "incidence_freq")
 out2
 
 }
