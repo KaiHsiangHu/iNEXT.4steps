@@ -1,8 +1,8 @@
-\name{woody_incid}
-\alias{woody_incid}
+\name{woody_plants}
+\alias{woody_plants}
 \docType{data}
 \title{
-Woody incidence-based data
+Woody plants incidence-based data
 }
 \description{
 The datasets considered here are a subset of The National Vegetation Database of Taiwan (AS-TW-001), sampled between 2003 and 2007 within the first national vegetation inventory project (Chiou et al. 2009).
@@ -10,7 +10,7 @@ Over 3600 vegetation plots, each 20x20-m in area, were set up in various locatio
 For illustration here, we selected only plots belonging to two vegetation types (according to Li et al. 2013): Pyrenaria-Machilus subtropical winter monsoon forest and Chamaecyparis montane mixed cloud forest, sampled in the northern part of Taiwan (in ecoregions 7 and 8 according to Su 1985).
 
 }
-\usage{data("woody_incid")}
+\usage{data("woody_plants")}
 \format{
   A data frame with 494 species on the following 4 sites.
   \describe{
@@ -24,9 +24,9 @@ For illustration here, we selected only plots belonging to two vegetation types 
 The National Vegetation Database of Taiwan (AS-TW-001).
 }
 \examples{
-data(woody_incid)
+data(woody_plants)
 \dontrun{
-woody_incid.out <- iNEXT.4steps(data = woody_incid, datatype = "incidence_freq")
+woody_incid.out <- iNEXT.4steps(data = woody_plants, datatype = "incidence_freq")
 woody_incid.out
 }
 }
