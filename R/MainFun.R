@@ -160,11 +160,11 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
             plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
 
     legend.p = get_legend(SC.plot + theme(legend.direction = "vertical"))
-    steps.plot = ggarrange(SC.plot       + guides(color = FALSE, fill = FALSE),
-                           size.RE.plot  + guides(color = FALSE, fill = FALSE, shape = FALSE),
-                           AO.plot      + guides(color = FALSE, fill = FALSE),
-                           cover.RE.plot + guides(color = FALSE, fill = FALSE, shape = FALSE),
-                           even.plot     + guides(color = FALSE, fill = FALSE),
+    steps.plot = ggarrange(SC.plot       + guides(color = "none", fill = "none"),
+                           size.RE.plot  + guides(color = "none", fill = "none", shape = "none"),
+                           AO.plot      + guides(color = "none", fill = "none"),
+                           cover.RE.plot + guides(color = "none", fill = "none", shape = "none"),
+                           even.plot     + guides(color = "none", fill = "none"),
                            legend.p, nrow = 3, ncol = 2
     )
   } else { warning("The number of communities exceeds eight. We don't show the figures.") }
