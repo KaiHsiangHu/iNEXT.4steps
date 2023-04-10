@@ -438,12 +438,12 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
   Assemblage         Diversity Observed Estimator  s.e.   LCL    UCL
-1     Closed  Species richness    44.00     72.11 24.42 44.00 119.97
-2     Closed Shannon diversity    10.04     10.30  0.42  9.47  11.13
-3     Closed Simpson diversity     5.71      5.73  0.27  5.20   6.26
-4       Open  Species richness    74.00     96.31 18.25 74.00 132.08
-5       Open Shannon diversity    16.34     16.84  0.71 15.45  18.23
-6       Open Simpson diversity     9.41      9.46  0.36  8.76  10.16
+1     Closed  Species richness    44.00     72.11 27.57 44.00 126.15
+2     Closed Shannon diversity    10.04     10.30  0.37  9.57  11.03
+3     Closed Simpson diversity     5.71      5.73  0.24  5.26   6.19
+4       Open  Species richness    74.00     96.31 13.01 74.00 121.81
+5       Open Shannon diversity    16.34     16.84  0.49 15.87  17.81
+6       Open Simpson diversity     9.41      9.46  0.30  8.87  10.05
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.994 q = 0 q = 1 q = 2
@@ -512,12 +512,12 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
    Assemblage         Diversity Observed Estimator  s.e.    LCL    UCL
-1     Monsoon  Species richness   329.00    421.67 26.90 368.96 474.39
-2     Monsoon Shannon diversity   145.65    150.15  2.09 146.06 154.24
-3     Monsoon Simpson diversity   102.33    103.35  1.27 100.86 105.83
-4 Upper_cloud  Species richness   239.00    307.78 21.30 266.03 349.53
-5 Upper_cloud Shannon diversity   105.53    110.50  1.69 107.19 113.81
-6 Upper_cloud Simpson diversity    71.17     72.23  0.98  70.31  74.14
+1     Monsoon  Species richness   329.00    421.67 25.49 371.71 471.64
+2     Monsoon Shannon diversity   145.65    150.15  1.81 146.60 153.70
+3     Monsoon Simpson diversity   102.33    103.35  1.17 101.06 105.64
+4 Upper_cloud  Species richness   239.00    307.78 18.08 272.34 343.22
+5 Upper_cloud Shannon diversity   105.53    110.50  1.73 107.11 113.89
+6 Upper_cloud Simpson diversity    71.17     72.23  1.17  69.93  74.52
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.993  q = 0  q = 1  q = 2
@@ -566,12 +566,12 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
   Assemblage Phylogenetic.Diversity Phylogenetic.Observed Phylogenetic.Estimator s.e.   LCL   UCL Reftime   Type
-1       Edge               q = 0 PD                 61.29                  80.03 3.74 72.71 87.35     400 meanPD
-2       Edge               q = 1 PD                  5.25                   5.37 0.11  5.15  5.59     400 meanPD
-3       Edge               q = 2 PD                  1.80                   1.80 0.02  1.75  1.85     400 meanPD
-4   Interior               q = 0 PD                 69.32                  86.38 6.15 74.33 98.42     400 meanPD
-5   Interior               q = 1 PD                  5.72                   5.85 0.12  5.63  6.08     400 meanPD
-6   Interior               q = 2 PD                  1.91                   1.91 0.03  1.86  1.97     400 meanPD
+1       Edge               q = 0 PD                 61.29                  80.03 3.79 72.60 87.46     400 meanPD
+2       Edge               q = 1 PD                  5.25                   5.37 0.14  5.09  5.65     400 meanPD
+3       Edge               q = 2 PD                  1.80                   1.80 0.03  1.74  1.86     400 meanPD
+4   Interior               q = 0 PD                 69.32                  86.38 4.39 77.77 94.98     400 meanPD
+5   Interior               q = 1 PD                  5.72                   5.85 0.12  5.62  6.08     400 meanPD
+6   Interior               q = 2 PD                  1.91                   1.91 0.02  1.87  1.96     400 meanPD
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.973 q = 0 q = 1 q = 2
@@ -615,12 +615,12 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
   Assemblage Functional.Diversity Functional.Observed Functional.Estimator s.e.  LCL  UCL  Tau
-1       Edge q = 0 FD(single tau)                6.86                 6.86 0.21 6.86 7.28 0.35
-2       Edge q = 1 FD(single tau)                6.52                 6.54 0.12 6.29 6.78 0.35
-3       Edge q = 2 FD(single tau)                6.26                 6.28 0.09 6.10 6.46 0.35
-4   Interior q = 0 FD(single tau)                5.91                 5.91 0.07 5.91 6.05 0.35
-5   Interior q = 1 FD(single tau)                5.19                 5.20 0.08 5.04 5.36 0.35
-6   Interior q = 2 FD(single tau)                4.72                 4.72 0.08 4.56 4.88 0.35
+1       Edge q = 0 FD(single tau)                6.86                 6.86 0.19 6.86 7.24 0.35
+2       Edge q = 1 FD(single tau)                6.52                 6.54 0.12 6.30 6.78 0.35
+3       Edge q = 2 FD(single tau)                6.26                 6.28 0.10 6.08 6.47 0.35
+4   Interior q = 0 FD(single tau)                5.91                 5.91 0.06 5.91 6.03 0.35
+5   Interior q = 1 FD(single tau)                5.19                 5.20 0.07 5.05 5.34 0.35
+6   Interior q = 2 FD(single tau)                4.72                 4.72 0.08 4.57 4.88 0.35
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.973 q = 0 q = 1 q = 2
@@ -676,7 +676,7 @@ out1 <- Completeness(data = Spider, datatype = "abundance")
 ggCompleteness(out1)
 ```
 
-<img src="README/README-unnamed-chunk-7-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="README/README-unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" />
 
 ## Incidence-based
 
@@ -689,7 +689,7 @@ out2 <- Completeness(data = woody_plants[,c(1,4)], datatype = "incidence_freq")
 ggCompleteness(out2)
 ```
 
-<img src="README/README-unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="README/README-unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" />
 
 ### MAIN FUNCTION: Evenness()
 
