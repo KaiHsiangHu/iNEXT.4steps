@@ -31,7 +31,7 @@ iNEXT.4steps (R package)
 <i>Institute of Statistics, National Tsing Hua University, Hsin-Chu, Taiwan 30043</i>  
 </h5>
 <br>
-NEXT.4steps (iNterpolation and EXTrapolation for four steps) is an original R package available in [Github](https://github.com/AnneChao) which provide an easy complete biological analysis computation. In Chao, A., Y. Kubota, D. Zelený, C.-H. Chiu(2020), they proposed a complete biological analysis process: 
+iNEXT.4steps (iNterpolation and EXTrapolation for four steps) is an original R package available in [Github](https://github.com/AnneChao) which provide an easy complete biological analysis computation. In Chao, A., Y. Kubota, D. Zelený, C.-H. Chiu(2020), they proposed a complete biological analysis process: 
 
 * `STEP1`. Sample completeness profiles. 
 
@@ -46,9 +46,9 @@ These are the foundation of `iNEXT.4steps`. Here we will introduce functions abo
 `iNEXT.3D` contains two major parts:
 
 1. Non-asymptotic diversity:
-(a) Sample-size-based <font color=#FF6781>(or size-based)</font> R/E sampling curves: `iNEXT3D` computes rarefied and extrapolated <font color=#FF6781>Taxonomic, Phylogenetic or Functional</font> diversity estimates under a specified sample size. This type of diversity curve plots the estimated diversity with respect to sample size.     
+- Sample-size-based <font color=#FF6781>(or size-based)</font> R/E sampling curves: `iNEXT3D` computes rarefied and extrapolated <font color=#FF6781>Taxonomic, Phylogenetic or Functional</font> diversity estimates under a specified sample size. This type of diversity curve plots the estimated diversity with respect to sample size.     
 
-(b) Coverage-based R/E sampling curves: `iNEXT3D` computes rarefied and extrapolated <font color=#FF6781>Taxonomic, Phylogenetic or Functional</font> diversity estimates under a specified sample coverage. This type of diversity curve plots the estimated diversity with respect to sample coverage. 
+- Coverage-based R/E sampling curves: `iNEXT3D` computes rarefied and extrapolated <font color=#FF6781>Taxonomic, Phylogenetic or Functional</font> diversity estimates under a specified sample coverage. This type of diversity curve plots the estimated diversity with respect to sample coverage. 
 
 2. Asymptotic diversity: asymptotic <font color=#FF6781>Taxonomic, Phylogenetic or Functional</font> diversity estimate with q-profile, time-profile, and tau-profile.
 
@@ -110,22 +110,22 @@ Three types of data are supported:
 1. Individual-based abundance data (`datatype="abundance"`): Input data for each assemblage/site include species abundances in an empirical sample of n individuals (“reference sample”). When there are N assemblages, input data consist of an S by N abundance matrix, or N lists of species abundances.  
 
 2. Sampling-unit-based incidence data: There are two kinds of input data.  
-  (a) Incidence-raw data (`datatype="incidence_raw"`): for each assemblage, input data for a reference sample consisting of a species-by-sampling-unit matrix; each element in the raw matrix is 1 for a detection, and 0 otherwise. When there are N assemblages, input data consist of N lists of raw matrices, and each matrix is a species-by-sampling-unit matrix.  
-  (b) Incidence-frequency data (`datatype="incidence_freq"`): input data for each assemblage consist of species sample incidence frequencies (i.e., row sums of the corresponding incidence raw matrix). When there are N assemblages, input data consist of an (S+1) by N matrix, or N lists of species incidence frequencies. The first entry of each column/list must be the total number of sampling units, followed by the species incidence frequencies.
+ (2a) Incidence-raw data (`datatype="incidence_raw"`): for each assemblage, input data for a reference sample consisting of a species-by-sampling-unit matrix; each element in the raw matrix is 1 for a detection, and 0 otherwise. When there are N assemblages, input data consist of N lists of raw matrices, and each matrix is a species-by-sampling-unit matrix.  
+ (2b) Incidence-frequency data (`datatype="incidence_freq"`): input data for each assemblage consist of species sample incidence frequencies (i.e., row sums of the corresponding incidence raw matrix). When there are N assemblages, input data consist of an (S+1) by N matrix, or N lists of species incidence frequencies. The first entry of each column/list must be the total number of sampling units, followed by the species incidence frequencies.
 
 
 ## MAIN FUNCTION: iNEXT4steps()
 
 We first describe the main function `iNEXT4steps()` with default arguments: 
 
-<br><br>
+<br>
 iNEXT4steps(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "abundance",
             nboot = 50, nT = NULL,
             PDtree = NULL, PDreftime = NULL, PDtype = "meanPD",
             FDdistM = NULL, FDtype = "AUC", FDtau = NULL,
             details = FALSE
 )
-<br><br>
+<br>
 
 The arguments of this function are briefly described below, and will explain details by illustrative examples in later text. 
 
@@ -166,6 +166,9 @@ The output of `iNEXT4steps` will have three parts (if you sets `details = TRUE`)
 
 
 ## Taxonomic Diversity ##
+
+## Abundance-based ##
+
 `“abundance Data”` usually indicated a random sampling source, and the individuals spread uniformly all over the area. If the species in your data has gathering effect, such as a kind of plant usually live near each other instead of spreading uniformly, then we will propose `datatype = “incidence_freq”` or `datatype = “incidence_raw”`. So user can follow a rule: `datatype = “abundance”` for animals and `datatype = “incidence”` for plants.
 First, we try to calculate taxonomic diversity for `Spider`
 
@@ -176,9 +179,6 @@ A total of 12 experimental plots were established in "closed forest" stands (6 p
 Epigeal spiders were sampled over three years with four pitfall traps in each plot, yielding a total of 3171 individuals belonging to 85 species recorded in the pooled habitat.
 
 Data Source : A mountain forest ecosystem in the Bavarian Forest National Park, Germany (Thorn et al. 2016, 2017).
-
-
-## Abundance-based ##
 
 
 ```{r setup, include=FALSE, echo=FALSE}
@@ -261,9 +261,9 @@ out4$figure[[6]]
 
 Function `Completeness()` provides a easy way to compute estimated sample completeness with order q. It has default arguments: 
 
-<br><br>
+<br>
 Completeness(data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50, conf = 0.95, nT = NULL)
-<br><br>
+<br>
 
 The function AO3D() can compute three type diversity(‘TD’,‘PD’,‘FD’),which including empirical diversity and asymptotic diversity. For either abundance data (datatype="abundance") or incidence data(datatype="incidence_freq" or "incidence_raw")with any specified level of q can be compute.
 
@@ -273,9 +273,9 @@ For example, the following command returns an empirical taxonomic diversity(‘T
 
 We also provides a realized function `ggCompleteness` to plot the output from `Completeness()`:
 
-<br><br>
+<br>
 ggCompleteness(output)
-<br><br>
+<br>
 
 There are two simple example for funciton `Completeness` and function `ggCompleteness`, one for abundance-based and the other for incidence-based data. 
 
@@ -283,7 +283,7 @@ There are two simple example for funciton `Completeness` and function `ggComplet
 
 We use data Spider to calculate abundance-based sample completeness and plot it.
 
-```{r}
+```{r align="center", out.width="100%"}
 data(Spider)
 out1 <- Completeness(data = Spider, datatype = "abundance")
 ggCompleteness(out1)
@@ -294,7 +294,7 @@ ggCompleteness(out1)
 We use data woody to calculate incidence-based sample completeness and plot it.
 
 
-```{r}
+```{r align="center", out.width="100%"}
 data(woody_plants)
 out2 <- Completeness(data = woody_plants[,c(1,4)], datatype = "incidence_freq")
 ggCompleteness(out2)
@@ -305,18 +305,18 @@ ggCompleteness(out2)
 
 We describe the main function `Evenness()` with default arguments: 
 
-<br><br>
+<br>
 Evenness(data, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
          nboot = 50, conf = 0.95, nT = NULL, E.class = 1:5, C = NULL)
-<br><br>
+<br>
 
 ### GRAPHIC DISPLAYS FUNCTION: ggCompleteness()
 
 We provide a function `ggEvenness()` to plot the output from `Evenness()`.
 
-<br><br>
+<br>
 ggEvenness(output)
-<br><br>
+<br>
 
 There are two simple example for funciton `Evenness` and function `ggEvenness`, one for abundance-based and the other for incidence-based data. 
 

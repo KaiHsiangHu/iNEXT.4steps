@@ -16,7 +16,7 @@ User’s Guide
 Statistics, National Tsing Hua University, Hsin-Chu, Taiwan 30043</i>
 </h5>
 
-<br> NEXT.4steps (iNterpolation and EXTrapolation for four steps) is an
+<br> iNEXT.4steps (iNterpolation and EXTrapolation for four steps) is an
 original R package available in [Github](https://github.com/AnneChao)
 which provide an easy complete biological analysis computation. In Chao,
 A., Y. Kubota, D. Zelený, C.-H. Chiu(2020), they proposed a complete
@@ -48,22 +48,18 @@ website](http://chao.stat.nthu.edu.tw/wordpress/software_download/).
 
 1.  Non-asymptotic diversity:
 
-<!-- -->
-
-1.  Sample-size-based <font color=#FF6781>(or size-based)</font> R/E
+-   Sample-size-based <font color=#FF6781>(or size-based)</font> R/E
     sampling curves: `iNEXT3D` computes rarefied and extrapolated
     <font color=#FF6781>Taxonomic, Phylogenetic or Functional</font>
     diversity estimates under a specified sample size. This type of
     diversity curve plots the estimated diversity with respect to sample
     size.
 
-2.  Coverage-based R/E sampling curves: `iNEXT3D` computes rarefied and
+-   Coverage-based R/E sampling curves: `iNEXT3D` computes rarefied and
     extrapolated <font color=#FF6781>Taxonomic, Phylogenetic or
     Functional</font> diversity estimates under a specified sample
     coverage. This type of diversity curve plots the estimated diversity
     with respect to sample coverage.
-
-<!-- -->
 
 1.  Asymptotic diversity: asymptotic <font color=#FF6781>Taxonomic,
     Phylogenetic or Functional</font> diversity estimate with q-profile,
@@ -185,32 +181,29 @@ Three types of data are supported:
 
 2.  Sampling-unit-based incidence data: There are two kinds of input
     data.  
-
-<!-- -->
-
-1.  Incidence-raw data (`datatype="incidence_raw"`): for each
+    (2a) Incidence-raw data (`datatype="incidence_raw"`): for each
     assemblage, input data for a reference sample consisting of a
     species-by-sampling-unit matrix; each element in the raw matrix is 1
     for a detection, and 0 otherwise. When there are N assemblages,
     input data consist of N lists of raw matrices, and each matrix is a
     species-by-sampling-unit matrix.  
-2.  Incidence-frequency data (`datatype="incidence_freq"`): input data
-    for each assemblage consist of species sample incidence frequencies
-    (i.e., row sums of the corresponding incidence raw matrix). When
-    there are N assemblages, input data consist of an (S+1) by N matrix,
-    or N lists of species incidence frequencies. The first entry of each
-    column/list must be the total number of sampling units, followed by
-    the species incidence frequencies.
+    (2b) Incidence-frequency data (`datatype="incidence_freq"`): input
+    data for each assemblage consist of species sample incidence
+    frequencies (i.e., row sums of the corresponding incidence raw
+    matrix). When there are N assemblages, input data consist of an
+    (S+1) by N matrix, or N lists of species incidence frequencies. The
+    first entry of each column/list must be the total number of sampling
+    units, followed by the species incidence frequencies.
 
 ## MAIN FUNCTION: iNEXT4steps()
 
 We first describe the main function `iNEXT4steps()` with default
 arguments:
 
-<br><br> iNEXT4steps(data, diversity = “TD”, q = seq(0, 2, 0.2),
-datatype = “abundance”, nboot = 50, nT = NULL, PDtree = NULL, PDreftime
-= NULL, PDtype = “meanPD”, FDdistM = NULL, FDtype = “AUC”, FDtau = NULL,
-details = FALSE ) <br><br>
+<br> iNEXT4steps(data, diversity = “TD”, q = seq(0, 2, 0.2), datatype =
+“abundance”, nboot = 50, nT = NULL, PDtree = NULL, PDreftime = NULL,
+PDtype = “meanPD”, FDdistM = NULL, FDtype = “AUC”, FDtau = NULL, details
+= FALSE ) <br>
 
 The arguments of this function are briefly described below, and will
 explain details by illustrative examples in later text.
@@ -409,6 +402,8 @@ a large number of `nboot.`
 
 ## Taxonomic Diversity
 
+## Abundance-based
+
 `“abundance Data”` usually indicated a random sampling source, and the
 individuals spread uniformly all over the area. If the species in your
 data has gathering effect, such as a kind of plant usually live near
@@ -432,8 +427,6 @@ individuals belonging to 85 species recorded in the pooled habitat.
 Data Source : A mountain forest ecosystem in the Bavarian Forest
 National Park, Germany (Thorn et al. 2016, 2017).
 
-## Abundance-based
-
 ``` r
 data(Spider)
 out1 <- iNEXT4steps(data = Spider, diversity = "TD", datatype = "abundance")
@@ -445,12 +438,12 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
   Assemblage         Diversity Observed Estimator  s.e.   LCL    UCL
-1     Closed  Species richness    44.00     72.11 29.48 44.00 129.89
-2     Closed Shannon diversity    10.04     10.30  0.43  9.46  11.14
-3     Closed Simpson diversity     5.71      5.73  0.25  5.23   6.22
-4       Open  Species richness    74.00     96.31 11.44 74.00 118.72
-5       Open Shannon diversity    16.34     16.84  0.54 15.77  17.91
-6       Open Simpson diversity     9.41      9.46  0.31  8.86  10.06
+1     Closed  Species richness    44.00     72.11 24.42 44.00 119.97
+2     Closed Shannon diversity    10.04     10.30  0.42  9.47  11.13
+3     Closed Simpson diversity     5.71      5.73  0.27  5.20   6.26
+4       Open  Species richness    74.00     96.31 18.25 74.00 132.08
+5       Open Shannon diversity    16.34     16.84  0.71 15.45  18.23
+6       Open Simpson diversity     9.41      9.46  0.36  8.76  10.16
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.994 q = 0 q = 1 q = 2
@@ -519,12 +512,12 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
    Assemblage         Diversity Observed Estimator  s.e.    LCL    UCL
-1     Monsoon  Species richness   329.00    421.67 17.73 386.92 456.43
-2     Monsoon Shannon diversity   145.65    150.15  1.95 146.32 153.98
-3     Monsoon Simpson diversity   102.33    103.35  1.31 100.77 105.93
-4 Upper_cloud  Species richness   239.00    307.78 18.20 272.11 343.44
-5 Upper_cloud Shannon diversity   105.53    110.50  1.99 106.59 114.41
-6 Upper_cloud Simpson diversity    71.17     72.23  1.29  69.69  74.76
+1     Monsoon  Species richness   329.00    421.67 26.90 368.96 474.39
+2     Monsoon Shannon diversity   145.65    150.15  2.09 146.06 154.24
+3     Monsoon Simpson diversity   102.33    103.35  1.27 100.86 105.83
+4 Upper_cloud  Species richness   239.00    307.78 21.30 266.03 349.53
+5 Upper_cloud Shannon diversity   105.53    110.50  1.69 107.19 113.81
+6 Upper_cloud Simpson diversity    71.17     72.23  0.98  70.31  74.14
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.993  q = 0  q = 1  q = 2
@@ -573,12 +566,12 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
   Assemblage Phylogenetic.Diversity Phylogenetic.Observed Phylogenetic.Estimator s.e.   LCL   UCL Reftime   Type
-1       Edge               q = 0 PD                 61.29                  80.03 4.90 70.42 89.63     400 meanPD
-2       Edge               q = 1 PD                  5.25                   5.37 0.10  5.17  5.57     400 meanPD
-3       Edge               q = 2 PD                  1.80                   1.80 0.03  1.75  1.85     400 meanPD
-4   Interior               q = 0 PD                 69.32                  86.38 3.96 78.61 94.14     400 meanPD
-5   Interior               q = 1 PD                  5.72                   5.85 0.11  5.65  6.06     400 meanPD
-6   Interior               q = 2 PD                  1.91                   1.91 0.03  1.85  1.98     400 meanPD
+1       Edge               q = 0 PD                 61.29                  80.03 3.74 72.71 87.35     400 meanPD
+2       Edge               q = 1 PD                  5.25                   5.37 0.11  5.15  5.59     400 meanPD
+3       Edge               q = 2 PD                  1.80                   1.80 0.02  1.75  1.85     400 meanPD
+4   Interior               q = 0 PD                 69.32                  86.38 6.15 74.33 98.42     400 meanPD
+5   Interior               q = 1 PD                  5.72                   5.85 0.12  5.63  6.08     400 meanPD
+6   Interior               q = 2 PD                  1.91                   1.91 0.03  1.86  1.97     400 meanPD
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.973 q = 0 q = 1 q = 2
@@ -622,12 +615,12 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
   Assemblage Functional.Diversity Functional.Observed Functional.Estimator s.e.  LCL  UCL  Tau
-1       Edge q = 0 FD(single tau)                6.86                 6.86 0.20 6.86 7.26 0.35
-2       Edge q = 1 FD(single tau)                6.52                 6.54 0.15 6.24 6.83 0.35
-3       Edge q = 2 FD(single tau)                6.26                 6.28 0.14 6.01 6.55 0.35
-4   Interior q = 0 FD(single tau)                5.91                 5.91 0.08 5.91 6.07 0.35
+1       Edge q = 0 FD(single tau)                6.86                 6.86 0.21 6.86 7.28 0.35
+2       Edge q = 1 FD(single tau)                6.52                 6.54 0.12 6.29 6.78 0.35
+3       Edge q = 2 FD(single tau)                6.26                 6.28 0.09 6.10 6.46 0.35
+4   Interior q = 0 FD(single tau)                5.91                 5.91 0.07 5.91 6.05 0.35
 5   Interior q = 1 FD(single tau)                5.19                 5.20 0.08 5.04 5.36 0.35
-6   Interior q = 2 FD(single tau)                4.72                 4.72 0.08 4.57 4.88 0.35
+6   Interior q = 2 FD(single tau)                4.72                 4.72 0.08 4.56 4.88 0.35
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.973 q = 0 q = 1 q = 2
@@ -648,8 +641,8 @@ out4$figure[[6]]
 Function `Completeness()` provides a easy way to compute estimated
 sample completeness with order q. It has default arguments:
 
-<br><br> Completeness(data, q = seq(0, 2, 0.2), datatype = “abundance”,
-nboot = 50, conf = 0.95, nT = NULL) <br><br>
+<br> Completeness(data, q = seq(0, 2, 0.2), datatype = “abundance”,
+nboot = 50, conf = 0.95, nT = NULL) <br>
 
 The function AO3D() can compute three type
 diversity(‘TD’,‘PD’,‘FD’),which including empirical diversity and
@@ -666,7 +659,7 @@ along with its confidence interval, for a specified q level from 0 to 2.
 We also provides a realized function `ggCompleteness` to plot the output
 from `Completeness()`:
 
-<br><br> ggCompleteness(output) <br><br>
+<br> ggCompleteness(output) <br>
 
 There are two simple example for funciton `Completeness` and function
 `ggCompleteness`, one for abundance-based and the other for
@@ -683,7 +676,7 @@ out1 <- Completeness(data = Spider, datatype = "abundance")
 ggCompleteness(out1)
 ```
 
-<img src="README/README-unnamed-chunk-7-1.png" width="1152" style="display: block; margin: auto;" />
+<img src="README/README-unnamed-chunk-7-1.png" width="100%" style="display: block; margin: auto;" />
 
 ## Incidence-based
 
@@ -696,22 +689,22 @@ out2 <- Completeness(data = woody_plants[,c(1,4)], datatype = "incidence_freq")
 ggCompleteness(out2)
 ```
 
-<img src="README/README-unnamed-chunk-8-1.png" width="1152" style="display: block; margin: auto;" />
+<img src="README/README-unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;" />
 
 ### MAIN FUNCTION: Evenness()
 
 We describe the main function `Evenness()` with default arguments:
 
-<br><br> Evenness(data, q = seq(0, 2, 0.2), datatype = “abundance”,
-method = “Estimated”, nboot = 50, conf = 0.95, nT = NULL, E.class = 1:5,
-C = NULL) <br><br>
+<br> Evenness(data, q = seq(0, 2, 0.2), datatype = “abundance”, method =
+“Estimated”, nboot = 50, conf = 0.95, nT = NULL, E.class = 1:5, C =
+NULL) <br>
 
 ### GRAPHIC DISPLAYS FUNCTION: ggCompleteness()
 
 We provide a function `ggEvenness()` to plot the output from
 `Evenness()`.
 
-<br><br> ggEvenness(output) <br><br>
+<br> ggEvenness(output) <br>
 
 There are two simple example for funciton `Evenness` and function
 `ggEvenness`, one for abundance-based and the other for incidence-based
