@@ -12,8 +12,8 @@ User’s Guide
 </h3>
 </font> <br>
 <h5>
-<b>Hsieh, Anne Chao, Kai-Hsiang Hu</b> <br><br> <i>Institute of
-Statistics, National Tsing Hua University, Hsin-Chu, Taiwan 30043</i>
+<b>Anne Chao, Kai-Hsiang Hu</b> <br><br> <i>Institute of Statistics,
+National Tsing Hua University, Hsin-Chu, Taiwan 30043</i>
 </h5>
 
 <br> iNEXT.4steps (iNterpolation and EXTrapolation for four steps) is an
@@ -86,9 +86,9 @@ statistics can be obtained from the following inference:
 
 The `iNEXT.4steps` package can be downloaded from Anne Chao’s
 [iNEXT.4steps_github](https://github.com/AnneChao/iNEXT.4steps) using
-the following commands. For a first-time installation, an additional
-visualization extension package (`ggplot2`) and (`iNEXT.3D`) from Anne
-Chao’s github must be installed and loaded.
+the following commands. For a first-time installation, additional
+visualization extension packages (`ggplot2`) from CRAN and (`iNEXT.3D`)
+from Anne Chao’s github must be installed and loaded.
 
 ``` r
 ## install the latest version from github
@@ -438,12 +438,12 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
   Assemblage         Diversity Observed Estimator  s.e.   LCL    UCL
-1     Closed  Species richness    44.00     72.11 21.16 44.00 113.59
-2     Closed Shannon diversity    10.04     10.30  0.43  9.46  11.14
-3     Closed Simpson diversity     5.71      5.73  0.25  5.23   6.22
-4       Open  Species richness    74.00     96.31 17.18 74.00 129.99
-5       Open Shannon diversity    16.34     16.84  0.53 15.80  17.88
-6       Open Simpson diversity     9.41      9.46  0.34  8.79  10.13
+1     Closed  Species richness    44.00     72.11 25.76 44.00 122.59
+2     Closed Shannon diversity    10.04     10.30  0.46  9.40  11.21
+3     Closed Simpson diversity     5.71      5.73  0.23  5.28   6.18
+4       Open  Species richness    74.00     96.31 13.10 74.00 121.98
+5       Open Shannon diversity    16.34     16.84  0.55 15.75  17.92
+6       Open Simpson diversity     9.41      9.46  0.30  8.88  10.04
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.994 q = 0 q = 1 q = 2
@@ -512,12 +512,12 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
    Assemblage         Diversity Observed Estimator  s.e.    LCL    UCL
-1     Monsoon  Species richness   329.00    421.67 22.46 377.65 465.70
-2     Monsoon Shannon diversity   145.65    150.15  1.60 147.02 153.28
-3     Monsoon Simpson diversity   102.33    103.35  1.26 100.88 105.82
-4 Upper_cloud  Species richness   239.00    307.78 22.79 263.11 352.45
-5 Upper_cloud Shannon diversity   105.53    110.50  1.83 106.92 114.08
-6 Upper_cloud Simpson diversity    71.17     72.23  1.12  70.03  74.42
+1     Monsoon  Species richness   329.00    421.67 20.50 381.50 461.84
+2     Monsoon Shannon diversity   145.65    150.15  1.88 146.47 153.83
+3     Monsoon Simpson diversity   102.33    103.35  1.17 101.06 105.64
+4 Upper_cloud  Species richness   239.00    307.78 19.74 269.08 346.47
+5 Upper_cloud Shannon diversity   105.53    110.50  1.97 106.63 114.37
+6 Upper_cloud Simpson diversity    71.17     72.23  1.30  69.69  74.76
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.993  q = 0  q = 1  q = 2
@@ -566,11 +566,11 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
   Assemblage Phylogenetic.Diversity Phylogenetic.Observed Phylogenetic.Estimator s.e.   LCL   UCL Reftime   Type
-1       Edge               q = 0 PD                 61.29                  80.03 5.54 69.18 90.88     400 meanPD
-2       Edge               q = 1 PD                  5.25                   5.37 0.10  5.17  5.58     400 meanPD
-3       Edge               q = 2 PD                  1.80                   1.80 0.02  1.75  1.84     400 meanPD
-4   Interior               q = 0 PD                 69.32                  86.38 2.90 80.69 92.06     400 meanPD
-5   Interior               q = 1 PD                  5.72                   5.85 0.11  5.64  6.06     400 meanPD
+1       Edge               q = 0 PD                 61.29                  80.03 4.27 71.65 88.40     400 meanPD
+2       Edge               q = 1 PD                  5.25                   5.37 0.13  5.11  5.64     400 meanPD
+3       Edge               q = 2 PD                  1.80                   1.80 0.03  1.73  1.86     400 meanPD
+4   Interior               q = 0 PD                 69.32                  86.38 5.75 75.10 97.65     400 meanPD
+5   Interior               q = 1 PD                  5.72                   5.85 0.13  5.60  6.11     400 meanPD
 6   Interior               q = 2 PD                  1.91                   1.91 0.03  1.86  1.97     400 meanPD
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
@@ -615,12 +615,12 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
   Assemblage Functional.Diversity Functional.Observed Functional.Estimator s.e.  LCL  UCL  Tau
-1       Edge q = 0 FD(single tau)                6.86                 6.86 0.16 6.86 7.18 0.35
-2       Edge q = 1 FD(single tau)                6.52                 6.54 0.11 6.32 6.75 0.35
-3       Edge q = 2 FD(single tau)                6.26                 6.28 0.09 6.10 6.45 0.35
-4   Interior q = 0 FD(single tau)                5.91                 5.91 0.05 5.91 6.01 0.35
+1       Edge q = 0 FD(single tau)                6.86                 6.86 0.25 6.86 7.35 0.35
+2       Edge q = 1 FD(single tau)                6.52                 6.54 0.16 6.23 6.84 0.35
+3       Edge q = 2 FD(single tau)                6.26                 6.28 0.12 6.04 6.52 0.35
+4   Interior q = 0 FD(single tau)                5.91                 5.91 0.06 5.91 6.03 0.35
 5   Interior q = 1 FD(single tau)                5.19                 5.20 0.08 5.05 5.35 0.35
-6   Interior q = 2 FD(single tau)                4.72                 4.72 0.09 4.55 4.90 0.35
+6   Interior q = 2 FD(single tau)                4.72                 4.72 0.08 4.56 4.89 0.35
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.973 q = 0 q = 1 q = 2
