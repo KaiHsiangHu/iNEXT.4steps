@@ -95,12 +95,12 @@ Chao’s github must be installed and loaded.
 install.packages('devtools')
 library(devtools)
 
+# install_github('AnneChao/iNEXT.3D')
+# library(iNEXT.3D)
+
 install_github('AnneChao/iNEXT.4steps')
 ## import packages
 library(iNEXT.4steps)
-
-# install_github('AnneChao/iNEXT.3D')
-# library(iNEXT.3D)
 
 library(ggplot2)
 ```
@@ -438,12 +438,12 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
   Assemblage         Diversity Observed Estimator  s.e.   LCL    UCL
-1     Closed  Species richness    44.00     72.11 32.45 44.00 135.71
-2     Closed Shannon diversity    10.04     10.30  0.45  9.42  11.18
-3     Closed Simpson diversity     5.71      5.73  0.29  5.16   6.30
-4       Open  Species richness    74.00     96.31 10.47 75.78 116.84
-5       Open Shannon diversity    16.34     16.84  0.40 16.06  17.62
-6       Open Simpson diversity     9.41      9.46  0.28  8.90  10.01
+1     Closed  Species richness    44.00     72.11 21.16 44.00 113.59
+2     Closed Shannon diversity    10.04     10.30  0.43  9.46  11.14
+3     Closed Simpson diversity     5.71      5.73  0.25  5.23   6.22
+4       Open  Species richness    74.00     96.31 17.18 74.00 129.99
+5       Open Shannon diversity    16.34     16.84  0.53 15.80  17.88
+6       Open Simpson diversity     9.41      9.46  0.34  8.79  10.13
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.994 q = 0 q = 1 q = 2
@@ -512,12 +512,12 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
    Assemblage         Diversity Observed Estimator  s.e.    LCL    UCL
-1     Monsoon  Species richness   329.00    421.67 23.80 375.02 468.33
-2     Monsoon Shannon diversity   145.65    150.15  1.55 147.12 153.18
-3     Monsoon Simpson diversity   102.33    103.35  1.04 101.31 105.39
-4 Upper_cloud  Species richness   239.00    307.78 17.84 272.81 342.75
-5 Upper_cloud Shannon diversity   105.53    110.50  1.69 107.19 113.81
-6 Upper_cloud Simpson diversity    71.17     72.23  1.18  69.90  74.55
+1     Monsoon  Species richness   329.00    421.67 22.46 377.65 465.70
+2     Monsoon Shannon diversity   145.65    150.15  1.60 147.02 153.28
+3     Monsoon Simpson diversity   102.33    103.35  1.26 100.88 105.82
+4 Upper_cloud  Species richness   239.00    307.78 22.79 263.11 352.45
+5 Upper_cloud Shannon diversity   105.53    110.50  1.83 106.92 114.08
+6 Upper_cloud Simpson diversity    71.17     72.23  1.12  70.03  74.42
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.993  q = 0  q = 1  q = 2
@@ -566,12 +566,12 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
   Assemblage Phylogenetic.Diversity Phylogenetic.Observed Phylogenetic.Estimator s.e.   LCL   UCL Reftime   Type
-1       Edge               q = 0 PD                 61.29                  80.03 5.22 69.80 90.25     400 meanPD
-2       Edge               q = 1 PD                  5.25                   5.37 0.12  5.13  5.62     400 meanPD
-3       Edge               q = 2 PD                  1.80                   1.80 0.03  1.74  1.85     400 meanPD
-4   Interior               q = 0 PD                 69.32                  86.38 5.04 76.49 96.26     400 meanPD
-5   Interior               q = 1 PD                  5.72                   5.85 0.14  5.58  6.13     400 meanPD
-6   Interior               q = 2 PD                  1.91                   1.91 0.04  1.84  1.99     400 meanPD
+1       Edge               q = 0 PD                 61.29                  80.03 5.54 69.18 90.88     400 meanPD
+2       Edge               q = 1 PD                  5.25                   5.37 0.10  5.17  5.58     400 meanPD
+3       Edge               q = 2 PD                  1.80                   1.80 0.02  1.75  1.84     400 meanPD
+4   Interior               q = 0 PD                 69.32                  86.38 2.90 80.69 92.06     400 meanPD
+5   Interior               q = 1 PD                  5.72                   5.85 0.11  5.64  6.06     400 meanPD
+6   Interior               q = 2 PD                  1.91                   1.91 0.03  1.86  1.97     400 meanPD
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.973 q = 0 q = 1 q = 2
@@ -615,12 +615,12 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
   Assemblage Functional.Diversity Functional.Observed Functional.Estimator s.e.  LCL  UCL  Tau
-1       Edge q = 0 FD(single tau)                6.86                 6.86 0.20 6.86 7.26 0.35
-2       Edge q = 1 FD(single tau)                6.52                 6.54 0.14 6.26 6.82 0.35
-3       Edge q = 2 FD(single tau)                6.26                 6.28 0.12 6.04 6.51 0.35
-4   Interior q = 0 FD(single tau)                5.91                 5.91 0.06 5.91 6.03 0.35
-5   Interior q = 1 FD(single tau)                5.19                 5.20 0.09 5.03 5.37 0.35
-6   Interior q = 2 FD(single tau)                4.72                 4.72 0.10 4.53 4.92 0.35
+1       Edge q = 0 FD(single tau)                6.86                 6.86 0.16 6.86 7.18 0.35
+2       Edge q = 1 FD(single tau)                6.52                 6.54 0.11 6.32 6.75 0.35
+3       Edge q = 2 FD(single tau)                6.26                 6.28 0.09 6.10 6.45 0.35
+4   Interior q = 0 FD(single tau)                5.91                 5.91 0.05 5.91 6.01 0.35
+5   Interior q = 1 FD(single tau)                5.19                 5.20 0.08 5.05 5.35 0.35
+6   Interior q = 2 FD(single tau)                4.72                 4.72 0.09 4.55 4.90 0.35
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.973 q = 0 q = 1 q = 2

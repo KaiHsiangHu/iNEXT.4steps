@@ -82,6 +82,9 @@ The `iNEXT.4steps` package is available from [CRAN](https://cran.r-project.org/p
 
 
 ```{r eval=FALSE}
+# install_github('AnneChao/iNEXT.3D')
+# library(iNEXT.3D)
+
 ## install iNEXT.4steps package from CRAN
 install.packages("iNEXT.4steps")
 
@@ -92,9 +95,6 @@ library(devtools)
 install_github('AnneChao/iNEXT.4steps')
 ## import packages
 library(iNEXT.4steps)
-
-# install_github('AnneChao/iNEXT.3D')
-# library(iNEXT.3D)
 
 library(ggplot2)
 ```

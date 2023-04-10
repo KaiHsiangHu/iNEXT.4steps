@@ -71,12 +71,12 @@ The `iNEXT.4steps` package can be downloaded from Anne Chao's [iNEXT.4steps_gith
 install.packages('devtools')
 library(devtools)
 
+# install_github('AnneChao/iNEXT.3D')
+# library(iNEXT.3D)
+
 install_github('AnneChao/iNEXT.4steps')
 ## import packages
 library(iNEXT.4steps)
-
-# install_github('AnneChao/iNEXT.3D')
-# library(iNEXT.3D)
 
 library(ggplot2)
 ```
