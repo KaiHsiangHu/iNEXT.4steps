@@ -78,18 +78,24 @@ If you publish your work based on the results from the `iNEXT.4steps` package, y
 - Suggested: [RStudio IDE](https://www.rstudio.com/products/RStudio/#Desktop)
 
 ## HOW TO RUN INEXT:
-The `iNEXT.4steps` package is available from [CRAN](https://cran.r-project.org/package=iNEXT.4steps) and can be downloaded with a standard R installation procedure or can be downloaded from Anne Chao's [iNEXT.4steps_github](https://github.com/AnneChao/iNEXT.4steps) using the following commands. For a first‐time installation, an additional visualization extension package (`ggplot2`) must be installed and loaded. 
+The `iNEXT.4steps` package is available from [CRAN](https://cran.r-project.org/package=iNEXT.4steps) and can be downloaded with a standard R installation procedure or can be downloaded from Anne Chao's [iNEXT.4steps_github](https://github.com/AnneChao/iNEXT.4steps) using the following commands. For a first-time installation, an additional visualization extension package (`ggplot2`) must be installed and loaded. 
 
 
 ```{r eval=FALSE}
 ## install iNEXT.4steps package from CRAN
 install.packages("iNEXT.4steps")
+
 ## install the latest version from github
 install.packages('devtools')
 library(devtools)
+
 install_github('AnneChao/iNEXT.4steps')
 ## import packages
 library(iNEXT.4steps)
+
+# install_github('AnneChao/iNEXT.3D')
+# library(iNEXT.3D)
+
 library(ggplot2)
 ```
 
@@ -120,7 +126,7 @@ Under Cmax, we can guarantee the accuracy of Evenness. According to this criteri
 ## DATA FORMAT/INFORMATION
 Three types of data are supported:
 
-1. Individual‐based abundance data (`datatype="abundance"`): Input data for each assemblage/site include species abundances in an empirical sample of n individuals (“reference sample”). When there are N assemblages, input data consist of an S by N abundance matrix, or N lists of species abundances.  
+1. Individual-based abundance data (`datatype="abundance"`): Input data for each assemblage/site include species abundances in an empirical sample of n individuals (“reference sample”). When there are N assemblages, input data consist of an S by N abundance matrix, or N lists of species abundances.  
 
 2. Sampling-unit-based incidence data: There are two kinds of input data.  
   (a) Incidence-raw data (`datatype="incidence_raw"`): for each assemblage, input data for a reference sample consisting of a species-by-sampling-unit matrix; each element in the raw matrix is 1 for a detection, and 0 otherwise. When there are N assemblages, input data consist of N lists of raw matrices, and each matrix is a species-by-sampling-unit matrix.  
