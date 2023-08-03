@@ -91,10 +91,12 @@ An online version of iNEXT.4steps(https://chao.shinyapps.io/iNEXT_4steps/) is al
 
 
 Step 1: `Sample completeness profile` 
+
 `Sample Completeness` represent the proportion of observed species in the population (Chao et al., 2020). Usually, the sampling data represents the abundant species in the population so that we will ignore the rare species. Here we will use Turing’s sample coverage theory to reconstruct the population proportion. Besides, sample completeness can correspond to order q, which is an weight index. When order q tends to zero, then we will give more weight to rare species. If order q tends to unity, then we will equally treat each species, which is also called sample coverage at unity. In contrast, if order q tends to larger than unity, we will give more weights to abundant species. By sample completeness, we can easily plot the estimated curve with respect to order q and associated 95% confidence interval.
 
 
 Step 2.1 and step 3: `Size-based and coverage-based Interpolation and Extrapolation` 
+
 `Interpolation and Extrapolation (iNEXT)` focuses on three measures of order q: species richness (q = 0), Shannon diversity (q = 1, the exponential of Shannon entropy), and Simpson diversity (q = 2, the inverse of Simpson concentration) (Chao and Jost, 2012; Chao et al. 2014). For each diversity measures, iNEXT uses observed sample to compute expected diversity estimates and associated 95% confidence intervals according two different unit types of rarefaction and extrapolation (R/E):
 
 1.	Sample-size-based R/E sampling curves versus diversity in each order q.
@@ -105,10 +107,12 @@ For more particular usage about iNEXT, please refer to Hsieh et al. (2016). We w
 
 
 Step 2.2: `Asymptotic diversity profile` 
+
 `Asymptotic Diversity (or called Hill numbers)` is a statistic which is used to represent the biological diversity. Its direct meaning is to transform the non-homogeneous distribution into homogeneous distribution (effective number of species). With this quantification criterian, we can easily analysis several communities for different data sources in an objective measure. It usually matches order q to give different weights so that we can focus on rare species or abundant species. When we use observed data to calculate empirical diversity, we usually get an underestimated value. In our package, we will provide an estimated statistic from Chao and Jost (2015), which can imitate a real population accurately. In addition, it can be related to order q index and associated 95% confidence interval.
 
 
 Step 4: `Evenness profile` 
+
 `Evenness` is an function to calculate whether a assemblage is uniform or not. We have sorted five main classes according to different transformation by species and diversity (Chao and Ricotta, 2019). In these five classes, they all have range from zero to one. When the value is close to zero, it means that the assemblage tends to uneven. On the contrary, when the value is close one, it means that the assemblage tends to uniform. Evenness considers different order q under each classes. When order q tends to zero, we will focus on rare species. In other sides, when order q tends to far from zero, then we will give more weights on abundant species. If we use observed sampling data to calculate Evenness, we usually have a biased value because of unobserved rare species. But if we try to use asymptotic diversity for calculating Evenness, then we may get a upper bound value. Here, we propose a “standardized coverage” (named `Cmax`) as a judged criterion. `Cmax` means that we computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes.
 Under Cmax, we can guarantee the accuracy of Evenness. According to this criterion, we can plot the Evenness curves versus order q and associated 95% confidence interval.
 
