@@ -571,7 +571,7 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' @param conf a positive number < 1 specifying the level of confidence interval. Default is 0.95.
 #' @param nT (required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc. 
 #' @param E.class an integer vector between 1 to 5
-#' @param C a standardized coverage for calculating estimated evenness. It is used when \code{method = 'Estimated'}. If \code{NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (C = Cmax).
+#' @param C (required only when `method = 'Estimated'`) a standardized coverage for calculating estimated evenness. If \code{NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (Cmax).
 #' @return A list of estimated(observed) evenness with order q.\cr
 #'         Different lists represent different classes of Evenness.\cr
 #'         Each list is combined with order.q and sites.\cr

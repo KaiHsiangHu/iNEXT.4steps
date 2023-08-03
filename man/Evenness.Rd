@@ -35,7 +35,7 @@ Evenness(
 
 \item{E.class}{an integer vector between 1 to 5}
 
-\item{C}{a standardized coverage for calculating estimated evenness. It is used when \code{method = 'Estimated'}. If \code{NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (C = Cmax).}
+\item{C}{(required only when `method = 'Estimated'`) a standardized coverage for calculating estimated evenness. If \code{NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (Cmax).}
 }
 \value{
 A list of estimated(observed) evenness with order q.\cr
