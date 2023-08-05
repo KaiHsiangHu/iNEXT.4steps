@@ -1,6 +1,6 @@
 ---
 title: "A Quick Introduction to iNEXT.4steps via Examples"
-author: "K. H. Hu, and Anne Chao"
+author: "Anne Chao and K.H. Hu"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
@@ -44,9 +44,13 @@ data("brazil_distM")
 
 These are the foundation of `iNEXT.4steps`. Here we will introduce functions about `STEP1` and `STEP4`, particularly. If you want to grasp the functions of `STEP2`, `STEP3` individually, then please search the related paper Hsieh et al. (2016) or the package [iNEXT.3D](https://github.com/AnneChao/iNEXT.3D) from Anne Chao's github to get more details. `iNEXT.3D` contains two major parts:
 
-1. Sample-size-based (or size-based) R/E sampling curves: `iNEXT3D` computes rarefied and extrapolated `taxonomic`, `phylogenetic`, or `functional` diversity estimates under a specified sample size. This type of diversity curve plots the estimated diversity with respect to sample size.     
+1. Non-asymptotic diversity:
 
-2. Coverage-based R/E sampling curves: `iNEXT3D` computes rarefied and extrapolated `taxonomic`, `phylogenetic`, or `functional` diversity estimates under a specified sample coverage. This type of diversity curve plots the estimated diversity with respect to sample coverage. 
+(1a) Sample-size-based (or size-based) R/E sampling curves: `iNEXT3D` computes rarefied and extrapolated `taxonomic`, `phylogenetic`, or `functional` diversity estimates under a specified sample size. This type of diversity curve plots the estimated diversity with respect to sample size.     
+
+(1b) Sample-coverage-based (or coverage-based) R/E sampling curves: `iNEXT3D` computes rarefied and extrapolated `taxonomic`, `phylogenetic`, or `functional` diversity estimates under a specified sample coverage. This type of diversity curve plots the estimated diversity with respect to sample coverage. 
+
+2. Asymptotic diversity: asymptotic `taxonomic`, `phylogenetic` or `functional` diversity estimate with q-profile, time-profile, and tau-profile.
 
 
 In `iNEXT.4steps` package, we provide other four functions for users to calculate and visualize the related biological statistics: `Completeness` and `Evenness` for calculation, and  `ggCompleteness` and `ggEvenness` for visualization. The most comprehensive function `iNEXT4steps` gathers `iNEXT3D`, `AO3D`, `Completeness` and `Evenness` into a summary table and a  figure. In this document, we will give a quick introduction demonstrating how to run these functions. Detailed information about these function settings is provided in the `iNEXT.4steps` manual, which will be submitted to [CRAN]. The theoretical basis about these biological statistics can be obtained from the following inference:
@@ -77,11 +81,10 @@ The `iNEXT.4steps` package will be submitted to [CRAN] and can be downloaded fro
 ## install the latest version from github
 install.packages('devtools')
 library(devtools)
-
 install_github('AnneChao/iNEXT.4steps')
+
 ## import packages
 library(iNEXT.4steps)
-
 library(ggplot2)
 ```
 
