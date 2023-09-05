@@ -35,10 +35,9 @@
 #' @importFrom stats rmultinom
 #' @importFrom stats sd
 #' @return a list of three of objects: \cr\cr
-#' \code{$summary} individual summary of 4 steps of data. \cr\cr
-#' \code{$figure} 5 figures of analysis process. \cr\cr
-#' \code{$details} the information for generating \code{figure}. \cr
-#' If you need it, you should key in \code{details = TRUE}. \cr\cr
+#' \code{$summary} four tables for individual summary of 4 steps. \cr\cr
+#' \code{$figure} six figures (five figures of each analysis process and an overall figure). \cr\cr
+#' \code{$details} only when (\code{details = TRUE}). the numerical output for plotting \code{figure}. \cr\cr
 #' 
 #' @examples
 #' \dontrun{
@@ -65,8 +64,8 @@
 #' ## Type (2) example for incidence based data (list of data.frame)
 #' ## Ex.1
 #' data(woody_plants)
-#' out <- iNEXT4steps(data = woody_plants[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
-#' out
+#' out4 <- iNEXT4steps(data = woody_plants[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
+#' out4
 #' 
 #' }
 #' 
@@ -114,15 +113,15 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
   
   ## Evenness ##
   Even.table <- Evenness(data, q = q, datatype = datatype, method = "Estimated", nboot = nboot, conf = 0.95, nT = nT, E.class = 3)
-  Cmax = Even.table[1]
-
-  if (length(unique((Even.table[[2]]$Assemblage)))>1) {
+  Cmax = unique(Even.table$E3$SC)
+  
+  if (length(unique((Even.table[[1]]$Assemblage)))>1) {
     iNEXT.table[[2]]$size_based$Assemblage = factor(iNEXT.table[[2]]$size_based$Assemblage)
     level = levels(iNEXT.table[[2]]$size_based$Assemblage)
     
     SC.table$Assemblage = factor(SC.table$Assemblage, level)
     qD.table$Assemblage = factor(qD.table$Assemblage, level)
-    Even.table[[2]]$Assemblage = factor(Even.table[[2]]$Assemblage, level)
+    Even.table[[1]]$Assemblage = factor(Even.table[[1]]$Assemblage, level)
   }
 
   ## 5 figures ##
@@ -174,12 +173,11 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
   
   ##  Outpue_summary ##
   summary = list(summary.deal(SC.table, 1),
-                 (iNEXT.table[[3]] %>%  
-                    lapply(FUN = function(x) if(is.numeric(x)) round(x,2)
-                                               else x) %>% data.frame()),
+                 iNEXT.table[[3]] %>%  
+                   lapply(FUN = function(x) if(is.numeric(x)) round(x,2) else x) %>% data.frame(),
                  summary.deal(est3D, 3),
                  summary.deal(Even.table, 4, estD)
-  )
+                 )
   names(summary) = table.names
   
   ##  Output ##
@@ -223,8 +221,9 @@ summary.deal <- function(table, step, Pielou = NULL) {
                      else x) %>% data.frame()
     colnames(out)[-1] = paste("q = ", c(0,1,2), sep="")
   }
+  
   if (step == 3){
-    tmp = table[,c(1, 5, 6)]
+    tmp = table[,c(1, 4, 6)]
     C = round(min(table$SC), 3)
     out = dcast(tmp, Assemblage ~ Order.q, value.var = colnames(tmp)[3]) %>% 
       lapply(FUN = function(x) if(is.numeric(x)) round(x,2)
@@ -232,15 +231,16 @@ summary.deal <- function(table, step, Pielou = NULL) {
     colnames(out) = c(paste("Cmax = ", C, sep = ""),
                       paste("q = ", c(0, 1, 2), sep = ""))
   }
+  
   if (step == 4){
-    if (names(table[1]) == "Coverage")  table = table[-1]
+    
     tmp = (table[[1]] %>%
              filter(Order.q %in% c(0,1,2)))[, c("Order.q", "Evenness", "Assemblage")]
     out = acast(tmp, Assemblage ~ Order.q, value.var="Evenness")
     
     D = (Pielou %>% filter(Order.q == 1))[,c("Assemblage", "qD")]
     S = (Pielou %>% filter(Order.q == 0))[,c("Assemblage", "qD")]
-    out[,1] = sapply(rownames(out), function(x) log(D[D$Assemblage == x,"qD"])/log(S[S$Assemblage == x,"qD"]))
+    out[,1] = sapply(rownames(out), function(x) log(D[D$Assemblage == x,"qD"]) / log(S[S$Assemblage == x,"qD"]))
     colnames(out) = c("Pielou J'", paste("q = ", c(1,2), sep=""))
     out <- round(out,2)
   }
@@ -342,6 +342,12 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 #' @param conf a positive number < 1 specifying the level of confidence interval. Default is 0.95.
 #' @param nT (required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc. 
 #' @return a matrix of estimated sample completeness with order q: \cr\cr
+#'         'Order.q' = the diversity order of q.\cr\cr
+#'         'Estimate.SC' = the estimated (or observed) sample completeness of order q.\cr\cr
+#'         's.e.' = standard error of sample completeness.\cr\cr
+#'         'SC.LCL', 'SC.UCL' = the bootstrap lower and upper confidence limits for the sample completeness of order q at the specified level (with a default value of 0.95).\cr\cr
+#'         'Assemblage' = the assemblage name.\cr\cr
+#' 
 #'
 #' @examples
 #' ## Type (1) example for abundance based data (data.frame)
@@ -357,8 +363,7 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 #' out2
 #'
 #' @references
-#' Chao,A.,Y.Kubota,D.Zelený,C.-H.Chiu.
-#' Quantifying sample completeness and comparing diversities among assemblages.
+#' Chao, A., Y. Kubota, D. Zelený, C.-H. Chiu, C.-F. Li, B. Kusumoto, M. Yasuhara, S. Thorn, C.-L. Wei, M. J. Costello, and R. K. Colwell (2020). Quantifying sample completeness and comparing diversities among assemblages. Ecological Research, 35, 292-314.
 #' @export
 
 Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
@@ -395,14 +400,13 @@ Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboo
       }
       out <- data.frame(Order.q = q, Estimate.SC = dq, s.e. = se,
                         SC.LCL = dq-qnorm(1-(1-conf)/2)*se, SC.UCL = dq+qnorm(1-(1-conf)/2)*se,
-                        Assemblage = names(data)[i], Method = rep("Estimated", length(q)))
+                        Assemblage = names(data)[i])
       out$SC.LCL[out$SC.LCL < 0] <- 0
       out$SC.UCL[out$SC.UCL > 1] <- 1
       out
     })
     out <- do.call(rbind, out)
-  }
-  else if (datatype == "incidence_freq") {
+  } else if (datatype == "incidence_freq") {
     out <- lapply(1:length(data), function(i) {
       dq <- sample_completeness(data[[i]], q, "incidence_freq")
       if (nboot > 1) {
@@ -419,7 +423,7 @@ Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboo
       }
       out <- data.frame(Order.q = q, Estimate.SC = dq, s.e. = se,
                         SC.LCL = dq-qnorm(1-(1-conf)/2)*se, SC.UCL = dq+qnorm(1-(1-conf)/2)*se,
-                        Assemblage = names(data)[i], Method = rep("Estimated", length(q)))
+                        Assemblage = names(data)[i])
       out$SC.LCL[out$SC.LCL < 0] <- 0
       out$SC.UCL[out$SC.UCL > 1] <- 1
       out
@@ -435,7 +439,7 @@ Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboo
 #' \code{ggCompleteness} the \code{\link[ggplot2]{ggplot}} extension for \code{\link{Completeness}} Object to plot sample completeness with order q
 #'
 #' @param output a table generated from Completeness function
-#' @return a figure of estimated sample completeness with order q
+#' @return a figure of estimated sample completeness with order q.
 #'
 #' @examples
 #' ## Type (1) example for abundance based data (data.frame)
@@ -451,8 +455,7 @@ Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboo
 #' ggCompleteness(out2)
 #'
 #' @references
-#' Chao,A.,Y.Kubota,D.Zelený,C.-H.Chiu.
-#' Quantifying sample completeness and comparing diversities among assemblages.
+#' Chao, A., Y. Kubota, D. Zelený, C.-H. Chiu, C.-F. Li, B. Kusumoto, M. Yasuhara, S. Thorn, C.-L. Wei, M. J. Costello, and R. K. Colwell (2020). Quantifying sample completeness and comparing diversities among assemblages. Ecological Research, 35, 292-314.
 #' @export
 
 ggCompleteness <- function(output) {
@@ -572,13 +575,17 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' @param nT (required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc. 
 #' @param E.class an integer vector between 1 to 5
 #' @param C (required only when `method = 'Estimated'`) a standardized coverage for calculating estimated evenness. If \code{NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (Cmax).
-#' @return A list of estimated(observed) evenness with order q.\cr
-#'         Different lists represent different classes of Evenness.\cr
-#'         Each list is combined with order.q and sites.\cr
-#'         If "method" is estimated, then fist list will be named "C" which means the
-#'         maximum standardized coverage among all double reference sample size.\cr\cr
-#' \code{$summary} individual summary of 4 steps of data. \cr\cr
-#'
+#' @return A list of several tables containing estimated (or observed) evenness with order q.\cr
+#'         Each tables represents a classe of Evenness.\cr
+#'         'Order.q' = the diversity order of q.\cr\cr
+#'         'Evenness' = the evenness of order q.\cr\cr
+#'         's.e.' = standard error of evenness.\cr\cr
+#'         'Even.LCL', 'Even.UCL' = the bootstrap lower and upper confidence limits for the evenness of order q at the specified level (with a default value of 0.95).\cr\cr
+#'         'Assemblage' = the assemblage name.\cr\cr
+#'         'Method' = "Estimated" or "Observed".\cr\cr
+#'         'SC' = the target standardized coverage value. \cr\cr
+#'         
+#' 
 #' @examples
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
@@ -593,7 +600,7 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' out2
 #'
 #' @references
-#' Chao,A.and Ricotta,C.(2019).Quantifying evenness and linking it to diversity, beta diversity, and similarity.
+#' Chao, A. and Ricotta, C. (2019). Quantifying evenness and linking it to diversity, beta diversity, and similarity. Ecology, 100(12), e02852.
 #' @export
 
 Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
@@ -634,6 +641,12 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
   }
   
   
+  if (is.null(C) == TRUE) {
+    if (datatype == "abundance") C = sapply(data, function(x) iNEXT.3D:::Coverage(x, "abundance", 2*sum(x))) %>% min
+    if (datatype == "incidence_freq") C = sapply(data, function(x) iNEXT.3D:::Coverage(x, "incidence_freq", 2*x[1])) %>% min
+  }
+  
+  
   if (datatype == "abundance") {
     qD <- Evenness.profile(data, q, "abundance", method, E.class, C)
     qD <- map(qD, as.vector)
@@ -665,11 +678,6 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
     })
-    
-    if (method=="Estimated") {
-      if (is.null(C) == TRUE) C = sapply(data, function(x) iNEXT.3D:::Coverage(x, "abundance", 2*sum(x))) %>% min
-      out <- append(C, out)
-    }
     
   } else if (datatype == "incidence_freq") {
     qD <- Evenness.profile(data, q, "incidence_freq", method, E.class, C)
@@ -705,15 +713,13 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
       tmp
     })
     
-    if (method == "Estimated") {
-      if (is.null(C) == TRUE) C = sapply(data, function(x) iNEXT.3D:::Coverage(x, "incidence_freq", 2*x[1])) %>% min
-      out <- append(C, out)
-    }
   }
   
-  if (method=="Estimated") {
-    names(out) = c("Coverage", paste("E", E.class, sep = ""))
-  } else if (method=="Observed") {names(out) = paste("E", E.class, sep = "")}
+  if (method == "Estimated") {
+    out <- lapply(out, function(x) x %>% mutate(SC = C))
+  }
+  
+  names(out) = paste("E", E.class, sep = "")
   
   return(out)
 }
@@ -724,8 +730,8 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
 #
 #' \code{ggEvenness} the \code{\link[ggplot2]{ggplot}} extension for \code{\link{Evenness}} Object to plot evenness with order q\cr
 #'
-#' @param output a table generated from Evenness function\cr
-#' @return a figure of estimated evenness with order q\cr
+#' @param output a list generated from Evenness function\cr
+#' @return a figure of estimated (or observed) evenness with order q.\cr
 #'
 #' @examples
 #' ## Type (1) example for abundance based data (data.frame)
@@ -741,11 +747,11 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
 #' ggEvenness(out2)
 #'
 #' @references
-#' Chao,A.and Ricotta,C.(2019).Quantifying evenness and linking it to diversity, beta diversity, and similarity.
+#' Chao, A. and Ricotta, C. (2019). Quantifying evenness and linking it to diversity, beta diversity, and similarity. Ecology, 100(12), e02852.
 #' @export
 
 ggEvenness <- function(output) {
-  if (names(output[1]) == "Coverage")  output = output[-1]
+  
   cbPalette <- rev(c("#999999", "#E69F00", "#56B4E9", "#009E73",
                      "#330066", "#CC79A7", "#0072B2", "#D55E00"))
   classdata = cbind(do.call(rbind, output),

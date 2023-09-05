@@ -51,10 +51,9 @@ iNEXT4steps(
 }
 \value{
 a list of three of objects: \cr\cr
-\code{$summary} individual summary of 4 steps of data. \cr\cr
-\code{$figure} 5 figures of analysis process. \cr\cr
-\code{$details} the information for generating \code{figure}. \cr
-If you need it, you should key in \code{details = TRUE}. \cr\cr
+\code{$summary} four tables for individual summary of 4 steps. \cr\cr
+\code{$figure} six figures (five figures of each analysis process and an overall figure). \cr\cr
+\code{$details} only when (\code{details = TRUE}). the numerical output for plotting \code{figure}. \cr\cr
 }
 \description{
 \code{iNEXT4steps}:\cr
@@ -89,8 +88,8 @@ out3
 ## Type (2) example for incidence based data (list of data.frame)
 ## Ex.1
 data(woody_plants)
-out <- iNEXT4steps(data = woody_plants[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
-out
+out4 <- iNEXT4steps(data = woody_plants[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
+out4
 
 }
 

@@ -10,7 +10,7 @@ ggCompleteness(output)
 \item{output}{a table generated from Completeness function}
 }
 \value{
-a figure of estimated sample completeness with order q
+a figure of estimated sample completeness with order q.
 }
 \description{
 \code{ggCompleteness} the \code{\link[ggplot2]{ggplot}} extension for \code{\link{Completeness}} Object to plot sample completeness with order q
@@ -30,6 +30,5 @@ ggCompleteness(out2)
 
 }
 \references{
-Chao,A.,Y.Kubota,D.Zelený,C.-H.Chiu.
-Quantifying sample completeness and comparing diversities among assemblages.
+Chao, A., Y. Kubota, D. Zelený, C.-H. Chiu, C.-F. Li, B. Kusumoto, M. Yasuhara, S. Thorn, C.-L. Wei, M. J. Costello, and R. K. Colwell (2020). Quantifying sample completeness and comparing diversities among assemblages. Ecological Research, 35, 292-314.
 }

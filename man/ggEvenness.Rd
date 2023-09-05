@@ -8,10 +8,10 @@
 ggEvenness(output)
 }
 \arguments{
-\item{output}{a table generated from Evenness function\cr}
+\item{output}{a list generated from Evenness function\cr}
 }
 \value{
-a figure of estimated evenness with order q\cr
+a figure of estimated (or observed) evenness with order q.\cr
 }
 \description{
 ggplot for Evenness
@@ -32,5 +32,5 @@ ggEvenness(out2)
 
 }
 \references{
-Chao,A.and Ricotta,C.(2019).Quantifying evenness and linking it to diversity, beta diversity, and similarity.
+Chao, A. and Ricotta, C. (2019). Quantifying evenness and linking it to diversity, beta diversity, and similarity. Ecology, 100(12), e02852.
 }

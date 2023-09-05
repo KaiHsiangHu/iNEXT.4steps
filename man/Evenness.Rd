@@ -38,12 +38,15 @@ Evenness(
 \item{C}{(required only when `method = 'Estimated'`) a standardized coverage for calculating estimated evenness. If \code{NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (Cmax).}
 }
 \value{
-A list of estimated(observed) evenness with order q.\cr
-        Different lists represent different classes of Evenness.\cr
-        Each list is combined with order.q and sites.\cr
-        If "method" is estimated, then fist list will be named "C" which means the
-        maximum standardized coverage among all double reference sample size.\cr\cr
-\code{$summary} individual summary of 4 steps of data. \cr\cr
+A list of several tables containing estimated (or observed) evenness with order q.\cr
+        Each tables represents a classe of Evenness.\cr
+        'Order.q' = the diversity order of q.\cr\cr
+        'Evenness' = the evenness of order q.\cr\cr
+        's.e.' = standard error of evenness.\cr\cr
+        'Even.LCL', 'Even.UCL' = the bootstrap lower and upper confidence limits for the evenness of order q at the specified level (with a default value of 0.95).\cr\cr
+        'Assemblage' = the assemblage name.\cr\cr
+        'Method' = "Estimated" or "Observed".\cr\cr
+        'SC' = the target standardized coverage value. \cr\cr
 }
 \description{
 \code{Evenness} Estimation (Observed) of Evenness with order q
@@ -68,5 +71,5 @@ out2
 
 }
 \references{
-Chao,A.and Ricotta,C.(2019).Quantifying evenness and linking it to diversity, beta diversity, and similarity.
+Chao, A. and Ricotta, C. (2019). Quantifying evenness and linking it to diversity, beta diversity, and similarity. Ecology, 100(12), e02852.
 }

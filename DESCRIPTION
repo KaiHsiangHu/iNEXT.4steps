@@ -2,8 +2,8 @@ Package: iNEXT.4steps
 Type: Package
 Title: four steps of INterpolation and EXTrapolation analysis
 Version: 1.0.1
-Author: Anne Chao, KaiHsiang Hu
-Maintainer: Kai-Hsiang Hu <river19951224@gmail.com>
+Author: Anne Chao and K.-H. Hu
+Maintainer: K.-H. Hu <river19951224@gmail.com>
 Description: iNEXT.4steps provides a simple function to create a complete analysis process
              with following four parts:
              Step1: Sample completeness profiles.
