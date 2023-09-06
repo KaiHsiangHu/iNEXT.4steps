@@ -39,14 +39,14 @@ Evenness(
 }
 \value{
 A list of several tables containing estimated (or observed) evenness with order q.\cr
-        Each tables represents a classe of Evenness.\cr
+        Each tables represents a class of evenness.\cr
         'Order.q' = the diversity order of q.\cr\cr
         'Evenness' = the evenness of order q.\cr\cr
         's.e.' = standard error of evenness.\cr\cr
         'Even.LCL', 'Even.UCL' = the bootstrap lower and upper confidence limits for the evenness of order q at the specified level (with a default value of 0.95).\cr\cr
         'Assemblage' = the assemblage name.\cr\cr
         'Method' = "Estimated" or "Observed".\cr\cr
-        'SC' = the target standardized coverage value. \cr\cr
+        'SC' = the target standardized coverage value. (only when method = 'Estimated') \cr\cr
 }
 \description{
 \code{Evenness} Estimation (Observed) of Evenness with order q
