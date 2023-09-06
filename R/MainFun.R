@@ -375,7 +375,21 @@ Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboo
   if (pmatch(datatype, TYPE) == -1)
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
-  if (datatype == "incidence_raw") {data = iNEXT.3D:::as.incfreq(data, nT = nT); datatype = "incidence_freq"}
+  
+  if (datatype == "incidence_raw") {
+    if (length(data) != 1) {
+      data = iNEXT.3D:::as.incfreq(data, nT = nT)
+      datatype = "incidence_freq"
+    }
+    
+    if (length(data) == 1) {
+      name = names(data)
+      data = list(iNEXT.3D:::as.incfreq(data, nT = nT))
+      names(data) = name
+      datatype = "incidence_freq"
+    }
+  }
+  
   if (inherits(data, c("numeric", "integer"))) {
     data <- list(data = data)
   }
@@ -640,7 +654,7 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
       names(data) = name
       datatype = "incidence_freq"
     }
-    }
+  }
   if (inherits(data, c("numeric", "integer"))) {
     data <- list(data = data)
   }
