@@ -628,7 +628,19 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
   if (sum(E.class %in% class) != length(E.class))
     stop("invalid E.class")
   
-  if (datatype == "incidence_raw") {data = iNEXT.3D:::as.incfreq(data, nT = nT); datatype = "incidence_freq"}
+  if (datatype == "incidence_raw") {
+    if (length(data) != 1) {
+      data = iNEXT.3D:::as.incfreq(data, nT = nT)
+      datatype = "incidence_freq"
+    }
+    
+    if (length(data) == 1) {
+      name = names(data)
+      data = list(iNEXT.3D:::as.incfreq(data, nT = nT))
+      names(data) = name
+      datatype = "incidence_freq"
+    }
+    }
   if (inherits(data, c("numeric", "integer"))) {
     data <- list(data = data)
   }
