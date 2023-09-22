@@ -39,14 +39,14 @@ Evenness(
 }
 \value{
 A list of several tables containing estimated (or observed) evenness with order q.\cr
-        Each tables represents a class of evenness.\cr
-        'Order.q' = the diversity order of q.\cr\cr
-        'Evenness' = the evenness of order q.\cr\cr
-        's.e.' = standard error of evenness.\cr\cr
-        'Even.LCL', 'Even.UCL' = the bootstrap lower and upper confidence limits for the evenness of order q at the specified level (with a default value of 0.95).\cr\cr
-        'Assemblage' = the assemblage name.\cr\cr
-        'Method' = "Estimated" or "Observed".\cr\cr
-        'SC' = the target standardized coverage value. (only when method = 'Estimated') \cr\cr
+        Each tables represents a class of evenness.
+        \item{Order.q}{the diversity order of q.}
+        \item{Evenness}{the evenness of order q.}
+        \item{s.e.}{standard error of evenness.}
+        \item{Even.LCL, Even.UCL}{the bootstrap lower and upper confidence limits for the evenness of order q at the specified level (with a default value of 0.95).}
+        \item{Assemblage}{the assemblage name.}
+        \item{Method}{"Estimated" or "Observed".}
+        \item{SC}{the target standardized coverage value. (only when method = 'Estimated')}
 }
 \description{
 \code{Evenness} Estimation (Observed) of Evenness with order q
@@ -60,14 +60,14 @@ installed and loaded before running the scripts.
 ## Type (1) example for abundance based data (data.frame)
 ## Ex.1
 data(Spider)
-out1 <- Evenness(data = Spider, datatype = "abundance")
-out1
+output1 <- Evenness(data = Spider, datatype = "abundance")
+output1
 
 ## Type (2) example for incidence based data (list of data.frame)
 ## Ex.2
 data(woody_plants)
-out2 <- Evenness(data = woody_plants[,c(1,4)], datatype = "incidence_freq")
-out2
+output2 <- Evenness(data = woody_plants[,c(1,4)], datatype = "incidence_freq")
+output2
 
 }
 \references{

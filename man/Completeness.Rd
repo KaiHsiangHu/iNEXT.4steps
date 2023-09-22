@@ -29,12 +29,12 @@ Completeness(
 \item{nT}{(required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc.}
 }
 \value{
-a matrix of estimated sample completeness with order q: \cr\cr
-        'Order.q' = the diversity order of q.\cr\cr
-        'Estimate.SC' = the estimated (or observed) sample completeness of order q.\cr\cr
-        's.e.' = standard error of sample completeness.\cr\cr
-        'SC.LCL', 'SC.UCL' = the bootstrap lower and upper confidence limits for the sample completeness of order q at the specified level (with a default value of 0.95).\cr\cr
-        'Assemblage' = the assemblage name.\cr\cr
+a matrix of estimated sample completeness with order q: 
+        \item{Order.q}{the diversity order of q.}
+        \item{Estimate.SC}{the estimated (or observed) sample completeness of order q.}
+        \item{s.e.}{standard error of sample completeness.}
+        \item{SC.LCL, SC.UCL}{the bootstrap lower and upper confidence limits for the sample completeness of order q at the specified level (with a default value of 0.95).}
+        \item{Assemblage}{the assemblage name.}
 }
 \description{
 \code{Completeness} Estimation of Sample Completeness with order q
@@ -43,14 +43,14 @@ a matrix of estimated sample completeness with order q: \cr\cr
 ## Type (1) example for abundance based data (data.frame)
 ## Ex.1
 data(Spider)
-out1 <- Completeness(data = Spider, datatype = "abundance")
-out1
+output1 <- Completeness(data = Spider, datatype = "abundance")
+output1
 
 ## Type (2) example for incidence based data (list of data.frame)
 ## Ex.2
 data(woody_plants)
-out2 <- Completeness(data = woody_plants[,c(1,4)], datatype = "incidence_freq")
-out2
+output2 <- Completeness(data = woody_plants[,c(1,4)], datatype = "incidence_freq")
+output2
 
 }
 \references{

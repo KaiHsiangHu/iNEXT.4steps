@@ -19,14 +19,14 @@ a figure of estimated sample completeness with order q.
 ## Type (1) example for abundance based data (data.frame)
 ## Ex.1
 data(Spider)
-out1 <- Completeness(data = Spider, datatype = "abundance")
-ggCompleteness(out1)
+output1 <- Completeness(data = Spider, datatype = "abundance")
+ggCompleteness(output1)
 
 ## Type (2) example for incidence based data (list of data.frame)
 ## Ex.2
 data(woody_plants)
-out2 <- Completeness(data = woody_plants[,c(1,4)], datatype = "incidence_freq")
-ggCompleteness(out2)
+output2 <- Completeness(data = woody_plants[,c(1,4)], datatype = "incidence_freq")
+ggCompleteness(output2)
 
 }
 \references{

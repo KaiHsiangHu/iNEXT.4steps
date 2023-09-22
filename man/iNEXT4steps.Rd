@@ -68,28 +68,28 @@ Step 4. Evenness among species abundances\cr
 ## Type (1) example for abundance based data (data.frame)
 ## Ex.1
 data(Spider)
-out1 <- iNEXT4steps(data = Spider, diversity = "TD", datatype = "abundance")
-out1
+output1 <- iNEXT4steps(data = Spider, diversity = "TD", datatype = "abundance")
+output1
 
 ## Ex.2
 data(brazil)
 data(brazil_tree)
-out2 <- iNEXT4steps(data = brazil, diversity = "PD", datatype = "abundance", 
-                    nboot = 0, PDtree = brazil_tree)
-out2
+output2 <- iNEXT4steps(data = brazil, diversity = "PD", datatype = "abundance", 
+                       nboot = 0, PDtree = brazil_tree)
+output2
 
 ## Ex.3
 data(brazil)
 data(brazil_distM)
-out3 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", 
-                    nboot = 0, FDdistM = brazil_distM, FDtype = 'tau_values')
-out3
+output3 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", 
+                       nboot = 0, FDdistM = brazil_distM, FDtype = 'tau_values')
+output3
 
 ## Type (2) example for incidence based data (list of data.frame)
 ## Ex.1
 data(woody_plants)
-out4 <- iNEXT4steps(data = woody_plants[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
-out4
+output4 <- iNEXT4steps(data = woody_plants[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
+output4
 
 }
 
