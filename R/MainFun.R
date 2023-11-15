@@ -108,7 +108,7 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
                          PDtree = PDtree, PDreftime = PDreftime, PDtype = PDtype, FDdistM = FDdistM, FDtype = FDtype, FDtau = FDtau)
   
   ## Asymptotic ##
-  qD.table <- AO3D(data, diversity = diversity, q = q, datatype = datatype, nboot = nboot, nT = nT, PDtree = PDtree, 
+  qD.table <- ObsAsy3D(data, diversity = diversity, q = q, datatype = datatype, nboot = nboot, nT = nT, PDtree = PDtree, 
                    PDreftime = PDreftime, PDtype = PDtype, FDdistM = FDdistM, FDtype = FDtype, FDtau = FDtau)
   
   ## Evenness ##
@@ -146,7 +146,7 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
             legend.margin = margin(0, 0, 0, 0),
             plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
 
-    AO.plot <- ggAO3D(qD.table) +
+    AO.plot <- ggObsAsy3D(qD.table) +
       labs(title = plot.names[3]) +
       theme(text = element_text(size = 12),
             plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
@@ -555,8 +555,8 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
     })
   } else if (method == "Observed") {
     
-    empqD = AO3D(x, diversity = 'TD', q = q, datatype = datatype, nboot = 0, method = 'Observed')
-    empS = AO3D(x, diversity = 'TD', q = 0, datatype = datatype, nboot = 0, method = 'Observed')
+    empqD = ObsAsy3D(x, diversity = 'TD', q = q, datatype = datatype, nboot = 0, method = 'Observed')
+    empS = ObsAsy3D(x, diversity = 'TD', q = 0, datatype = datatype, nboot = 0, method = 'Observed')
     
     out = lapply(E.class, function(i) {
       tmp = sapply(1:length(x), function(k) even.class(q, empqD[empqD$Assemblage == names(x)[k], "qTD"], empS[empS$Assemblage == names(x)[k], "qTD"], i, x[[k]]/sum(x[[k]])))
