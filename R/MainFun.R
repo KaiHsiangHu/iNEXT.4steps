@@ -224,7 +224,7 @@ summary.deal <- function(table, step, Pielou = NULL) {
   }
   
   if (step == 3){
-    tmp = table[,c(1, 2, 5)]
+    tmp = table[,c(1, 2, 6)]
     C = round(min(table$SC), 3)
     out = dcast(tmp, Assemblage ~ Order.q, value.var = colnames(tmp)[3]) %>% 
       lapply(FUN = function(x) if(is.numeric(x)) round(x,2)
