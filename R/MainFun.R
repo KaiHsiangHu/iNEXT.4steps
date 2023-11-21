@@ -376,9 +376,11 @@ Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboo
   if (pmatch(datatype, TYPE) == -1)
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
+  
   if(datatype == "incidence") stop("Completeness can only accept datatype = 'incidence_freq' or 'datatype = incidence_raw'.") 
   
   if (datatype == "incidence_raw") {
+    
     if (length(data) != 1) {
       data = iNEXT.3D:::as.incfreq(data, nT = nT)
       datatype = "incidence_freq"
@@ -395,14 +397,24 @@ Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboo
   if (inherits(data, c("numeric", "integer"))) {
     data <- list(data = data)
   }
+  
   if (inherits(data, c("data.frame", "matrix"))) {
+    
     datalist <- lapply(1:ncol(data), function(i) data[, i])
+    
     if (is.null(colnames(data)))
-      names(datalist) <- paste0("data", 1:ncol(data))
+      names(datalist) <- paste0("Assemblage_", 1:ncol(data))
     else names(datalist) <- colnames(data)
+    
     data <- datalist
   }
+  
+  if (inherits(data, "list")) {
+    if (is.null(names(data))) names(data) = paste0("Assemblage_", 1:length(data))
+  }
+  
   if (datatype == "abundance") {
+    
     out <- lapply(1:length(data), function(i) {
       dq <- sample_completeness(data[[i]], q, "abundance")
       if (nboot > 1) {
@@ -422,7 +434,9 @@ Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboo
       out
     })
     out <- do.call(rbind, out)
+    
   } else if (datatype == "incidence_freq") {
+    
     out <- lapply(1:length(data), function(i) {
       dq <- sample_completeness(data[[i]], q, "incidence_freq")
       if (nboot > 1) {
@@ -444,6 +458,7 @@ Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboo
       out$SC.UCL[out$SC.UCL > 1] <- 1
       out
     })
+    
     out <- do.call(rbind, out)
   }
   return(out)
@@ -628,6 +643,7 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
   if (pmatch(datatype, TYPE) == -1)
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
+  
   if(datatype == "incidence") stop("Completeness can only accept datatype = 'incidence_freq' or 'datatype = incidence_raw'.") 
   
   kind <- c("Estimated", "Observed")
@@ -643,6 +659,7 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
     stop("invalid E.class")
   
   if (datatype == "incidence_raw") {
+    
     if (length(data) != 1) {
       data = iNEXT.3D:::as.incfreq(data, nT = nT)
       datatype = "incidence_freq"
@@ -655,17 +672,25 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
       datatype = "incidence_freq"
     }
   }
+  
   if (inherits(data, c("numeric", "integer"))) {
     data <- list(data = data)
   }
+  
   if (inherits(data, c("data.frame", "matrix"))) {
+    
     datalist <- lapply(1:ncol(data), function(i) data[, i])
+    
     if (is.null(colnames(data)))
       names(datalist) <- paste0("data", 1:ncol(data))
     else names(datalist) <- colnames(data)
+    
     data <- datalist
   }
   
+  if (inherits(data, "list")) {
+    if (is.null(names(data))) names(data) = paste0("Assemblage_", 1:length(data))
+  }
   
   if (is.null(SC) == TRUE) {
     if (datatype == "abundance") SC = sapply(data, function(x) iNEXT.3D:::Coverage(x, "abundance", 2*sum(x))) %>% min
@@ -674,6 +699,7 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
   
   
   if (datatype == "abundance") {
+    
     qD <- Evenness.profile(data, q, "abundance", method, E.class, SC)
     qD <- map(qD, as.vector)
     
@@ -706,6 +732,7 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
     })
     
   } else if (datatype == "incidence_freq") {
+    
     qD <- Evenness.profile(data, q, "incidence_freq", method, E.class, SC)
     qD <- map(qD, as.vector)
     
