@@ -376,6 +376,7 @@ Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboo
   if (pmatch(datatype, TYPE) == -1)
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
+  if(datatype == "incidence") stop("Completeness can only accept datatype = 'incidence_freq' or 'datatype = incidence_raw'.") 
   
   if (datatype == "incidence_raw") {
     if (length(data) != 1) {
@@ -589,7 +590,7 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' @param conf a positive number < 1 specifying the level of confidence interval. Default is 0.95.
 #' @param nT (required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc. 
 #' @param E.class an integer vector between 1 to 5
-#' @param C (required only when `method = 'Estimated'`) a standardized coverage for calculating estimated evenness. If \code{NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (Cmax).
+#' @param SC (required only when `method = 'Estimated'`) a standardized coverage for calculating estimated evenness. If \code{NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (Cmax).
 #' @return A list of several tables containing estimated (or observed) evenness with order q.\cr
 #'         Each tables represents a class of evenness.
 #'         \item{Order.q}{the diversity order of q.}
@@ -619,7 +620,7 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' @export
 
 Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
-                      nboot = 50, conf = 0.95, nT = NULL, E.class = 1:5, C = NULL)
+                      nboot = 50, conf = 0.95, nT = NULL, E.class = 1:5, SC = NULL)
 {
   TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
   if (is.na(pmatch(datatype, TYPE)))
@@ -627,9 +628,7 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
   if (pmatch(datatype, TYPE) == -1)
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
-  if (datatype == "incidence") {
-    stop("datatype=\"incidence\" was no longer supported after v2.0.8, \n         please try datatype=\"incidence_freq\".")
-  }
+  if(datatype == "incidence") stop("Completeness can only accept datatype = 'incidence_freq' or 'datatype = incidence_raw'.") 
   
   kind <- c("Estimated", "Observed")
   if (length(method) > 1)
@@ -668,14 +667,14 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
   }
   
   
-  if (is.null(C) == TRUE) {
-    if (datatype == "abundance") C = sapply(data, function(x) iNEXT.3D:::Coverage(x, "abundance", 2*sum(x))) %>% min
-    if (datatype == "incidence_freq") C = sapply(data, function(x) iNEXT.3D:::Coverage(x, "incidence_freq", 2*x[1])) %>% min
+  if (is.null(SC) == TRUE) {
+    if (datatype == "abundance") SC = sapply(data, function(x) iNEXT.3D:::Coverage(x, "abundance", 2*sum(x))) %>% min
+    if (datatype == "incidence_freq") SC = sapply(data, function(x) iNEXT.3D:::Coverage(x, "incidence_freq", 2*x[1])) %>% min
   }
   
   
   if (datatype == "abundance") {
-    qD <- Evenness.profile(data, q, "abundance", method, E.class, C)
+    qD <- Evenness.profile(data, q, "abundance", method, E.class, SC)
     qD <- map(qD, as.vector)
     
     if (nboot > 1) {
@@ -685,7 +684,7 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
       error = apply( matrix(sapply(1:nboot, function(b) {
         dat = lapply(1:length(Abun.Mat),function(j) Abun.Mat[[j]][,b])
         names(dat) = paste("Site", 1:length(dat), sep="")
-        dat.qD = Evenness.profile(dat, q, "abundance", method, E.class, C)
+        dat.qD = Evenness.profile(dat, q, "abundance", method, E.class, SC)
         unlist(dat.qD)
       }), nrow=length(q)*length(E.class)*length(Abun.Mat))
       , 1, sd, na.rm = TRUE)
@@ -707,7 +706,7 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
     })
     
   } else if (datatype == "incidence_freq") {
-    qD <- Evenness.profile(data, q, "incidence_freq", method, E.class, C)
+    qD <- Evenness.profile(data, q, "incidence_freq", method, E.class, SC)
     qD <- map(qD, as.vector)
     
     if (nboot > 1) {
@@ -719,7 +718,7 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
       error = apply(  matrix(sapply(1:nboot, function(b) {
         dat = lapply(1:length(Incid.Mat),function(j) Incid.Mat[[j]][,b])
         names(dat) = paste("Site", 1:length(dat), sep="")
-        dat.qD = Evenness.profile(dat, q, "incidence_freq", method, E.class, C)
+        dat.qD = Evenness.profile(dat, q, "incidence_freq", method, E.class, SC)
         unlist(dat.qD)  }
       ), nrow=length(q)*length(E.class)*length(Incid.Mat))
       , 1, sd, na.rm = TRUE)
@@ -743,7 +742,7 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
   }
   
   if (method == "Estimated") {
-    out <- lapply(out, function(x) x %>% mutate(SC = C))
+    out <- lapply(out, function(x) x %>% mutate(SC = SC))
   }
   
   names(out) = paste("E", E.class, sep = "")

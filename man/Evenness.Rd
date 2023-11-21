@@ -13,7 +13,7 @@ Evenness(
   conf = 0.95,
   nT = NULL,
   E.class = 1:5,
-  C = NULL
+  SC = NULL
 )
 }
 \arguments{
@@ -35,7 +35,7 @@ Evenness(
 
 \item{E.class}{an integer vector between 1 to 5}
 
-\item{C}{(required only when `method = 'Estimated'`) a standardized coverage for calculating estimated evenness. If \code{NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (Cmax).}
+\item{SC}{(required only when `method = 'Estimated'`) a standardized coverage for calculating estimated evenness. If \code{NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (Cmax).}
 }
 \value{
 A list of several tables containing estimated (or observed) evenness with order q.\cr
