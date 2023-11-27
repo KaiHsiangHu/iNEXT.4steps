@@ -27,7 +27,7 @@ Imports: devtools,
          tidytree,
          phyclust,
          iNEXT.3D
-Suggests: knitr
+Suggests: knitr, rmarkdown
 Remotes: AnneChao/iNEXT.3D
 Encoding: UTF-8
 BugReports: https://github.com/KaiHsiangHu/iNEXT.4steps/issues
