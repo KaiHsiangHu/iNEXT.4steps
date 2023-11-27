@@ -32,3 +32,6 @@ Encoding: UTF-8
 BugReports: https://github.com/KaiHsiangHu/iNEXT.4steps/issues
 LazyData: true
 RoxygenNote: 7.2.3
+VignetteBuilder: knitr
+ByteCompile: true
+
