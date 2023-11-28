@@ -65,7 +65,7 @@ If you publish your work based on the results from the `iNEXT.4steps` package, y
 
 ## SOFTWARE NEEDED TO RUN INEXT IN R
 - Required: [R](https://cran.r-project.org/)
-- Suggested: [RStudio IDE](https://www.rstudio.com/products/RStudio/#Desktop)
+- Suggested: [RStudio IDE](https://posit.co/products/open-source/rstudio/#Desktop)
 
 ## HOW TO RUN INEXT:
 The `iNEXT.4steps` package will be submitted to [CRAN] and can be downloaded from Anne Chao's [iNEXT.4steps_github](https://github.com/AnneChao/iNEXT.4steps) using the following commands. For a first-time installation, a related R package (`iNEXT.3D`) and an additional visualization extension package (`ggplot2`) must be installed and loaded. 
