@@ -1,6 +1,6 @@
 ---
 title: "A Quick Introduction to iNEXT.4steps via Examples"
-author: "Anne Chao and K.H. Hu"
+author: "Anne Chao and Hu, K.-H."
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
@@ -15,7 +15,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "",
                       fig.align = 'center',
                       fig.width = 12, fig.height = 10.5,
                       warning = FALSE, message = FALSE)
-options("width" = 200)
+options("width" = 200, digits = 3)
 if("ggthemes" %in% rownames(installed.packages()) == FALSE) {install.packages("ggthemes")}
 if("gridExtra" %in% rownames(installed.packages()) == FALSE) {install.packages("gridExtra")}
 #devtools::load_all(".")

@@ -40,7 +40,7 @@
 #' \code{$details} only when (\code{details = TRUE}). the numerical output for plotting \code{figure}. \cr\cr
 #' 
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' ## Type (1) example for abundance based data (data.frame)
 #' ## Ex.1
 #' data(Spider)
@@ -364,7 +364,7 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 #' output2
 #'
 #' @references
-#' Chao, A., Y. Kubota, D. Zelený, C.-H. Chiu, C.-F. Li, B. Kusumoto, M. Yasuhara, S. Thorn, C.-L. Wei, M. J. Costello, and R. K. Colwell (2020). Quantifying sample completeness and comparing diversities among assemblages. Ecological Research, 35, 292-314.
+#' Chao, A., Y. Kubota, D. Zelen??, C.-H. Chiu, C.-F. Li, B. Kusumoto, M. Yasuhara, S. Thorn, C.-L. Wei, M. J. Costello, and R. K. Colwell (2020). Quantifying sample completeness and comparing diversities among assemblages. Ecological Research, 35, 292-314.
 #' @export
 
 Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
@@ -486,7 +486,7 @@ Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboo
 #' ggCompleteness(output2)
 #'
 #' @references
-#' Chao, A., Y. Kubota, D. Zelený, C.-H. Chiu, C.-F. Li, B. Kusumoto, M. Yasuhara, S. Thorn, C.-L. Wei, M. J. Costello, and R. K. Colwell (2020). Quantifying sample completeness and comparing diversities among assemblages. Ecological Research, 35, 292-314.
+#' Chao, A., Y. Kubota, D. Zelen??, C.-H. Chiu, C.-F. Li, B. Kusumoto, M. Yasuhara, S. Thorn, C.-L. Wei, M. J. Costello, and R. K. Colwell (2020). Quantifying sample completeness and comparing diversities among assemblages. Ecological Research, 35, 292-314.
 #' @export
 
 ggCompleteness <- function(output) {
