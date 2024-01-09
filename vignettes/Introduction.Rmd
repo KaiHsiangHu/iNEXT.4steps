@@ -1,6 +1,6 @@
 ---
 title: "A Quick Introduction to iNEXT.4steps via Examples"
-author: "Anne Chao and Hu, K.-H."
+author: "Anne Chao and Kai-Hsiang Hu"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:

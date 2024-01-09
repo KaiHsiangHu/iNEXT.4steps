@@ -11,7 +11,7 @@ citEntry(
 		 year = year,
 		 note = note,
 		 url = "http://chao.stat.nthu.edu.tw/wordpress/software_download/inext-4steps/",
-		 textVersion = paste("Anne Chao. and K.-H. Hu", year, "iNEXT.4steps: four steps of INterpolation and EXTrapolation analysis.", note, "URL: http://chao.stat.nthu.edu.tw/wordpress/software_download/inext-4steps/.")
+		 textVersion = paste("Anne Chao and Kai-Hsiang Hu", year, "iNEXT.4steps: four steps of INterpolation and EXTrapolation analysis.", note, "URL: http://chao.stat.nthu.edu.tw/wordpress/software_download/inext-4steps/.")
 )
 
 citEntry(

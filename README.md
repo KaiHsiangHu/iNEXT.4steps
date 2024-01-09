@@ -3,7 +3,7 @@
 # iNEXT.4steps (R package)
 
 <h5 align="right">
-Latest version: 2024-01-08
+Latest version: 2024-01-09
 </h5>
 <font color="394CAE">
 <h3 color="394CAE" style="font-weight: bold">
@@ -12,7 +12,7 @@ User’s Guide
 </h3>
 </font> <br>
 <h5>
-<b>Anne Chao, Hu, K.-H.</b> <br><br> <i>Institute of Statistics,
+<b>Anne Chao, Kai-Hsiang Hu</b> <br><br> <i>Institute of Statistics,
 National Tsing Hua University, Hsin-Chu, Taiwan 30043</i>
 </h5>
 
@@ -441,12 +441,12 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
   Assemblage Taxonomic.Diversity Taxonomic.Observed Taxonomic.Estimator  s.e.   LCL    UCL
-1     Closed    Species richness              44.00               72.11 40.96 44.00 152.39
-2     Closed   Shannon diversity              10.04               10.30  0.40  9.51  11.09
-3     Closed   Simpson diversity               5.71                5.73  0.25  5.25   6.21
-4       Open    Species richness              74.00               96.31 17.02 74.00 129.66
-5       Open   Shannon diversity              16.34               16.84  0.49 15.88  17.80
-6       Open   Simpson diversity               9.41                9.46  0.28  8.90  10.01
+1     Closed    Species richness              44.00               72.11 28.54 44.00 128.04
+2     Closed   Shannon diversity              10.04               10.30  0.46  9.40  11.20
+3     Closed   Simpson diversity               5.71                5.73  0.26  5.21   6.25
+4       Open    Species richness              74.00               96.31 13.18 74.00 122.13
+5       Open   Shannon diversity              16.34               16.84  0.59 15.69  17.99
+6       Open   Simpson diversity               9.41                9.46  0.37  8.74  10.18
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.994 q = 0 q = 1 q = 2
@@ -514,12 +514,12 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
    Assemblage Taxonomic.Diversity Taxonomic.Observed Taxonomic.Estimator  s.e.    LCL    UCL
-1     Monsoon    Species richness             329.00              421.67 19.03 384.37 458.97
-2     Monsoon   Shannon diversity             145.65              150.15  1.81 146.61 153.69
-3     Monsoon   Simpson diversity             102.33              103.35  1.25 100.89 105.81
-4 Upper_cloud    Species richness             239.00              307.78 18.19 272.13 343.43
-5 Upper_cloud   Shannon diversity             105.53              110.50  2.12 106.35 114.64
-6 Upper_cloud   Simpson diversity              71.17               72.23  1.31  69.65  74.80
+1     Monsoon    Species richness             329.00              421.67 23.32 375.96 467.39
+2     Monsoon   Shannon diversity             145.65              150.15  1.89 146.44 153.86
+3     Monsoon   Simpson diversity             102.33              103.35  1.22 100.95 105.75
+4 Upper_cloud    Species richness             239.00              307.78 20.96 266.70 348.86
+5 Upper_cloud   Shannon diversity             105.53              110.50  2.20 106.19 114.81
+6 Upper_cloud   Simpson diversity              71.17               72.23  1.32  69.65  74.80
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.993  q = 0  q = 1  q = 2
@@ -557,11 +557,11 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
   Assemblage Phylogenetic.Diversity Phylogenetic.Observed Phylogenetic.Estimator s.e.   LCL   UCL Reftime   Type
-1       Edge               q = 0 PD                 61.29                  80.03 4.67 70.87 89.18     400 meanPD
-2       Edge               q = 1 PD                  5.25                   5.37 0.13  5.11  5.64     400 meanPD
-3       Edge               q = 2 PD                  1.80                   1.80 0.03  1.75  1.85     400 meanPD
-4   Interior               q = 0 PD                 69.32                  86.38 3.60 79.32 93.43     400 meanPD
-5   Interior               q = 1 PD                  5.72                   5.85 0.13  5.59  6.12     400 meanPD
+1       Edge               q = 0 PD                 61.29                  80.03 5.00 70.24 89.82     400 meanPD
+2       Edge               q = 1 PD                  5.25                   5.37 0.10  5.18  5.56     400 meanPD
+3       Edge               q = 2 PD                  1.80                   1.80 0.02  1.75  1.84     400 meanPD
+4   Interior               q = 0 PD                 69.32                  86.38 4.93 76.71 96.04     400 meanPD
+5   Interior               q = 1 PD                  5.72                   5.85 0.13  5.60  6.10     400 meanPD
 6   Interior               q = 2 PD                  1.91                   1.91 0.03  1.86  1.97     400 meanPD
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
@@ -598,11 +598,11 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
   Assemblage Functional.Diversity Functional.Observed Functional.Estimator s.e.  LCL  UCL  Tau
-1       Edge q = 0 FD(single tau)                6.86                 6.86 0.19 6.86 7.24 0.35
-2       Edge q = 1 FD(single tau)                6.52                 6.52 0.13 6.27 6.78 0.35
-3       Edge q = 2 FD(single tau)                6.26                 6.26 0.11 6.04 6.48 0.35
-4   Interior q = 0 FD(single tau)                5.91                 5.91 0.07 5.91 6.05 0.35
-5   Interior q = 1 FD(single tau)                5.19                 5.19 0.09 5.02 5.37 0.35
+1       Edge q = 0 FD(single tau)                6.86                 6.86 0.21 6.86 7.27 0.35
+2       Edge q = 1 FD(single tau)                6.52                 6.52 0.14 6.25 6.80 0.35
+3       Edge q = 2 FD(single tau)                6.26                 6.26 0.12 6.03 6.49 0.35
+4   Interior q = 0 FD(single tau)                5.91                 5.91 0.06 5.91 6.04 0.35
+5   Interior q = 1 FD(single tau)                5.19                 5.19 0.08 5.03 5.36 0.35
 6   Interior q = 2 FD(single tau)                4.72                 4.72 0.10 4.52 4.91 0.35
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
