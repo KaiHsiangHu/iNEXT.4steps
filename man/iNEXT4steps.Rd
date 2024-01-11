@@ -64,7 +64,7 @@ Step 3. Non-asymptotic coverage-based rarefaction and extrapolation\cr
 Step 4. Evenness among species abundances\cr
 }
 \examples{
-\dontrun{
+\donttest{
 ## Type (1) example for abundance based data (data.frame)
 ## Ex.1
 data(Spider)
