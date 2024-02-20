@@ -1,7 +1,7 @@
 Package: iNEXT.4steps
 Type: Package
 Title: Four Steps of Interpolation and Extrapolation Analysis
-Version: 1.0.1
+Version: 1.0.0
 Author: Anne Chao and Kai-Hsiang Hu
 Maintainer: Anne Chao <chao@stat.nthu.edu.tw>
 URL: https://chao.stat.nthu.edu.tw/wordpress/software_download/inext-4steps/
