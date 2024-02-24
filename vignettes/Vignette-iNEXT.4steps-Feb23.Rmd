@@ -1,22 +1,21 @@
 ---
+title: "A Quick Introduction to iNEXT.4steps via Examples"
+author: "Anne Chao and Kai-Hsiang Hu"
+date: "`r Sys.Date()`"
 output:
-  md_document:
-    variant: markdown_github
+  rmarkdown::html_vignette:
+    vignette: >
+      %\VignetteIndexEntry{A Quick Introduction to iNEXT.4steps via Examples}
+      %\VignetteEngine{knitr::rmarkdown}
+      %\VignetteEncoding{UTF-8}
 ---
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
-```{r, include=FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "",
-  fig.path = "README/README-",
-  fig.align = 'center',
-  fig.retina=2, fig.width = 12, fig.height = 10.5,
-  warning = FALSE,
-  message = FALSE
-)
-options("width"=200)
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "", 
+                      fig.retina = 2,
+                      fig.align = 'center',
+                      fig.width = 12, fig.height = 10.5,
+                      warning = FALSE, message = FALSE)
+options("width" = 200, digits = 3)
 
 library(iNEXT.4steps)
 library(ggplot2)
@@ -26,18 +25,10 @@ data("Brazil_phylo_tree")
 data("Brazil_distance_matrix")
 ```
 
-iNEXT.4steps (R package)
-=====
+<font color=#FF6600>
+</font>
 
-<h5 align="right">Latest version: `r Sys.Date()`</h5>
 
-<font color="394CAE"><h3 color= 394CAE style = "font-weight: bold"> Introduction to iNEXT.4steps (R package): Excerpt from iNEXT.4steps User’s Guide </h3> </font>
-<br>
-<h5><b>Anne Chao, Kai-Hsiang Hu</b>
-<br><br>
-<i>Institute of Statistics, National Tsing Hua University, Hsin-Chu, Taiwan 30043</i>  
-</h5>
-<br>
 `iNEXT.4steps` (iNterpolation and EXTrapolation for four steps of biodiversity) is an original R package which provide an easy complete biological analysis computation. In Chao et al. (2020) paper, they proposed a complete biological analysis process:
 
 * `STEP1`. Sample completeness profiles. 
@@ -78,7 +69,7 @@ If you publish your work based on results from iNEXT.4steps package, you should 
 The `iNEXT.4steps` package will be submitted to [CRAN] or can be downloaded from Anne Chao's [iNEXT.4steps_github](https://github.com/AnneChao/iNEXT.4steps). For a first-time installation, some additional packages must be installed and loaded; see package manual.
 
 
-```{r install, eval=FALSE}
+```{r eval=FALSE}
 ## install iNEXT.4steps package from CRAN
 # install.packages("iNEXT.4steps")  # Coming soon
 
@@ -90,7 +81,6 @@ install_github('AnneChao/iNEXT.4steps')
 ## import packages
 library(iNEXT.4steps)
 ```
-
 
 An online version of iNEXT.4steps (https://chao.shinyapps.io/iNEXT_4steps/) is also available for users without R background.
 
@@ -198,33 +188,86 @@ iNEXT4steps(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "abundance",
             FDdistM = NULL, FDtype = 'AUC', FDtau = NULL, FDcut_number = 50, details = FALSE)
 ```
 
+The arguments of this function are briefly described below, and will explain details by illustrative examples in later text. 
+<table style="width:100%;">
+<colgroup>
+<col width="20%">
+<col width="80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Argument</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><code>data</code></td>
+<td align="left">
+(a) For `datatype = "abundance"`, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
+(b) For `datatype = "incidence_freq"`, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
+(c) For `datatype = "incidence_raw"`, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
+</td>
+</tr>
+<tr class="even">
+<td align="center"><code>diversity</code></td>
+<td align="left">selection of diversity type: `TD` = Taxonomic diversity, `PD` = Phylogenetic diversity, and `FD` = Functional diversity.</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>q</code></td>
+<td align="left">a numerical vector specifying the diversity orders for q-profile output. Default is <code>seq(0, 2, by = 0.2)</code>.</td>
+</tr>
+<tr class="even">
+<td align="center"><code>datatype</code></td>
+<td align="left">data type of input data: individual-based abundance data (`datatype = "abundance"`), sampling-unit-based incidence frequencies data (`datatype = "incidence_freq"`), or species by sampling-units incidence matrix (`datatype = "incidence_raw"`) with all entries being 0 (non-detection) or 1 (detection)</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>nboot</code></td>
+<td align="left">a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.</td>
+</tr>
+<tr class="even">
+<td align="center"><code>conf</code></td>
+<td align="left">a positive number < 1 specifying the level of confidence interval. Default is 0.95.</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>nT</code></td>
+<td align="left">(required only when <code>datatype = "incidence_raw"</code> and input data in a single matrix/data.frame) a vector of positive integers specifying the number of sampling units in each assemblage. If assemblage names are not specified (i.e., <code>names(nT) = NULL</code>), then assemblages are automatically named as "assemblage1", "assemblage2",..., etc.</td>
+</tr>
+<tr class="even">
+<td align="center"><code>PDtree</code></td>
+<td align="left">(required argument for <code>diversity = "PD"</code>), a phylogenetic tree in Newick format for all observed species in the pooled assemblage.</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>PDreftime</code></td>
+<td align="left">(argument only for <code>diversity = "PD"</code>), a vector of numerical values specifying reference times for PD. Default is <code>NULL</code> (i.e., the age of the root of <code>PDtree</code>).</td>
+</tr>
+<tr class="even">
+<td align="center"><code>PDtype</code></td>
+<td align="left">(argument only for <code>diversity = "PD"</code>), select PD type: <code>PDtype = "PD"</code> (effective total branch length) or <code>PDtype = "meanPD"</code> (effective number of equally divergent lineages). Default is <code>"meanPD"</code>, where <code>meanPD = PD/tree depth</code>.</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>FDdistM</code></td>
+<td align="left">(required argument for <code>diversity = "FD"</code>), a species pairwise distance matrix for all species in the pooled assemblage.</td>
+</tr>
+<tr class="even">
+<td align="center"><code>FDtype</code></td>
+<td align="left">(argument only for <code>diversity = "FD"</code>), select FD type: <code>FDtype = "tau_values"</code> for FD under specified threshold values, or <code>FDtype = "AUC"</code> (area under the curve of tau-profile) for an overall FD which integrates all threshold values between zero and one. Default is <code>"AUC"</code>.</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>FDtau</code></td>
+<td align="left">(argument only for <code>diversity = "FD"</code> and <code>FDtype = "tau_values"</code>), a numerical vector between 0 and 1 specifying tau values (threshold levels). If <code>NULL</code> (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled assemblage (i.e., quadratic entropy).</td>
+</tr>
+<tr class="even">
+<td align="center"><code>FDcut_number</code></td>
+<td align="left">(argument only for <code>diversity = "FD"</code> and <code>FDtype = "AUC"</code>), a numeric number to cut [0, 1] interval into equal-spaced sub-intervals to obtain the AUC value by integrating the tau-profile. Equivalently, the number of tau values that will be considered to compute the integrated AUC value. Default is <code>FDcut_number = 50</code>. A larger value can be set to obtain more accurate AUC value.</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>details</code></td>
+<td align="left">a logical variable to decide whether do you want to print out the detailed value for each plots, default is `FALSE`.</td>
+</tr>
 
-```{r, echo=FALSE,warning=FALSE}
-Des <- c("data","(1) For `datatype = 'abundance'`, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. (2) For `datatype = 'incidence_freq'`, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. (3) For `datatype = 'incidence_raw'`, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. ",
-"diversity","selection of diversity type: `TD` = Taxonomic diversity, `PD` = Phylogenetic diversity, and `FD` = Functional diversity.",
-"q","a numerical vector specifying the diversity orders for q-profile output. Default is <code>seq(0, 2, by = 0.2)</code>.",
-"datatype","data type of input data: individual-based abundance data (datatype = 'abundance'), sampling-unit-based incidence frequencies data (datatype = 'incidence_freq'), or species by sampling-units incidence matrix (datatype = 'incidence_raw') with all entries being 0 (non-detection) or 1 (detection).", 
-"nboot","a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.",
-"conf","a positive number < 1 specifying the level of confidence interval. Default is 0.95.",
-"nT","(required only when datatype = 'incidence_raw' and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as 'assemblage1', 'assemblage2',..., etc.",
-"PDtree","(required argument for <code>diversity = 'PD'</code>), a phylogenetic tree in Newick format for all observed species in the pooled assemblage.",
-"PDreftime", "(argument only for <code>diversity = 'PD'</code>), a vector of numerical values specifying reference times for PD. Default is <code>NULL</code> (i.e., the age of the root of <code>PDtree</code>).",
-"PDtype","(argument only for <code>diversity = 'PD'</code>), select PD type: <code>PDtype = 'PD'</code> (effective total branch length) or <code>PDtype = 'meanPD'</code> (effective number of equally divergent lineages). Default is <code>'meanPD'</code>, where <code>meanPD = PD/tree depth</code>.",
-"FDdistM","(required argument for <code>diversity = 'PD'</code>), a species pairwise distance matrix for all species in the pooled assemblage.",
-"FDtype","(argument only for <code>diversity = 'FD'</code>), select FD type: <code>FDtype = 'tau_values'</code> for FD under specified threshold values, or <code>FDtype = 'AUC'</code> (area under the curve of tau-profile) for an overall FD which integrates all threshold values between zero and one. Default is <code>'AUC'</code>.",
-"FDtau","(argument only for <code>diversity = 'FD'</code> and <code>FDtype = 'tau_values'</code>), a numerical vector between 0 and 1 specifying tau values (threshold levels). If <code>NULL</code> (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled assemblage (i.e., quadratic entropy).",
-"FDcut_number","(argument only for <code>diversity = 'FD'</code> and <code>FDtype = 'AUC'</code>), a numeric number to cut [0, 1] interval into equal-spaced sub-intervals to obtain the AUC value by integrating the tau-profile. Equivalently, the number of tau values that will be considered to compute the integrated AUC value. Default is <code>FDcut_number = 50</code>. A larger value can be set to obtain more accurate AUC value.",
-"details"," a logical variable to decide whether do you want to print out the detailed value for each plots, default is `FALSE`.")
-
-output <- 
-  matrix(Des, 
-         ncol=2, byrow = TRUE)
-
-library(htmlTable)
-htmlTable(output,
-          header =  c("Argument","Description"),align = "l"
-          )
-```
+</tbody>
+</table>
 
 
 Data type has following formats, such as a vector gathered by factors (`abundance` and `incidence_freq`), a matrix/data frame with species versus a assemblage (`abundance` `incidence_freq`, and `incidence_raw`), a list of several vectors (`abundance` and `incidence_freq`), or a list correspond to a assemblage (`incidence_raw`). `data` should  comform the format of each datatype. When `datatype = "incidence_raw"` and class of data is matrix/data frame, user should input `nT` for each assemblage which represents sampling units.
@@ -321,25 +364,49 @@ out4$figure[[6]]
 Completeness(data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50, conf = 0.95, nT = NULL)
 ```
 
+<table style="width:100%;">
+<colgroup>
+<col width="20%">
+<col width="80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Argument</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><code>data</code></td>
+<td align="left">
+(a) For `datatype = "abundance"`, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
+(b) For `datatype = "incidence_freq"`, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
+(c) For `datatype = "incidence_raw"`, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
+</td>
+</tr>
+<tr class="even">
+<td align="center"><code>q</code></td>
+<td align="left">a numerical vector specifying the diversity orders. Default is <code>seq(0, 2, by = 0.2)</code>.</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>datatype</code></td>
+<td align="left">data type of input data: individual-based abundance data (`datatype = "abundance"`), sampling-unit-based incidence frequencies data (`datatype = "incidence_freq"`), or species by sampling-units incidence matrix (`datatype = "incidence_raw"`) with all entries being 0 (non-detection) or 1 (detection)</td>
+</tr>
+<tr class="even">
+<td align="center"><code>nboot</code></td>
+<td align="left">a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>conf</code></td>
+<td align="left">a positive number < 1 specifying the level of confidence interval. Default is 0.95.</td>
+</tr>
+<tr class="even">
+<td align="center"><code>nT</code></td>
+<td align="left">(required only when `datatype = "incidence_raw"` and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc.</td>
+</tr>
 
-```{r, echo=FALSE,warning=FALSE}
-Des <- c("data","(1) For `datatype = 'abundance'`, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. (2) For `datatype = 'incidence_freq'`, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. (3) For `datatype = 'incidence_raw'`, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. ",
-"q","a numerical vector specifying the diversity orders for q-profile output. Default is <code>seq(0, 2, by = 0.2)</code>.",
-"datatype","data type of input data: individual-based abundance data (datatype = 'abundance'), sampling-unit-based incidence frequencies data (datatype = 'incidence_freq'), or species by sampling-units incidence matrix (datatype = 'incidence_raw') with all entries being 0 (non-detection) or 1 (detection).", 
-"nboot","a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.",
-"conf","a positive number < 1 specifying the level of confidence interval. Default is 0.95.",
-"nT","(required only when datatype = 'incidence_raw' and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as 'assemblage1', 'assemblage2',..., etc.")
-
-output <- 
-  matrix(Des, 
-         ncol=2, byrow = TRUE)
-
-library(htmlTable)
-htmlTable(output,
-          header =  c("Argument","Description"),align = "l"
-          )
-```
-
+</tbody>
+</table>
 
 ## <span style="color:red;">FUNCTION ggCompleteness(): GRAPHIC DISPLAYS OF SAMPLE COMPLETENESS PROFILES</span>
 
@@ -348,6 +415,27 @@ htmlTable(output,
 ```{r eval=FALSE}
 ggCompleteness(output)
 ```
+
+<table style="width:100%;">
+<colgroup>
+<col width="20%">
+<col width="80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Argument</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><code>output</code></td>
+<td align="left">the output of the function <code>Completeness</code>.
+</td>
+
+</tbody>
+</table>
+
 
 Following are two simple examples for functions `Completeness` and `ggCompleteness`.  
 
@@ -395,26 +483,61 @@ Evenness(data, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
          nboot = 50, conf = 0.95, nT = NULL, E.class = 1:5, SC = NULL)
 ```
 
-```{r, echo=FALSE,warning=FALSE}
-Des <- c("data","(1) For `datatype = 'abundance'`, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. (2) For `datatype = 'incidence_freq'`, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. (3) For `datatype = 'incidence_raw'`, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. ",
-"q","a numerical vector specifying the diversity orders for q-profile output. Default is <code>seq(0, 2, by = 0.2)</code>.",
-"datatype","data type of input data: individual-based abundance data (datatype = 'abundance'), sampling-unit-based incidence frequencies data (datatype = 'incidence_freq'), or species by sampling-units incidence matrix (datatype = 'incidence_raw') with all entries being 0 (non-detection) or 1 (detection).", 
-"method","a binary calculation method with <code>'Estimated'</code> or <code>'Observed'</code>.",
-"nboot","a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.",
-"conf","a positive number < 1 specifying the level of confidence interval. Default is 0.95.",
-"nT","(required only when datatype = 'incidence_raw' and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as 'assemblage1', 'assemblage2',..., etc.",
-"E.class","an integer vector between 1 to 5.",
-"SC","(required only when method = 'Estimated') a standardized coverage for calculating estimated evenness. If <code>NULL</code>, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (Cmax).")
+<table style="width:100%;">
+<colgroup>
+<col width="20%">
+<col width="80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Argument</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><code>data</code></td>
+<td align="left">
+(a) For `datatype = "abundance"`, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
+(b) For `datatype = "incidence_freq"`, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
+(c) For `datatype = "incidence_raw"`, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
+</td>
+</tr>
+<tr class="even">
+<td align="center"><code>q</code></td>
+<td align="left">a numerical vector specifying the diversity orders. Default is <code>(0, 0.2, 0.4,...,2)</code>.</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>datatype</code></td>
+<td align="left">data type of input data: individual-based abundance data (`datatype = "abundance"`), sampling-unit-based incidence frequencies data (`datatype = "incidence_freq"`), or species by sampling-units incidence matrix (`datatype = "incidence_raw"`) with all entries being 0 (non-detection) or 1 (detection)</td>
+</tr>
+<tr class="even">
+<td align="center"><code>method</code></td>
+<td align="left">a binary calculation method with <code>"Estimated"</code> or <code>"Observed"</code>.</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>nboot</code></td>
+<td align="left">a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is <code>50</code>.</td>
+</tr>
+<tr class="even">
+<td align="center"><code>conf</code></td>
+<td align="left">a positive number < <code>1</code> specifying the level of confidence interval. Default is <code>0.95</code>.</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>nT</code></td>
+<td align="left">(required only when `datatype = "incidence_raw"` and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc.</td>
+</tr>
+<tr class="even">
+<td align="center"><code>E.class</code></td>
+<td align="left">an integer vector between 1 to 5.</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>SC</code></td>
+<td align="left">(required only when method = "Estimated") a standardized coverage for calculating estimated evenness. If <code>NULL</code>, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (Cmax).</td>
+</tr>
 
-output <- 
-  matrix(Des, 
-         ncol=2, byrow = TRUE)
-
-library(htmlTable)
-htmlTable(output,
-          header =  c("Argument","Description"),align = "l"
-          )
-```
+</tbody>
+</table>
 
 
 ## <span style="color:red;">FUNCTION ggEvenness(): GRAPHIC DISPLAYS OF EVENNESS PROFILES</span>
@@ -424,6 +547,26 @@ htmlTable(output,
 ```{r eval=FALSE}
 ggEvenness(output)
 ```
+
+<table style="width:100%;">
+<colgroup>
+<col width="20%">
+<col width="80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Argument</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><code>output</code></td>
+<td align="left">the output of the function <code>Evenness</code>.
+</td>
+
+</tbody>
+</table>
 
 Following are two simple examples for functions `Evenness` and `ggEvenness`. 
 

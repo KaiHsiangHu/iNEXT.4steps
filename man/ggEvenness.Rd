@@ -3,34 +3,36 @@
 \name{ggEvenness}
 \alias{ggEvenness}
 \title{ggplot for Evenness
-\code{ggEvenness} the \code{\link[ggplot2]{ggplot}} extension for \code{\link{Evenness}} Object to plot evenness with order q\cr}
+\code{ggEvenness} is a \code{ggplot2} extension for \code{Evenness} Object to plot evenness with order q.\cr\cr}
 \usage{
 ggEvenness(output)
 }
 \arguments{
-\item{output}{a list generated from Evenness function\cr}
+\item{output}{the output of the function \code{Evenness}.\cr}
 }
 \value{
 a figure of estimated (or observed) evenness with order q.\cr
 }
 \description{
 ggplot for Evenness
-\code{ggEvenness} the \code{\link[ggplot2]{ggplot}} extension for \code{\link{Evenness}} Object to plot evenness with order q\cr
+\code{ggEvenness} is a \code{ggplot2} extension for \code{Evenness} Object to plot evenness with order q.\cr\cr
 }
 \examples{
+\donttest{
 ## Type (1) example for abundance based data (data.frame)
 ## Ex.1
 data(Spider)
-output1 <- Evenness(data = Spider, datatype = "abundance")
+output1 <- Evenness(data = Spider, datatype = "abundance", 
+                    method = "Estimated", SC = NULL, E.class = 1:5)
 ggEvenness(output1)
+}
 
 ## Type (2) example for incidence based data (list of data.frame)
 ## Ex.2
-data(woody_plants)
-output2 <- Evenness(data = woody_plants[,c(1,4)], datatype = "incidence_freq")
+data(Woody_plants)
+output2 <- Evenness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq", 
+                    method = "Estimated", SC = NULL, E.class = 1:5)
 ggEvenness(output2)
 
-}
-\references{
-Chao, A. and Ricotta, C. (2019). Quantifying evenness and linking it to diversity, beta diversity, and similarity. Ecology, 100(12), e02852.
+
 }

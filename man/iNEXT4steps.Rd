@@ -10,6 +10,7 @@ iNEXT4steps(
   q = seq(0, 2, 0.2),
   datatype = "abundance",
   nboot = 50,
+  conf = 0.95,
   nT = NULL,
   PDtree = NULL,
   PDreftime = NULL,
@@ -17,6 +18,7 @@ iNEXT4steps(
   FDdistM = NULL,
   FDtype = "AUC",
   FDtau = NULL,
+  FDcut_number = 50,
   details = FALSE
 )
 }
@@ -27,33 +29,37 @@ iNEXT4steps(
 
 \item{diversity}{selection of diversity type: \code{'TD'} = Taxonomic diversity, \code{'PD'} = Phylogenetic diversity, and \code{'FD'} = Functional diversity.}
 
-\item{q}{a numerical vector specifying the diversity orders. Default is (0, 0.2, 0.4,...,2).}
+\item{q}{a numerical vector specifying the diversity orders for q-profile output. Default is \code{seq(0, 2, by = 0.2)}.}
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).}
 
 \item{nboot}{a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.}
 
-\item{nT}{(required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc.}
+\item{conf}{a positive number < 1 specifying the level of confidence interval. Default is 0.95.}
 
-\item{PDtree}{(required only when \code{diversity = "PD"}), a phylogenetic tree in Newick format for all observed species in the pooled assemblage.}
+\item{nT}{(required only when \code{datatype = "incidence_raw"} and input data in a single matrix/data.frame) a vector of positive integers specifying the number of sampling units in each assemblage. If assemblage names are not specified (i.e., \code{names(nT) = NULL}), then assemblages are automatically named as "assemblage1", "assemblage2",..., etc.}
 
-\item{PDreftime}{(required only when \code{diversity = "PD"}), a vector of numerical values specifying reference times for PD. Default is \code{NULL} (i.e., the age of the root of PDtree).}
+\item{PDtree}{(required argument for \code{diversity = "PD"}), a phylogenetic tree in Newick format for all observed species in the pooled assemblage.}
 
-\item{PDtype}{(required only when \code{diversity = "PD"}), select PD type: \code{PDtype = "PD"} (effective total branch length) or \code{PDtype = "meanPD"} (effective number of equally divergent lineages). Default is \code{"meanPD"}, where \code{meanPD = PD/tree depth}.}
+\item{PDreftime}{(argument only for \code{diversity = "PD"}), a vector of numerical values specifying reference times for PD. Default is \code{NULL} (i.e., the age of the root of \code{PDtree}).}
 
-\item{FDdistM}{(required only when \code{diversity = "FD"}), a species pairwise distance matrix for all species in the pooled assemblage.}
+\item{PDtype}{(argument only for \code{diversity = "PD"}), select PD type: \code{PDtype = "PD"} (effective total branch length) or \code{PDtype = "meanPD"} (effective number of equally divergent lineages). Default is \code{"meanPD"}, where \code{meanPD = PD/tree depth}.}
 
-\item{FDtype}{(required only when \code{diversity = "FD"}), select FD type: \code{FDtype = "tau_values"} for FD under specified threshold values, or \code{FDtype = "AUC"} (area under the curve of tau-profile) for an overall FD which integrates all threshold values between zero and one. Default is \code{"AUC"}.}
+\item{FDdistM}{(required argument for \code{diversity = "FD"}), a species pairwise distance matrix for all species in the pooled assemblage.}
 
-\item{FDtau}{(required only when \code{diversity = "FD"} and \code{FDtype = "tau_values"}), a numerical vector between 0 and 1 specifying tau values (threshold levels). If \code{NULL} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled assemblage (i.e., quadratic entropy).}
+\item{FDtype}{(argument only for \code{diversity = "FD"}), select FD type: \code{FDtype = "tau_values"} for FD under specified threshold values, or \code{FDtype = "AUC"} (area under the curve of tau-profile) for an overall FD which integrates all threshold values between zero and one. Default is \code{"AUC"}.}
 
-\item{details}{a logical variable to decide whether do you want to print out the detailed value for each plots, default is \code{FALSE}.}
+\item{FDtau}{(argument only for \code{diversity = "FD"} and \code{FDtype = "tau_values"}), a numerical vector between 0 and 1 specifying tau values (threshold levels). If \code{NULL} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled assemblage (i.e., quadratic entropy).}
+
+\item{FDcut_number}{(argument only for \code{diversity = "FD"} and \code{FDtype = "AUC"}), a numeric number to cut [0, 1] interval into equal-spaced sub-intervals to obtain the AUC value by integrating the tau-profile. Equivalently, the number of tau values that will be considered to compute the integrated AUC value. Default is \code{FDcut_number = 50}. A larger value can be set to obtain more accurate AUC value.}
+
+\item{details}{a logical variable to decide whether print out the detailed values for each steps or not. Default is \code{FALSE}.}
 }
 \value{
 a list of three of objects: \cr\cr
 \code{$summary} four tables for individual summary of 4 steps. \cr\cr
 \code{$figure} six figures (five figures of each analysis process and an overall figure). \cr\cr
-\code{$details} only when (\code{details = TRUE}). the numerical output for plotting \code{figure}. \cr\cr
+\code{$details} (only when \code{details = TRUE}). The numerical output for plotting \code{figure}. \cr\cr
 }
 \description{
 \code{iNEXT4steps}:\cr
@@ -71,30 +77,32 @@ data(Spider)
 output1 <- iNEXT4steps(data = Spider, diversity = "TD", datatype = "abundance")
 output1
 
+
 ## Ex.2
-data(brazil)
-data(brazil_tree)
-output2 <- iNEXT4steps(data = brazil, diversity = "PD", datatype = "abundance", 
-                       nboot = 0, PDtree = brazil_tree)
+data(Brazil_abun_data)
+data(Brazil_phylo_tree)
+output2 <- iNEXT4steps(data = Brazil_abun_data, diversity = "PD", datatype = "abundance", 
+                       nboot = 0, PDtree = Brazil_phylo_tree)
 output2
 
+
 ## Ex.3
-data(brazil)
-data(brazil_distM)
-output3 <- iNEXT4steps(data = brazil, diversity = "FD", datatype = "abundance", 
-                       nboot = 0, FDdistM = brazil_distM, FDtype = 'tau_values')
+data(Brazil_abun_data)
+data(Brazil_distance_matrix)
+output3 <- iNEXT4steps(data = Brazil_abun_data, diversity = "FD", datatype = "abundance", 
+                       nboot = 0, FDdistM = Brazil_distance_matrix, FDtype = 'tau_values')
 output3
+
 
 ## Type (2) example for incidence based data (list of data.frame)
 ## Ex.1
-data(woody_plants)
-output4 <- iNEXT4steps(data = woody_plants[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
+data(Woody_plants)
+output4 <- iNEXT4steps(data = Woody_plants[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
 output4
-
 }
+
 
 }
 \references{
-Chao,A., Y.Kubota, D.Zeleny, C.-H.Chiu.
-Quantifying sample completeness and comparing diversities among assemblages. Ecological Research.
+Chao, A., Y. Kubota, D. Zeleny, C.-H. Chiu, C.-F. Li, B. Kusumoto, M. Yasuhara, S. Thorn, C.-L. Wei, M. J. Costello, and R. K. Colwell (2020). Quantifying sample completeness and comparing diversities among assemblages. Ecological Research, 35, 292-314.
 }

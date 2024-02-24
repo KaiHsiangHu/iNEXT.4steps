@@ -7,28 +7,28 @@
 ggCompleteness(output)
 }
 \arguments{
-\item{output}{a table generated from Completeness function}
+\item{output}{the output of the function \code{Completeness}.}
 }
 \value{
 a figure of estimated sample completeness with order q.
 }
 \description{
-\code{ggCompleteness} the \code{\link[ggplot2]{ggplot}} extension for \code{\link{Completeness}} Object to plot sample completeness with order q
+\code{ggCompleteness} is a \code{ggplot2} extension for \code{Completeness} Object to plot sample completeness with order q.\cr\cr
 }
 \examples{
-## Type (1) example for abundance based data (data.frame)
+## Type (1) example for abundance-based data
 ## Ex.1
+\donttest{
 data(Spider)
 output1 <- Completeness(data = Spider, datatype = "abundance")
 ggCompleteness(output1)
+}
 
-## Type (2) example for incidence based data (list of data.frame)
+## Type (2) example for incidence-based data
 ## Ex.2
-data(woody_plants)
-output2 <- Completeness(data = woody_plants[,c(1,4)], datatype = "incidence_freq")
+data(Woody_plants)
+output2 <- Completeness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq")
 ggCompleteness(output2)
 
-}
-\references{
-Chao, A., Y. Kubota, D. Zelen??, C.-H. Chiu, C.-F. Li, B. Kusumoto, M. Yasuhara, S. Thorn, C.-L. Wei, M. J. Costello, and R. K. Colwell (2020). Quantifying sample completeness and comparing diversities among assemblages. Ecological Research, 35, 292-314.
+
 }
