@@ -108,7 +108,7 @@ without R background.
 
 ## SIMPLE STEPS BRIEF
 
--   **Step 1**: `Sample completeness profile`
+-   **Step 1: Sample completeness profile**
 
 `Sample Completeness` represent the proportion of observed species in
 the population (Chao et al., 2020). Usually, the sampling data
@@ -123,8 +123,8 @@ unity, we will give more weights to abundant species. By sample
 completeness, we can easily plot the estimated curve with respect to
 order q and associated 95% confidence interval.
 
--   **Step 2.1 and step 3**:
-    `Size-based and coverage-based Interpolation and Extrapolation`
+-   **Step 2.1 and step 3: Size-based and coverage-based Interpolation
+    and Extrapolation**
 
 `Interpolation and Extrapolation (iNEXT)` focuses on three measures of
 order q: species richness (q = 0), Shannon diversity (q = 1, the
@@ -151,7 +151,7 @@ units of species/lineage equivalents and can be meaningfully compared.
 For more particular usage about `iNEXT.3D`, please refer to Chao et
 al. (2021).
 
--   **Step 2.2**: `Asymptotic diversity profile`
+-   **Step 2.2: Asymptotic diversity profile**
 
 `Asymptotic Diversity (or called Hill numbers)` computes the estimated
 asymptotic 3D diversity and also plots 3D diversity profiles
@@ -164,7 +164,7 @@ estimate of PD or mean PD with respect to reference times), and a
 tau-profile (which depicts the observed and asymptotic estimate of FD
 with respect to threshold level tau).
 
--   **Step 4**: `Evenness profile`
+-   **Step 4: Evenness profile**
 
 `Evenness` is an function to compute whether a assemblage is uniform or
 not. There are five main classes according to different transformation
@@ -256,7 +256,7 @@ We use incidence frequency data (`Woody_plants`) collected from four
 sites, namely `"Upper_cloud"`, `"Lower_cloud"`, `"Lowland"`, and
 `"Monsoon"`, as an example. Note that the first row of incidence
 frequency data should be the total sampling units for each assemblage.
-Run the following code to view the first 16 rows and first 3 columns of
+Run the following code to view the first 16 rows and first 2 columns of
 the incidence frequency data.
 
 ``` r
@@ -264,7 +264,23 @@ data("Woody_plants")
 Woody_plants
 ```
 
-     [1] 129   0   0   4   2   1   0   0  16   0   4   0   0   0   0   0
+                                                                          Upper_cloud Lower_cloud
+    plots                                                                         153         203
+    Abelia_chinensis_R._Br._var._ionandra_(Hayata)_Masam.                           1           0
+    Abies_kawakamii_(Hayata)_Ito                                                    2           1
+    Acacia_confusa_Merr.                                                            0           0
+    Acer_albopurpurascens_Hayata                                                    1           2
+    Acer_kawakamii_Koidzumi                                                         7          36
+    Acer_morrisonense_Hayata                                                       25          25
+    Acer_palmatum_Thunb._var._pubescens_Li                                         12           1
+    Acer_serrulatum_Hayata                                                          6          26
+    Actinidia_chinensis_Planch._var._setosa_Li                                      0           0
+    Adinandra_formosana_Hayata                                                     12          16
+    Adinandra_lasiostyla_Hayata                                                    34          15
+    Aeschynanthus_acuminatus_Wall._ex_A._DC.                                        0           0
+    Ailanthus_altissima_(Miller)_Swingle_var._tanakai_(Hayata)_Sasaki               0           1
+    Akebia_trifoliata_(Thunb.)_Koidz._subsp._australis_(Diels)_T._Shimizu           0           1
+    Alangium_chinense_(Lour.)_Rehder                                                0           1
 
 ### Phylogenetic tree format for PD
 
@@ -574,12 +590,12 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
   Assemblage               qTD TD_obs TD_asy  s.e. qTD.LCL qTD.UCL
-1     Closed  Species richness  44.00  72.11 17.27   38.25  105.96
-2     Closed Shannon diversity  10.04  10.30  0.36    9.60   11.01
-3     Closed Simpson diversity   5.71   5.73  0.22    5.30    6.15
-4       Open  Species richness  74.00  96.31 15.39   66.14  126.47
-5       Open Shannon diversity  16.34  16.84  0.60   15.66   18.01
-6       Open Simpson diversity   9.41   9.46  0.33    8.81   10.11
+1     Closed  Species richness  44.00  72.11 18.27   36.30  107.91
+2     Closed Shannon diversity  10.04  10.30  0.47    9.37   11.23
+3     Closed Simpson diversity   5.71   5.73  0.29    5.16    6.30
+4       Open  Species richness  74.00  96.31 11.26   74.25  118.37
+5       Open Shannon diversity  16.34  16.84  0.56   15.74   17.93
+6       Open Simpson diversity   9.41   9.46  0.36    8.75   10.17
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.994 q = 0 q = 1 q = 2
@@ -649,12 +665,12 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
    Assemblage               qTD TD_obs TD_asy  s.e. qTD.LCL qTD.UCL
-1     Monsoon  Species richness 329.00 421.67 27.01  368.73  474.62
-2     Monsoon Shannon diversity 145.65 150.15  1.71  146.79  153.51
-3     Monsoon Simpson diversity 102.33 103.35  1.24  100.92  105.78
-4 Upper_cloud  Species richness 239.00 307.78 21.03  266.55  349.01
-5 Upper_cloud Shannon diversity 105.53 110.50  1.56  107.43  113.57
-6 Upper_cloud Simpson diversity  71.17  72.23  1.02   70.22   74.23
+1     Monsoon  Species richness 329.00 421.67 27.03  368.69  474.65
+2     Monsoon Shannon diversity 145.65 150.15  1.72  146.78  153.52
+3     Monsoon Simpson diversity 102.33 103.35  1.37  100.67  106.03
+4 Upper_cloud  Species richness 239.00 307.78 19.63  269.30  346.25
+5 Upper_cloud Shannon diversity 105.53 110.50  1.99  106.60  114.39
+6 Upper_cloud Simpson diversity  71.17  72.23  1.24   69.80   74.65
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.993  q = 0  q = 1  q = 2
@@ -692,12 +708,12 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
   Assemblage      qPD PD_obs PD_asy s.e. qPD.LCL qPD.UCL Reftime   Type
-1       Edge q = 0 PD  61.29  80.03 7.20   65.92   94.14     400 meanPD
-2       Edge q = 1 PD   5.25   5.37 0.11    5.16    5.58     400 meanPD
-3       Edge q = 2 PD   1.80   1.80 0.03    1.74    1.85     400 meanPD
-4   Interior q = 0 PD  69.32  86.38 4.87   76.83   95.92     400 meanPD
-5   Interior q = 1 PD   5.72   5.85 0.10    5.66    6.05     400 meanPD
-6   Interior q = 2 PD   1.91   1.91 0.02    1.87    1.96     400 meanPD
+1       Edge q = 0 PD  61.29  80.03 4.72   70.79   89.27     400 meanPD
+2       Edge q = 1 PD   5.25   5.37 0.13    5.13    5.62     400 meanPD
+3       Edge q = 2 PD   1.80   1.80 0.03    1.75    1.85     400 meanPD
+4   Interior q = 0 PD  69.32  86.38 3.41   79.69   93.06     400 meanPD
+5   Interior q = 1 PD   5.72   5.85 0.11    5.64    6.07     400 meanPD
+6   Interior q = 2 PD   1.91   1.91 0.03    1.86    1.97     400 meanPD
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.973 q = 0 q = 1 q = 2
@@ -738,12 +754,12 @@ $`STEP1. Sample completeness profiles`
 
 $`STEP2. Asymptotic analysis`
   Assemblage                  qFD FD_obs FD_asy s.e. qFD.LCL qFD.UCL  Tau
-1       Edge q = 0 FD(single tau)   6.86   6.86 0.22    6.42    7.30 0.35
-2       Edge q = 1 FD(single tau)   6.52   6.52 0.14    6.26    6.79 0.35
+1       Edge q = 0 FD(single tau)   6.86   6.86 0.17    6.52    7.20 0.35
+2       Edge q = 1 FD(single tau)   6.52   6.52 0.12    6.28    6.76 0.35
 3       Edge q = 2 FD(single tau)   6.26   6.26 0.11    6.05    6.47 0.35
-4   Interior q = 0 FD(single tau)   5.91   5.91 0.06    5.79    6.03 0.35
-5   Interior q = 1 FD(single tau)   5.19   5.19 0.08    5.04    5.34 0.35
-6   Interior q = 2 FD(single tau)   4.72   4.72 0.08    4.55    4.88 0.35
+4   Interior q = 0 FD(single tau)   5.91   5.91 0.07    5.76    6.05 0.35
+5   Interior q = 1 FD(single tau)   5.19   5.19 0.09    5.02    5.36 0.35
+6   Interior q = 2 FD(single tau)   4.72   4.72 0.09    4.54    4.90 0.35
 
 $`STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.973 q = 0 q = 1 q = 2
@@ -877,28 +893,28 @@ data(Spider)
 out1 <- Completeness(data = Spider, datatype = "abundance")
 out1
    Order.q Estimate.SC         s.e.    SC.LCL    SC.UCL Assemblage
-1      0.0   0.7683622 7.881909e-02 0.6138796 0.9228448       Open
-2      0.2   0.8181065 5.830653e-02 0.7038278 0.9323852       Open
-3      0.4   0.8768761 3.520988e-02 0.8078660 0.9458862       Open
-4      0.6   0.9302044 1.661199e-02 0.8976455 0.9627633       Open
-5      0.8   0.9664828 6.246960e-03 0.9542389 0.9787266       Open
-6      1.0   0.9858045 2.001376e-03 0.9818819 0.9897271       Open
-7      1.2   0.9944729 6.077648e-04 0.9932817 0.9956641       Open
-8      1.4   0.9979624 2.085246e-04 0.9975537 0.9983711       Open
-9      1.6   0.9992757 8.695740e-05 0.9991052 0.9994461       Open
-10     1.8   0.9997489 3.871000e-05 0.9996731 0.9998248       Open
-11     2.0   0.9999146 1.684662e-05 0.9998815 0.9999476       Open
-12     0.0   0.6102206 1.096237e-01 0.3953622 0.8250790     Closed
-13     0.2   0.7182647 8.074973e-02 0.5599982 0.8765313     Closed
-14     0.4   0.8338575 4.592607e-02 0.7438441 0.9238709     Closed
-15     0.6   0.9215916 1.929979e-02 0.8837647 0.9594185     Closed
-16     0.8   0.9692426 6.264917e-03 0.9569636 0.9815216     Closed
-17     1.0   0.9893733 1.730946e-03 0.9859807 0.9927659     Closed
-18     1.2   0.9966174 4.813958e-04 0.9956739 0.9975609     Closed
-19     1.4   0.9989804 1.650075e-04 0.9986570 0.9993038     Closed
-20     1.6   0.9997042 6.534401e-05 0.9995762 0.9998323     Closed
-21     1.8   0.9999166 2.567485e-05 0.9998663 0.9999669     Closed
-22     2.0   0.9999770 9.604946e-06 0.9999582 0.9999958     Closed
+1      0.0   0.7683622 9.481347e-02 0.5825312 0.9541932       Open
+2      0.2   0.8181065 7.064529e-02 0.6796443 0.9565687       Open
+3      0.4   0.8768761 4.269957e-02 0.7931865 0.9605658       Open
+4      0.6   0.9302044 2.004604e-02 0.8909149 0.9694940       Open
+5      0.8   0.9664828 7.473631e-03 0.9518347 0.9811308       Open
+6      1.0   0.9858045 2.378624e-03 0.9811425 0.9904665       Open
+7      1.2   0.9944729 7.210652e-04 0.9930596 0.9958861       Open
+8      1.4   0.9979624 2.443664e-04 0.9974834 0.9984413       Open
+9      1.6   0.9992757 9.868063e-05 0.9990823 0.9994691       Open
+10     1.8   0.9997489 4.254166e-05 0.9996656 0.9998323       Open
+11     2.0   0.9999146 1.804458e-05 0.9998792 0.9999499       Open
+12     0.0   0.6102206 1.290200e-01 0.3573462 0.8630951     Closed
+13     0.2   0.7182647 9.851865e-02 0.5251717 0.9113577     Closed
+14     0.4   0.8338575 5.765765e-02 0.7208506 0.9468644     Closed
+15     0.6   0.9215916 2.330820e-02 0.8759084 0.9672748     Closed
+16     0.8   0.9692426 6.962278e-03 0.9555968 0.9828884     Closed
+17     1.0   0.9893733 1.873850e-03 0.9857006 0.9930459     Closed
+18     1.2   0.9966174 5.822561e-04 0.9954762 0.9977586     Closed
+19     1.4   0.9989804 2.203640e-04 0.9985485 0.9994123     Closed
+20     1.6   0.9997042 8.700597e-05 0.9995337 0.9998748     Closed
+21     1.8   0.9999166 3.326519e-05 0.9998514 0.9999818     Closed
+22     2.0   0.9999770 1.223136e-05 0.9999530 1.0000000     Closed
 ```
 
 The following commands plot sample completeness curves, along with its
@@ -920,28 +936,28 @@ data(Woody_plants)
 out2 <- Completeness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq")
 out2
    Order.q Estimate.SC         s.e.    SC.LCL    SC.UCL  Assemblage
-1      0.0   0.7765330 5.585889e-02 0.6670516 0.8860144 Upper_cloud
-2      0.2   0.8358241 3.923805e-02 0.7589189 0.9127293 Upper_cloud
-3      0.4   0.8915125 2.360559e-02 0.8452464 0.9377786 Upper_cloud
-4      0.6   0.9354738 1.208284e-02 0.9117918 0.9591557 Upper_cloud
-5      0.8   0.9649731 5.329743e-03 0.9545270 0.9754192 Upper_cloud
-6      1.0   0.9823020 2.076560e-03 0.9782321 0.9863720 Upper_cloud
-7      1.2   0.9915212 7.615384e-04 0.9900286 0.9930138 Upper_cloud
-8      1.4   0.9960932 3.214034e-04 0.9954633 0.9967232 Upper_cloud
-9      1.6   0.9982514 1.802434e-04 0.9978982 0.9986047 Upper_cloud
-10     1.8   0.9992348 1.100643e-04 0.9990190 0.9994505 Upper_cloud
-11     2.0   0.9996711 6.447329e-05 0.9995447 0.9997975 Upper_cloud
-12     0.0   0.7802244 4.147521e-02 0.6989345 0.8615144     Monsoon
-13     0.2   0.8490462 2.680152e-02 0.7965162 0.9015762     Monsoon
-14     0.4   0.9086970 1.435193e-02 0.8805678 0.9368263     Monsoon
-15     0.6   0.9508262 6.415580e-03 0.9382519 0.9634006     Monsoon
-16     0.8   0.9758389 2.455199e-03 0.9710268 0.9806510     Monsoon
-17     1.0   0.9888942 8.351815e-04 0.9872573 0.9905311     Monsoon
-18     1.2   0.9951304 2.858212e-04 0.9945702 0.9956906     Monsoon
-19     1.4   0.9979362 1.296975e-04 0.9976820 0.9981904     Monsoon
-20     1.6   0.9991474 7.363881e-05 0.9990031 0.9992917     Monsoon
-21     1.8   0.9996547 4.140270e-05 0.9995736 0.9997359     Monsoon
-22     2.0   0.9998625 2.185975e-05 0.9998196 0.9999053     Monsoon
+1      0.0   0.7765330 3.945082e-02 0.6992108 0.8538552 Upper_cloud
+2      0.2   0.8358241 2.730851e-02 0.7823004 0.8893478 Upper_cloud
+3      0.4   0.8915125 1.626604e-02 0.8596316 0.9233933 Upper_cloud
+4      0.6   0.9354738 8.335205e-03 0.9191371 0.9518105 Upper_cloud
+5      0.8   0.9649731 3.755301e-03 0.9576129 0.9723334 Upper_cloud
+6      1.0   0.9823020 1.554049e-03 0.9792562 0.9853479 Upper_cloud
+7      1.2   0.9915212 6.445519e-04 0.9902579 0.9927845 Upper_cloud
+8      1.4   0.9960932 3.032244e-04 0.9954989 0.9966875 Upper_cloud
+9      1.6   0.9982514 1.641998e-04 0.9979296 0.9985733 Upper_cloud
+10     1.8   0.9992348 9.264975e-05 0.9990532 0.9994164 Upper_cloud
+11     2.0   0.9996711 5.117167e-05 0.9995708 0.9997714 Upper_cloud
+12     0.0   0.7802244 4.946689e-02 0.6832711 0.8771778     Monsoon
+13     0.2   0.8490462 3.254597e-02 0.7852573 0.9128352     Monsoon
+14     0.4   0.9086970 1.762230e-02 0.8741580 0.9432361     Monsoon
+15     0.6   0.9508262 7.923499e-03 0.9352965 0.9663560     Monsoon
+16     0.8   0.9758389 3.049352e-03 0.9698623 0.9818155     Monsoon
+17     1.0   0.9888942 1.039192e-03 0.9868574 0.9909310     Monsoon
+18     1.2   0.9951304 3.404490e-04 0.9944631 0.9957977     Monsoon
+19     1.4   0.9979362 1.379567e-04 0.9976658 0.9982066     Monsoon
+20     1.6   0.9991474 7.495364e-05 0.9990005 0.9992943     Monsoon
+21     1.8   0.9996547 4.242513e-05 0.9995716 0.9997379     Monsoon
+22     2.0   0.9998625 2.270661e-05 0.9998179 0.9999070     Monsoon
 ```
 
 The following commands plot sample completeness curves, along with its
@@ -1105,27 +1121,27 @@ out1 <- Evenness(data = Spider, datatype = "abundance",
 out1$E1
    Order.q  Evenness        s.e.  Even.LCL  Even.UCL Assemblage    Method        SC
 1      0.0 1.0000000 0.000000000 1.0000000 1.0000000       Open Estimated 0.9937676
-2      0.2 0.7276194 0.019876494 0.6886622 0.7665766       Open Estimated 0.9937676
-3      0.4 0.6008010 0.025913540 0.5500114 0.6515906       Open Estimated 0.9937676
-4      0.6 0.5628529 0.025786372 0.5123126 0.6133933       Open Estimated 0.9937676
-5      0.8 0.5801167 0.022667896 0.5356885 0.6245450       Open Estimated 0.9937676
-6      1.0 0.6297250 0.018166007 0.5941202 0.6653297       Open Estimated 0.9937676
-7      1.2 0.6941362 0.013468596 0.6677382 0.7205341       Open Estimated 0.9937676
-8      1.4 0.7600773 0.009485700 0.7414856 0.7786689       Open Estimated 0.9937676
-9      1.6 0.8190763 0.006654641 0.8060335 0.8321192       Open Estimated 0.9937676
-10     1.8 0.8673381 0.004889330 0.8577551 0.8769210       Open Estimated 0.9937676
-11     2.0 0.9044427 0.003818402 0.8969588 0.9119266       Open Estimated 0.9937676
+2      0.2 0.7276194 0.017474610 0.6933698 0.7618690       Open Estimated 0.9937676
+3      0.4 0.6008010 0.022861236 0.5559938 0.6456082       Open Estimated 0.9937676
+4      0.6 0.5628529 0.022811667 0.5181429 0.6075630       Open Estimated 0.9937676
+5      0.8 0.5801167 0.020159768 0.5406043 0.6196292       Open Estimated 0.9937676
+6      1.0 0.6297250 0.016344703 0.5976899 0.6617600       Open Estimated 0.9937676
+7      1.2 0.6941362 0.012378998 0.6698738 0.7183985       Open Estimated 0.9937676
+8      1.4 0.7600773 0.008997610 0.7424423 0.7777123       Open Estimated 0.9937676
+9      1.6 0.8190763 0.006528693 0.8062803 0.8318723       Open Estimated 0.9937676
+10     1.8 0.8673381 0.004889999 0.8577538 0.8769223       Open Estimated 0.9937676
+11     2.0 0.9044427 0.003809103 0.8969770 0.9119084       Open Estimated 0.9937676
 12     0.0 1.0000000 0.000000000 1.0000000 1.0000000     Closed Estimated 0.9937676
-13     0.2 0.6996114 0.035731801 0.6295783 0.7696444     Closed Estimated 0.9937676
-14     0.4 0.5665175 0.045811273 0.4767291 0.6563059     Closed Estimated 0.9937676
-15     0.6 0.5253117 0.045432919 0.4362649 0.6143586     Closed Estimated 0.9937676
-16     0.8 0.5365988 0.039999708 0.4582008 0.6149967     Closed Estimated 0.9937676
-17     1.0 0.5775431 0.032126724 0.5145758 0.6405103     Closed Estimated 0.9937676
-18     1.2 0.6330777 0.023770021 0.5864893 0.6796661     Closed Estimated 0.9937676
-19     1.4 0.6926130 0.016464519 0.6603431 0.7248828     Closed Estimated 0.9937676
-20     1.6 0.7491390 0.011103175 0.7273772 0.7709008     Closed Estimated 0.9937676
-21     1.8 0.7988183 0.007836255 0.7834595 0.8141770     Closed Estimated 0.9937676
-22     2.0 0.8402207 0.006186862 0.8280947 0.8523467     Closed Estimated 0.9937676
+13     0.2 0.6996114 0.034852544 0.6313017 0.7679211     Closed Estimated 0.9937676
+14     0.4 0.5665175 0.045837792 0.4766771 0.6563579     Closed Estimated 0.9937676
+15     0.6 0.5253117 0.046456519 0.4342586 0.6163648     Closed Estimated 0.9937676
+16     0.8 0.5365988 0.041914965 0.4544469 0.6187506     Closed Estimated 0.9937676
+17     1.0 0.5775431 0.034823871 0.5092895 0.6457966     Closed Estimated 0.9937676
+18     1.2 0.6330777 0.027063319 0.5800346 0.6861209     Closed Estimated 0.9937676
+19     1.4 0.6926130 0.020057779 0.6533004 0.7319255     Closed Estimated 0.9937676
+20     1.6 0.7491390 0.014616559 0.7204911 0.7777870     Closed Estimated 0.9937676
+21     1.8 0.7988183 0.010883244 0.7774875 0.8201490     Closed Estimated 0.9937676
+22     2.0 0.8402207 0.008545150 0.8234725 0.8569689     Closed Estimated 0.9937676
 ```
 
 The following commands plot the evenness curves, along with its
@@ -1150,27 +1166,27 @@ out2 <- Evenness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq",
 out2$E1
    Order.q  Evenness         s.e.  Even.LCL  Even.UCL  Assemblage    Method        SC
 1      0.0 1.0000000 0.0000000000 1.0000000 1.0000000 Upper_cloud Estimated 0.9925846
-2      0.2 0.8302829 0.0112153534 0.8083012 0.8522646 Upper_cloud Estimated 0.9925846
-3      0.4 0.7565487 0.0149289533 0.7272885 0.7858089 Upper_cloud Estimated 0.9925846
-4      0.6 0.7473532 0.0146001205 0.7187375 0.7759689 Upper_cloud Estimated 0.9925846
-5      0.8 0.7795871 0.0120660777 0.7559380 0.8032361 Upper_cloud Estimated 0.9925846
-6      1.0 0.8323270 0.0086369347 0.8153989 0.8492551 Upper_cloud Estimated 0.9925846
-7      1.2 0.8869413 0.0054001960 0.8763571 0.8975255 Upper_cloud Estimated 0.9925846
-8      1.4 0.9312253 0.0030042462 0.9253371 0.9371135 Upper_cloud Estimated 0.9925846
-9      1.6 0.9614213 0.0015352568 0.9584122 0.9644303 Upper_cloud Estimated 0.9925846
-10     1.8 0.9795937 0.0007486165 0.9781265 0.9810610 Upper_cloud Estimated 0.9925846
-11     2.0 0.9895988 0.0003673000 0.9888789 0.9903187 Upper_cloud Estimated 0.9925846
+2      0.2 0.8302829 0.0076490280 0.8152911 0.8452747 Upper_cloud Estimated 0.9925846
+3      0.4 0.7565487 0.0100862627 0.7367800 0.7763174 Upper_cloud Estimated 0.9925846
+4      0.6 0.7473532 0.0098008078 0.7281440 0.7665625 Upper_cloud Estimated 0.9925846
+5      0.8 0.7795871 0.0080657630 0.7637785 0.7953957 Upper_cloud Estimated 0.9925846
+6      1.0 0.8323270 0.0057570559 0.8210434 0.8436106 Upper_cloud Estimated 0.9925846
+7      1.2 0.8869413 0.0035944817 0.8798962 0.8939863 Upper_cloud Estimated 0.9925846
+8      1.4 0.9312253 0.0020038459 0.9272979 0.9351528 Upper_cloud Estimated 0.9925846
+9      1.6 0.9614213 0.0010339467 0.9593948 0.9634478 Upper_cloud Estimated 0.9925846
+10     1.8 0.9795937 0.0005149306 0.9785845 0.9806030 Upper_cloud Estimated 0.9925846
+11     2.0 0.9895988 0.0002596511 0.9890899 0.9901077 Upper_cloud Estimated 0.9925846
 12     0.0 1.0000000 0.0000000000 1.0000000 1.0000000     Monsoon Estimated 0.9925846
-13     0.2 0.8270279 0.0076794775 0.8119764 0.8420794     Monsoon Estimated 0.9925846
-14     0.4 0.7581724 0.0099141578 0.7387410 0.7776038     Monsoon Estimated 0.9925846
-15     0.6 0.7554881 0.0094102379 0.7370443 0.7739318     Monsoon Estimated 0.9925846
-16     0.8 0.7929638 0.0075350196 0.7781954 0.8077322     Monsoon Estimated 0.9925846
-17     1.0 0.8482450 0.0052010173 0.8380512 0.8584388     Monsoon Estimated 0.9925846
-18     1.2 0.9022994 0.0031161898 0.8961918 0.9084070     Monsoon Estimated 0.9925846
-19     1.4 0.9437403 0.0016532387 0.9405000 0.9469806     Monsoon Estimated 0.9925846
-20     1.6 0.9703214 0.0008043787 0.9687448 0.9718979     Monsoon Estimated 0.9925846
-21     1.8 0.9853020 0.0003736373 0.9845697 0.9860343     Monsoon Estimated 0.9925846
-22     2.0 0.9930196 0.0001728704 0.9926808 0.9933584     Monsoon Estimated 0.9925846
+13     0.2 0.8270279 0.0083714125 0.8106202 0.8434355     Monsoon Estimated 0.9925846
+14     0.4 0.7581724 0.0108983810 0.7368120 0.7795328     Monsoon Estimated 0.9925846
+15     0.6 0.7554881 0.0104049651 0.7350947 0.7758814     Monsoon Estimated 0.9925846
+16     0.8 0.7929638 0.0083519563 0.7765943 0.8093333     Monsoon Estimated 0.9925846
+17     1.0 0.8482450 0.0057547836 0.8369658 0.8595241     Monsoon Estimated 0.9925846
+18     1.2 0.9022994 0.0034232908 0.8955899 0.9090089     Monsoon Estimated 0.9925846
+19     1.4 0.9437403 0.0017898253 0.9402323 0.9472483     Monsoon Estimated 0.9925846
+20     1.6 0.9703214 0.0008497857 0.9686558 0.9719869     Monsoon Estimated 0.9925846
+21     1.8 0.9853020 0.0003809243 0.9845554 0.9860486     Monsoon Estimated 0.9925846
+22     2.0 0.9930196 0.0001685398 0.9926893 0.9933500     Monsoon Estimated 0.9925846
 ```
 
 The following commands plot the evenness curves, along with its

@@ -87,12 +87,12 @@ An online version of iNEXT.4steps (https://chao.shinyapps.io/iNEXT_4steps/) is a
 
 ## SIMPLE STEPS BRIEF
 
-- **Step 1**: `Sample completeness profile` 
+- **Step 1: Sample completeness profile**
 
 `Sample Completeness` represent the proportion of observed species in the population (Chao et al., 2020). Usually, the sampling data represents the abundant species in the population so that we will ignore the rare species. Here we will use Turing’s sample coverage theory to reconstruct the population proportion. Besides, sample completeness can correspond to order q, which is an weight index. When order q tends to zero, then we will give more weight to rare species. If order q tends to unity, then we will equally treat each species, which is also called sample coverage at unity. In contrast, if order q tends to larger than unity, we will give more weights to abundant species. By sample completeness, we can easily plot the estimated curve with respect to order q and associated 95% confidence interval.
 
 
-- **Step 2.1 and step 3**: `Size-based and coverage-based Interpolation and Extrapolation` 
+- **Step 2.1 and step 3: Size-based and coverage-based Interpolation and Extrapolation** 
 
 `Interpolation and Extrapolation (iNEXT)` focuses on three measures of order q: species richness (q = 0), Shannon diversity (q = 1, the exponential of Shannon entropy), and Simpson diversity (q = 2, the inverse of Simpson concentration) (Chao and Jost, 2012; Chao et al. 2014). For each diversity measures, `iNEXT` uses observed sample to compute expected diversity estimates and associated 95% confidence intervals according two different unit types of rarefaction and extrapolation (R/E):
 
@@ -104,12 +104,12 @@ A unified framework based on Hill numbers (for TD) and their generalizations (Hi
 FD) is adopted to quantify 3D. In this framework, TD quantifies the effective number of species, PD quantifies the effective total branch length, mean-PD (PD divided by tree depth) quantifies the effective number of lineages, and FD quantifies the effective number of virtual functional groups (or functional “species”). Thus, TD, mean-PD, and FD are all in the same units of species/lineage equivalents and can be meaningfully compared. For more particular usage about `iNEXT.3D`, please refer to Chao et al. (2021).
 
 
-- **Step 2.2**: `Asymptotic diversity profile` 
+- **Step 2.2: Asymptotic diversity profile** 
 
 `Asymptotic Diversity (or called Hill numbers)` computes the estimated asymptotic 3D diversity and also plots 3D diversity profiles (q-profiles) for q between 0 and 2, in comparison with the observed diversity. Typically, the asymptotic estimates for q ≥ 1 are reliable, but for q < 1 (especially for q = 0, species richness), the asymptotic estimates represent only lower bounds. `Asymptotic Diversity` also features a time-profile (which depicts the observed and asymptotic estimate of PD or mean PD with respect to reference times), and a tau-profile (which depicts the observed and asymptotic estimate of FD with respect to threshold level tau).
 
 
-- **Step 4**: `Evenness profile` 
+- **Step 4: Evenness profile**
 
 `Evenness` is an function to compute whether a assemblage is uniform or not. There are five main classes according to different transformation by species and diversity (Chao and Ricotta, 2019). In these five classes, they all have range from zero to one. When the value reaches to minimum (zero), it means that the assemblage tends to uneven. On the contrary, when the value reaches to maximum (one), it means that the assemblage tends to even. Evenness considers different order q under each classes. When order q tends to zero, we will focus on rare species. In other sides, when order q tends to far from zero, then we will give more weights on abundant species. For each sampling data, it usually has biase because of unobserved rare species. Here, we propose a "standardized sample coverage" (default is `Cmax`, which means the minimum sample coverage among all samples extrapolated to double reference sizes) as a judged criterion. According to this criterion, we can also plot the Evenness curves with order q and associated 95% confidence interval.
 
@@ -140,7 +140,7 @@ Brazil_abun_data[1:15,]
 ```
 
 
-We use incidence frequency data (`Woody_plants`) collected from four sites, namely `"Upper_cloud"`, `"Lower_cloud"`, `"Lowland"`, and `"Monsoon"`, as an example. Note that the first row of incidence frequency data should be the total sampling units for each assemblage. Run the following code to view the first 16 rows and first 3 columns of the incidence frequency data. 
+We use incidence frequency data (`Woody_plants`) collected from four sites, namely `"Upper_cloud"`, `"Lower_cloud"`, `"Lowland"`, and `"Monsoon"`, as an example. Note that the first row of incidence frequency data should be the total sampling units for each assemblage. Run the following code to view the first 16 rows and first 2 columns of the incidence frequency data. 
 
 
 ```{r eval=FALSE}
@@ -150,7 +150,7 @@ Woody_plants
 
 ```{r echo=FALSE}
 data("Woody_plants")
-Woody_plants[1:16, 3]
+Woody_plants[1:16, 1:2]
 ```
 
 
