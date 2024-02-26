@@ -41,15 +41,15 @@ a matrix of estimated sample completeness with order q:
 }
 \examples{
 \donttest{
-## Type (1) example for abundance based data (data.frame)
-## Ex.1
+## Type (1) example for abundance based data
+# Example 1
 data(Spider)
 output1 <- Completeness(data = Spider, datatype = "abundance")
 output1
 }
 
-## Type (2) example for incidence based data (list of data.frame)
-## Ex.2
+## Type (2) example for incidence based data
+# Example 2
 data(Woody_plants)
 output2 <- Completeness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq")
 output2

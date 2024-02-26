@@ -57,21 +57,34 @@ This R code is for computing Figures 2, 3 and 4 of Chao and Ricotta (2019) paper
 installed and loaded before running the scripts.
 }
 \examples{
-\donttest{
-## Type (1) example for abundance based data (data.frame)
-## Ex.1
+## Type (1) example for abundance based data
+# Example 1. observed evenness for abundance data
 data(Spider)
 output1 <- Evenness(data = Spider, datatype = "abundance", 
-                    method = "Estimated", SC = NULL, E.class = 1:5)
+                    method = "Observed", E.class = 1:5)
 output1
 
-
-## Type (2) example for incidence based data (list of data.frame)
-## Ex.2
-data(Woody_plants)
-output2 <- Evenness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq", 
+\donttest{
+# Example 2. estimated evenness for abundance data with default SC = Cmax
+data(Spider)
+output2 <- Evenness(data = Spider, datatype = "abundance", 
                     method = "Estimated", SC = NULL, E.class = 1:5)
 output2
+}
+
+## Type (2) example for incidence based data
+# Example 3. observed evenness for incidence data
+data(Woody_plants)
+output3 <- Evenness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq", 
+                    method = "Observed", E.class = 1:5)
+output3
+
+\donttest{
+# Example 4. estimated evenness for incidence data with default SC = Cmax
+data(Woody_plants)
+output4 <- Evenness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq", 
+                    method = "Estimated", SC = NULL, E.class = 1:5)
+output4
 }
 
 }

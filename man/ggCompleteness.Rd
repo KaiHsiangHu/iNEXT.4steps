@@ -17,7 +17,7 @@ a figure of estimated sample completeness with order q.
 }
 \examples{
 ## Type (1) example for abundance-based data
-## Ex.1
+## Example 1
 \donttest{
 data(Spider)
 output1 <- Completeness(data = Spider, datatype = "abundance")
@@ -25,7 +25,7 @@ ggCompleteness(output1)
 }
 
 ## Type (2) example for incidence-based data
-## Ex.2
+## Example 2
 data(Woody_plants)
 output2 <- Completeness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq")
 ggCompleteness(output2)

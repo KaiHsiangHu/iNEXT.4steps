@@ -445,14 +445,14 @@ Use abundance data `Spider` to compute estimated sample completeness.
 
 ```{r}
 data(Spider)
-out1 <- Completeness(data = Spider, datatype = "abundance")
-out1
+output1 <- Completeness(data = Spider, datatype = "abundance")
+output1
 ```
 
 The following commands plot sample completeness curves, along with its confidence interval for q between 0 to 2.
 
 ```{r out.width="70%",fig.height=8}
-ggCompleteness(out1)
+ggCompleteness(output1)
 ```
 
 
@@ -462,14 +462,14 @@ Use incidence frequency data `woody plants` to compute sample completeness.
 
 ```{r}
 data(Woody_plants)
-out2 <- Completeness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq")
-out2
+output2 <- Completeness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq")
+output2
 ```
 
 The following commands plot sample completeness curves, along with its confidence interval for q between 0 to 2.
 
 ```{r out.width="70%",fig.height=8}
-ggCompleteness(out2)
+ggCompleteness(output2)
 ```
 
 
@@ -568,43 +568,78 @@ ggEvenness(output)
 </tbody>
 </table>
 
-Following are two simple examples for functions `Evenness` and `ggEvenness`. 
+Following are four simple examples for functions `Evenness` and `ggEvenness`. 
 
-### Evenness profiles for abundance data
+### Observed evenness profiles for abundance data
 
-Use abundance data `Spider` to compute estimated evenness under `C = Cmax`. Here only show the output for first class of evenness.
+Use abundance data `Spider` to compute observed evenness. Here only show the output for first class of evenness.
 
 ```{r}
 data(Spider)
-out1 <- Evenness(data = Spider, datatype = "abundance", 
-                 method = "Estimated", SC = NULL, E.class = 1:5)
-out1$E1
+output1 <- Evenness(data = Spider, datatype = "abundance", 
+                    method = "Observed", E.class = 1:5)
+output1$E1
 ```
 
-The following commands plot the evenness curves, along with its confidence interval for q between 0 to 2.
+The following commands plot the evenness curves for five classes, along with its confidence interval for q between 0 to 2.
 
 ```{r out.width="100%",fig.height=8}
-ggEvenness(out1)
+ggEvenness(output1)
+```
+
+
+### Estimated evenness profiles for abundance data with default SC = Cmax
+
+Use abundance data `Spider` to compute estimated evenness with default `SC = NULL` (Cmax = 0.994). Here only show the output for first class of evenness.
+
+```{r}
+data(Spider)
+output2 <- Evenness(data = Spider, datatype = "abundance", 
+                    method = "Estimated", SC = NULL, E.class = 1:5)
+output2$E1
+```
+
+The following commands plot the evenness curves for five classes, along with its confidence interval for q between 0 to 2.
+
+```{r out.width="100%",fig.height=8}
+ggEvenness(output2)
 ```
 
 
 
-### Evenness profiles for incidence data
+### Observed evenness profiles for incidence data 
 
-Use incidence frequency data `Woody plants` to calculate estimated evenness under `C = NULL` (Cmax). Here only show the output for first class of evenness.
-
+Use incidence frequency data `Woody plants` to compute observed evenness. Here only show the output for first class of evenness.
 
 ```{r}
 data(Woody_plants)
-out2 <- Evenness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq", 
-                 method = "Estimated", SC = NULL, E.class = 1:5)
-out2$E1
+output3 <- Evenness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq", 
+                    method = "Observed", E.class = 1:5)
+output3$E1
 ```
 
-The following commands plot the evenness curves, along with its confidence interval for q between 0 to 2.
+The following commands plot the evenness curves for five classes, along with its confidence interval for q between 0 to 2.
 
 ```{r out.width="100%",fig.height=8}
-ggEvenness(out2)
+ggEvenness(output3)
+```
+
+
+### Estimated evenness profiles for incidence data with default SC = Cmax
+
+Use incidence frequency data `Woody plants` to compute estimated evenness with `SC = NULL` (Cmax = 0.993). Here only show the output for first class of evenness.
+
+```{r}
+data(Woody_plants)
+output4 <- Evenness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq", 
+                    method = "Estimated", SC = NULL, E.class = 1:5)
+output4$E1
+```
+
+The following commands plot the evenness curves for five classes, along with its confidence interval for q between 0 to 2.
+
+```{r out.width="100%",fig.height=8}
+ggEvenness(output4)
 ```
 
 
