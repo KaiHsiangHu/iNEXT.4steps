@@ -12,7 +12,7 @@ For illustration here, we selected only plots belonging to two vegetation types 
 }
 \usage{data(Woody_plants)}
 \format{
-  \code{Woody_plants} is a data frame with 494 species on the following 4 sites. \cr
+  \code{Woody_plants} is a data frame with 494 species in the following 4 sites. \cr
   $ Upper_cloud: int  153 1 2 0 1 7 25 12 6 0 ... \cr
   $ Lower_cloud: int  203 0 1 0 2 36 25 1 26 0 ... \cr
   $ Lowland    : int  129 0 0 4 2 1 0 0 16 0 ... \cr
