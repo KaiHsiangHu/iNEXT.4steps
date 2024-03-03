@@ -184,8 +184,8 @@ We first describe the main function `iNEXT4steps()` with default arguments:
 
 ```{r eval=FALSE}
 iNEXT4steps(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "abundance", 
-            nboot = 50, conf = 0.95, nT = NULL, PDtree = NULL, PDreftime = NULL, PDtype = 'meanPD', 
-            FDdistM = NULL, FDtype = 'AUC', FDtau = NULL, FDcut_number = 50, details = FALSE)
+            nboot = 30, conf = 0.95, nT = NULL, PDtree = NULL, PDreftime = NULL, PDtype = 'meanPD', 
+            FDdistM = NULL, FDtype = 'AUC', FDtau = NULL, FDcut_number = 30, details = FALSE)
 ```
 
 The arguments of this function are briefly described below, and will explain details by illustrative examples in later text. 
@@ -223,7 +223,7 @@ The arguments of this function are briefly described below, and will explain det
 </tr>
 <tr class="odd">
 <td align="center"><code>nboot</code></td>
-<td align="left">a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.</td>
+<td align="left">a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 30.</td>
 </tr>
 <tr class="even">
 <td align="center"><code>conf</code></td>
@@ -259,7 +259,7 @@ The arguments of this function are briefly described below, and will explain det
 </tr>
 <tr class="even">
 <td align="center"><code>FDcut_number</code></td>
-<td align="left">(argument only for <code>diversity = "FD"</code> and <code>FDtype = "AUC"</code>), a numeric number to cut [0, 1] interval into equal-spaced sub-intervals to obtain the AUC value by integrating the tau-profile. Equivalently, the number of tau values that will be considered to compute the integrated AUC value. Default is <code>FDcut_number = 50</code>. A larger value can be set to obtain more accurate AUC value.</td>
+<td align="left">(argument only for <code>diversity = "FD"</code> and <code>FDtype = "AUC"</code>), a numeric number to cut [0, 1] interval into equal-spaced sub-intervals to obtain the AUC value by integrating the tau-profile. Equivalently, the number of tau values that will be considered to compute the integrated AUC value. Default is <code>FDcut_number = 30</code>. A larger value can be set to obtain more accurate AUC value.</td>
 </tr>
 <tr class="odd">
 <td align="center"><code>details</code></td>

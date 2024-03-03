@@ -9,7 +9,7 @@ iNEXT4steps(
   diversity = "TD",
   q = seq(0, 2, 0.2),
   datatype = "abundance",
-  nboot = 50,
+  nboot = 30,
   conf = 0.95,
   nT = NULL,
   PDtree = NULL,
@@ -18,7 +18,7 @@ iNEXT4steps(
   FDdistM = NULL,
   FDtype = "AUC",
   FDtau = NULL,
-  FDcut_number = 50,
+  FDcut_number = 30,
   details = FALSE
 )
 }
@@ -33,7 +33,7 @@ iNEXT4steps(
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).}
 
-\item{nboot}{a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.}
+\item{nboot}{a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 30.}
 
 \item{conf}{a positive number < 1 specifying the level of confidence interval. Default is 0.95.}
 
@@ -51,7 +51,7 @@ iNEXT4steps(
 
 \item{FDtau}{(argument only for \code{diversity = "FD"} and \code{FDtype = "tau_values"}), a numerical vector between 0 and 1 specifying tau values (threshold levels). If \code{NULL} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled assemblage (i.e., quadratic entropy).}
 
-\item{FDcut_number}{(argument only for \code{diversity = "FD"} and \code{FDtype = "AUC"}), a numeric number to cut [0, 1] interval into equal-spaced sub-intervals to obtain the AUC value by integrating the tau-profile. Equivalently, the number of tau values that will be considered to compute the integrated AUC value. Default is \code{FDcut_number = 50}. A larger value can be set to obtain more accurate AUC value.}
+\item{FDcut_number}{(argument only for \code{diversity = "FD"} and \code{FDtype = "AUC"}), a numeric number to cut [0, 1] interval into equal-spaced sub-intervals to obtain the AUC value by integrating the tau-profile. Equivalently, the number of tau values that will be considered to compute the integrated AUC value. Default is \code{FDcut_number = 30}. A larger value can be set to obtain more accurate AUC value.}
 
 \item{details}{a logical variable to decide whether print out the detailed values for each steps or not. Default is \code{FALSE}.}
 }
