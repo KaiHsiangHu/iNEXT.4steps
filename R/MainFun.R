@@ -66,7 +66,8 @@
 #' ## Functional diversity for abundance data
 #' data(Brazil_abun_data)
 #' data(Brazil_distance_matrix)
-#' output4 <- iNEXT4steps(data = Brazil_abun_data, diversity = "FD", datatype = "abundance", nboot = 10, 
+#' output4 <- iNEXT4steps(data = Brazil_abun_data, diversity = "FD", 
+#'                        datatype = "abundance", nboot = 10, 
 #'                        FDdistM = Brazil_distance_matrix, FDtype = 'AUC', FDcut_number = 30)
 #' output4
 #' }
