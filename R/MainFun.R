@@ -113,9 +113,9 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
                          FDdistM = FDdistM, FDtype = FDtype, FDtau = FDtau, FDcut_number = FDcut_number)
   
   ## Asymptotic ##
-  qD.table <- ObsAsy3D(data, diversity = diversity, q = q, datatype = datatype, nboot = nboot, conf = conf, nT = nT, PDtree = PDtree, 
-                   PDreftime = PDreftime, PDtype = PDtype, 
-                   FDdistM = FDdistM, FDtype = FDtype, FDtau = FDtau, FDcut_number = FDcut_number)
+  qD.table <- ObsAsy3D(data, diversity = diversity, q = q, datatype = datatype, nboot = nboot, conf = conf, nT = nT, 
+                       PDtree = PDtree, PDreftime = PDreftime, PDtype = PDtype, 
+                       FDdistM = FDdistM, FDtype = FDtype, FDtau = FDtau, FDcut_number = FDcut_number)
   
   ## Evenness ##
   Even.table <- Evenness(data, q = q, datatype = datatype, method = "Estimated", nboot = nboot, conf = conf, nT = nT, E.class = 3)
@@ -175,7 +175,9 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
   } else { warning("The number of communities exceeds eight. We don't show the figures.") }
   
   estD = estimate3D(data, diversity = 'TD', q = c(0, 1, 2), datatype, base = "coverage", level = NULL, nboot = 0, nT = nT)
-  est3D = estimate3D(data, diversity = diversity, q = c(0, 1, 2), datatype, base = "coverage", level = NULL, nboot = 0, nT = nT, PDtree = PDtree, PDtype = PDtype, FDdistM = FDdistM, FDtype = FDtype)
+  est3D = estimate3D(data, diversity = diversity, q = c(0, 1, 2), datatype, base = "coverage", level = NULL, nboot = 0, nT = nT, 
+                     PDtree = PDtree, PDreftime = PDreftime, PDtype = PDtype, 
+                     FDdistM = FDdistM, FDtype = FDtype, FDtau = FDtau, FDcut_number = FDcut_number)
   
   
   ##  Outpue_summary ##
