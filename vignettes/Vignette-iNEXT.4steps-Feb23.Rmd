@@ -294,9 +294,9 @@ Run the following code to get the output from iNEXT4steps.
 
 ```{r align="center",out.width="100%"}
 data(Spider)
-out1 <- iNEXT4steps(data = Spider, diversity = "TD", datatype = "abundance")
-out1$summary
-out1$figure[[6]]
+output1 <- iNEXT4steps(data = Spider, diversity = "TD", datatype = "abundance")
+output1$summary
+output1$figure[[6]]
 ```
 
 `$summary` lists all biological summaries according to Chao et al. (2020). There are four parts corresponding to each step in the paper. They analysis and explain biological data from different and superimposed side. User can easily compare difference between each assemblages. 
@@ -318,9 +318,9 @@ Run the following code to get the output from iNEXT4steps.
 
 ```{r align="center", out.width="100%"}
 data(Woody_plants)
-out2 <- iNEXT4steps(data = Woody_plants[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
-out2$summary
-out2$figure[[6]]
+output2 <- iNEXT4steps(data = Woody_plants[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
+output2$summary
+output2$figure[[6]]
 ```
 
 
@@ -333,10 +333,10 @@ Run the following code to get the output from iNEXT4steps.
 ```{r align="center", out.width="100%"}
 data(Brazil_abun_data)
 data(Brazil_phylo_tree)
-out3 <- iNEXT4steps(data = Brazil_abun_data, diversity = "PD", datatype = "abundance", nboot = 20, 
-                    PDtree = Brazil_phylo_tree)
-out3$summary
-out3$figure[[6]]
+output3 <- iNEXT4steps(data = Brazil_abun_data, diversity = "PD", datatype = "abundance", nboot = 20, 
+                       PDtree = Brazil_phylo_tree)
+output3$summary
+output3$figure[[6]]
 ```
 
 
@@ -349,10 +349,10 @@ Run the following code to get the output from iNEXT4steps.
 ```{r align="center", out.width="100%"}
 data(Brazil_abun_data)
 data(Brazil_distance_matrix)
-out4 <- iNEXT4steps(data = Brazil_abun_data, diversity = "FD", datatype = "abundance", nboot = 20, 
-                    FDdistM = Brazil_distance_matrix, FDtype = 'tau_values')
-out4$summary
-out4$figure[[6]]
+output4 <- iNEXT4steps(data = Brazil_abun_data, diversity = "FD", datatype = "abundance", nboot = 10, 
+                       FDdistM = Brazil_distance_matrix, FDtype = 'AUC', FDcut_number = 30)
+output4$summary
+output4$figure[[6]]
 ```
 
 

@@ -43,33 +43,31 @@
 #' 
 #' @examples
 #' \donttest{
-#' ## Type (1) example for abundance based data (data.frame)
-#' ## Ex.1
+#' ## Taxonomic diversity for abundance data
 #' data(Spider)
 #' output1 <- iNEXT4steps(data = Spider, diversity = "TD", datatype = "abundance")
 #' output1
 #' 
 #' 
-#' ## Ex.2
-#' data(Brazil_abun_data)
-#' data(Brazil_phylo_tree)
-#' output2 <- iNEXT4steps(data = Brazil_abun_data, diversity = "PD", datatype = "abundance", 
-#'                        nboot = 0, PDtree = Brazil_phylo_tree)
+#' ## Taxonomic diversity for incidence data
+#' data(Woody_plants)
+#' output2 <- iNEXT4steps(data = Woody_plants[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
 #' output2
 #' 
 #' 
-#' ## Ex.3
+#' ## Phylogenetic diversity for abundance data
 #' data(Brazil_abun_data)
-#' data(Brazil_distance_matrix)
-#' output3 <- iNEXT4steps(data = Brazil_abun_data, diversity = "FD", datatype = "abundance", 
-#'                        nboot = 0, FDdistM = Brazil_distance_matrix, FDtype = 'tau_values')
+#' data(Brazil_phylo_tree)
+#' output3 <- iNEXT4steps(data = Brazil_abun_data, diversity = "PD", datatype = "abundance", 
+#'                        nboot = 0, PDtree = Brazil_phylo_tree)
 #' output3
 #' 
 #' 
-#' ## Type (2) example for incidence based data (list of data.frame)
-#' ## Ex.1
-#' data(Woody_plants)
-#' output4 <- iNEXT4steps(data = Woody_plants[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
+#' ## Functional diversity for abundance data
+#' data(Brazil_abun_data)
+#' data(Brazil_distance_matrix)
+#' output4 <- iNEXT4steps(data = Brazil_abun_data, diversity = "FD", datatype = "abundance", nboot = 10, 
+#'                        FDdistM = Brazil_distance_matrix, FDtype = 'AUC', FDcut_number = 30)
 #' output4
 #' }
 #' 
