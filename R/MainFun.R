@@ -95,10 +95,11 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
     stop("You should input distance data for Functional diversity.")
 
   plot.names = c("(a) STEP1.\n Sample completeness profiles",
-                 "(b) STEP2.1.\n Size-based rarefaction/extrapolation",
-                 "(c) STEP2.2.\n Asymptotic and empirical diversity profiles",
+                 "(b) STEP2a.\n Size-based rarefaction/extrapolation",
+                 "(c) STEP2b.\n Asymptotic and empirical diversity profiles",
                  "(d) STEP3.\n Coverage-based rarefaction/extrapolation",
                  "(e) STEP4.\n Evenness profiles")
+  
   table.names = c("STEP1. Sample completeness profiles",
                   "STEP2. Asymptotic analysis",
                   "STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis",
