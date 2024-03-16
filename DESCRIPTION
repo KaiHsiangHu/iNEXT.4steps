@@ -33,7 +33,9 @@ Imports: ggplot2,
          ggpubr,
          purrr,
          iNEXT.3D
-Suggests: knitr, rmarkdown
+Suggests: testthat, 
+    knitr, 
+    rmarkdown
 Encoding: UTF-8
 BugReports: https://github.com/KaiHsiangHu/iNEXT.4steps/issues
 LazyData: true
