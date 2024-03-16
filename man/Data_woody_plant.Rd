@@ -1,5 +1,5 @@
-\name{Woody_plants}
-\alias{Woody_plants}
+\name{Data_woody_plant}
+\alias{Data_woody_plant}
 \docType{data}
 \title{
 Woody plants incidence-based frequency data
@@ -10,19 +10,20 @@ Over 3600 vegetation plots, each 20x20-m in area, were set up in various locatio
 For illustration here, we selected only plots belonging to two vegetation types (according to Li et al. 2013): Pyrenaria-Machilus subtropical winter monsoon forest and Chamaecyparis montane mixed cloud forest, sampled in the northern part of Taiwan (in ecoregions 7 and 8 according to Su 1985).
 
 }
-\usage{data(Woody_plants)}
+\usage{data(Data_woody_plant)}
 \format{
-  \code{Woody_plants} is a data frame with 494 species in the following 4 sites. \cr
-  $ Upper_cloud: int  153 1 2 0 1 7 25 12 6 0 ... \cr
-  $ Lower_cloud: int  203 0 1 0 2 36 25 1 26 0 ... \cr
-  $ Lowland    : int  129 0 0 4 2 1 0 0 16 0 ... \cr
-  $ Monsoon    : int  191 0 0 8 0 8 3 0 29 1 ... \cr
+  \code{Data_woody_plant} a list of four species-by-sampling-unit data frames. Each element in the data frame is 1 for a detection, and 0 for a non-detection.\cr
+  A list of 4: \cr
+  $ Upper_cloud: num [1:239, 1:153] 0 0 0 0 0 0 0 0 0 0 ... \cr
+  $ Lower_cloud: num [1:313, 1:203] 0 0 0 1 0 0 0 0 0 0 ... \cr
+  $ Lowland    : num [1:269, 1:129] 0 0 0 0 0 0 0 0 0 0 ... \cr
+  $ Monsoon    : num [1:329, 1:191] 0 0 0 0 0 0 0 0 0 0 ... \cr
 }
 \source{
 The National Vegetation Database of Taiwan (AS-TW-001).
 }
 \examples{
-data(Woody_plants)
+data(Data_woody_plant)
 }
 \references{
 Chiou, C.-R., Hsieh, C.-F., Wang, J.-C., Chen, M.-Y., Liu, H.-Y., Yeh, C.-L., ... Song, M. G.-Z. (2009). The first national vegetation inventory in Taiwan. Taiwan Journal of Forest Science, 24, 295-302. \cr\cr

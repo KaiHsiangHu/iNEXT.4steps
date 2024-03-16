@@ -15,12 +15,11 @@ Completeness(
 }
 \arguments{
 \item{data}{(a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
-(b) For \code{datatype = "incidence_freq"}, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
-(c) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input.}
+(b) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input.}
 
 \item{q}{a numerical vector specifying the diversity orders. Default is \code{seq(0, 2, by = 0.2)}.}
 
-\item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).}
+\item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).}
 
 \item{nboot}{a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.}
 
@@ -43,15 +42,15 @@ a matrix of estimated sample completeness with order q:
 \donttest{
 ## Type (1) example for abundance based data
 # Example 1
-data(Spider)
-output1 <- Completeness(data = Spider, datatype = "abundance")
+data(Data_spider)
+output1 <- Completeness(data = Data_spider, datatype = "abundance")
 output1
 }
 
 ## Type (2) example for incidence based data
 # Example 2
-data(Woody_plants)
-output2 <- Completeness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq")
+data(Data_woody_plant)
+output2 <- Completeness(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw")
 output2
 
 

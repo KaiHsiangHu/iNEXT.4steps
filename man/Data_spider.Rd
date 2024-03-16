@@ -1,5 +1,5 @@
-\name{Spider}
-\alias{Spider}
+\name{Data_spider}
+\alias{Data_spider}
 \docType{data}
 \title{
 Spider abundance-based data
@@ -10,9 +10,9 @@ A total of 12 experimental plots were established in "closed forest" stands (6 p
 Epigeal spiders were sampled over three years with four pitfall traps in each plot, yielding a total of 3171 individuals belonging to 85 species recorded in the pooled habitat.
 
 }
-\usage{data("Spider")}
+\usage{data("Data_spider")}
 \format{
-  \code{Woody_plants} is a data frame with 85 species on the following 2 sites.
+  \code{Woody_plants} is a species-by-assemblages data.frame with 85 species on the following 2 sites.
   $ Open  : int  350 325 237 102 91 72 68 61 53 50 ... \cr
   $ Closed: int  10 55 502 1 3 4 171 140 180 24 ... \cr
 }
@@ -20,7 +20,7 @@ Epigeal spiders were sampled over three years with four pitfall traps in each pl
 A mountain forest ecosystem in the Bavarian Forest National Park, Germany (Thorn et al. 2016, 2017).
 }
 \examples{
-data(Spider)
+data(Data_spider)
 }
 \references{
 Thorn, S., Bassler, C., Svoboda, M., & Muller, J. (2017). Effects of natural disturbances and salvage logging on biodiversity - les- sons from the bohemian Forest. Forest Ecology and Management, 388, 113-119. https://doi.org/10.1016/j.foreco.2016.06.006 \cr\cr

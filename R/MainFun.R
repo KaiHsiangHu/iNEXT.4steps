@@ -8,21 +8,12 @@
 #' Step 4. Evenness among species abundances\cr
 #' 
 #' @param data (a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
-#' (b) For \code{datatype = "incidence_freq"}, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
-#' (c) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
-#' @param diversity selection of diversity type: \code{'TD'} = Taxonomic diversity, \code{'PD'} = Phylogenetic diversity, and \code{'FD'} = Functional diversity.
+#' (b) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input.
 #' @param q a numerical vector specifying the diversity orders for q-profile output. Default is \code{seq(0, 2, by = 0.2)}.
-#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).
 #' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 30.
 #' @param conf a positive number < 1 specifying the level of confidence interval. Default is 0.95.
 #' @param nT (required only when \code{datatype = "incidence_raw"} and input data in a single matrix/data.frame) a vector of positive integers specifying the number of sampling units in each assemblage. If assemblage names are not specified (i.e., \code{names(nT) = NULL}), then assemblages are automatically named as "assemblage1", "assemblage2",..., etc. 
-#' @param PDtree (required argument for \code{diversity = "PD"}), a phylogenetic tree in Newick format for all observed species in the pooled assemblage. 
-#' @param PDreftime (argument only for \code{diversity = "PD"}), a vector of numerical values specifying reference times for PD. Default is \code{NULL} (i.e., the age of the root of \code{PDtree}).  
-#' @param PDtype (argument only for \code{diversity = "PD"}), select PD type: \code{PDtype = "PD"} (effective total branch length) or \code{PDtype = "meanPD"} (effective number of equally divergent lineages). Default is \code{"meanPD"}, where \code{meanPD = PD/tree depth}.
-#' @param FDdistM (required argument for \code{diversity = "FD"}), a species pairwise distance matrix for all species in the pooled assemblage. 
-#' @param FDtype (argument only for \code{diversity = "FD"}), select FD type: \code{FDtype = "tau_values"} for FD under specified threshold values, or \code{FDtype = "AUC"} (area under the curve of tau-profile) for an overall FD which integrates all threshold values between zero and one. Default is \code{"AUC"}.  
-#' @param FDtau (argument only for \code{diversity = "FD"} and \code{FDtype = "tau_values"}), a numerical vector between 0 and 1 specifying tau values (threshold levels). If \code{NULL} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled assemblage (i.e., quadratic entropy). 
-#' @param FDcut_number (argument only for \code{diversity = "FD"} and \code{FDtype = "AUC"}), a numeric number to cut [0, 1] interval into equal-spaced sub-intervals to obtain the AUC value by integrating the tau-profile. Equivalently, the number of tau values that will be considered to compute the integrated AUC value. Default is \code{FDcut_number = 30}. A larger value can be set to obtain more accurate AUC value.
 #' @param details a logical variable to decide whether print out the detailed values for each steps or not. Default is \code{FALSE}.
 #' 
 #' @import ggplot2
@@ -44,32 +35,15 @@
 #' @examples
 #' \donttest{
 #' ## Taxonomic diversity for abundance data
-#' data(Spider)
-#' output1 <- iNEXT4steps(data = Spider, diversity = "TD", datatype = "abundance")
+#' data(Data_spider)
+#' output1 <- iNEXT4steps(data = Data_spider, datatype = "abundance")
 #' output1
 #' 
 #' 
 #' ## Taxonomic diversity for incidence data
-#' data(Woody_plants)
-#' output2 <- iNEXT4steps(data = Woody_plants[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
+#' data(Data_woody_plant)
+#' output2 <- iNEXT4steps(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw")
 #' output2
-#' 
-#' 
-#' ## Phylogenetic diversity for abundance data
-#' data(Brazil_abun_data)
-#' data(Brazil_phylo_tree)
-#' output3 <- iNEXT4steps(data = Brazil_abun_data, diversity = "PD", datatype = "abundance", 
-#'                        nboot = 0, PDtree = Brazil_phylo_tree)
-#' output3
-#' 
-#' 
-#' ## Functional diversity for abundance data
-#' data(Brazil_abun_data)
-#' data(Brazil_distance_matrix)
-#' output4 <- iNEXT4steps(data = Brazil_abun_data, diversity = "FD", 
-#'                        datatype = "abundance", nboot = 10, 
-#'                        FDdistM = Brazil_distance_matrix, FDtype = 'AUC', FDcut_number = 30)
-#' output4
 #' }
 #' 
 #' 
@@ -77,9 +51,8 @@
 #' Chao, A., Y. Kubota, D. Zeleny, C.-H. Chiu, C.-F. Li, B. Kusumoto, M. Yasuhara, S. Thorn, C.-L. Wei, M. J. Costello, and R. K. Colwell (2020). Quantifying sample completeness and comparing diversities among assemblages. Ecological Research, 35, 292-314.
 #' @export
 
-iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "abundance", 
-                        nboot = 30, conf = 0.95, nT = NULL, PDtree = NULL, PDreftime = NULL, PDtype = 'meanPD', 
-                        FDdistM = NULL, FDtype = 'AUC', FDtau = NULL, FDcut_number = 30, details = FALSE) 
+iNEXT4steps <- function(data, q = seq(0, 2, 0.2), datatype = "abundance", 
+                        nboot = 30, conf = 0.95, nT = NULL, details = FALSE) 
 {
   if ((length(data) == 1) && (inherits(data, c("numeric", "integer"))))
     stop("Error: Your data does not have enough information.")
@@ -89,34 +62,26 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
     stop("invalid details setting")
   if (pmatch(details, logic) == -1)
     stop("ambiguous details setting")
-  if ((diversity == "PD") && is.null(PDtree))
-    stop("You should input tree data for Phylogenetic diversity.")
-  if ((diversity == "FD") && is.null(FDdistM))
-    stop("You should input distance data for Functional diversity.")
-
-  plot.names = c("(a) STEP1.\n Sample completeness profiles",
-                 "(b) STEP2a.\n Size-based rarefaction/extrapolation",
-                 "(c) STEP2b.\n Asymptotic and empirical diversity profiles",
-                 "(d) STEP3.\n Coverage-based rarefaction/extrapolation",
-                 "(e) STEP4.\n Evenness profiles")
   
-  table.names = c("STEP1. Sample completeness profiles",
-                  "STEP2. Asymptotic analysis",
-                  "STEP3. Non-asymptotic coverage-based rarefaction and extrapolation analysis",
-                  "STEP4. Evenness among species abundances")
+  plot.names = c("(a) STEP 1.\n Sample completeness profiles",
+                 "(b) STEP 2a.\n Size-based rarefaction/extrapolation",
+                 "(c) STEP 2b.\n Asymptotic and empirical diversity profiles",
+                 "(d) STEP 3.\n Coverage-based rarefaction/extrapolation",
+                 "(e) STEP 4.\n Evenness profiles")
+  
+  table.names = c("STEP 1. Sample completeness profiles",
+                  "STEP 2. Asymptotic analysis",
+                  "STEP 3. Non-asymptotic coverage-based rarefaction and extrapolation analysis",
+                  "STEP 4. Evenness among species abundances")
   
   ## SC ##
   SC.table <- Completeness(data, q = q, datatype = datatype, nboot = nboot, conf = conf, nT = nT)
-
+  
   ## iNEXT ##
-  iNEXT.table <- iNEXT3D(data, diversity = diversity, q = c(0, 1, 2), datatype = datatype, nboot = nboot, conf = conf, nT = nT, 
-                         PDtree = PDtree, PDreftime = PDreftime, PDtype = PDtype, 
-                         FDdistM = FDdistM, FDtype = FDtype, FDtau = FDtau, FDcut_number = FDcut_number)
+  iNEXT.table <- iNEXT3D(data, diversity = "TD", q = c(0, 1, 2), datatype = datatype, nboot = nboot, conf = conf, nT = nT)
   
   ## Asymptotic ##
-  qD.table <- ObsAsy3D(data, diversity = diversity, q = q, datatype = datatype, nboot = nboot, conf = conf, nT = nT, 
-                       PDtree = PDtree, PDreftime = PDreftime, PDtype = PDtype, 
-                       FDdistM = FDdistM, FDtype = FDtype, FDtau = FDtau, FDcut_number = FDcut_number)
+  qD.table <- ObsAsy3D(data, diversity = "TD", q = q, datatype = datatype, nboot = nboot, conf = conf, nT = nT)
   
   ## Evenness ##
   Even.table <- Evenness(data, q = q, datatype = datatype, method = "Estimated", nboot = nboot, conf = conf, nT = nT, E.class = 3)
@@ -168,7 +133,7 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
     legend.p = get_legend(SC.plot + theme(legend.direction = "vertical"))
     steps.plot = ggarrange(SC.plot       + guides(color = "none", fill = "none"),
                            size.RE.plot  + guides(color = "none", fill = "none", shape = "none"),
-                           AO.plot      + guides(color = "none", fill = "none"),
+                           AO.plot       + guides(color = "none", fill = "none"),
                            cover.RE.plot + guides(color = "none", fill = "none", shape = "none"),
                            even.plot     + guides(color = "none", fill = "none"),
                            legend.p, nrow = 3, ncol = 2
@@ -176,18 +141,30 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
   } else { warning("The number of communities exceeds eight. We don't show the figures.") }
   
   estD = estimate3D(data, diversity = 'TD', q = c(0, 1, 2), datatype, base = "coverage", level = NULL, nboot = 0, nT = nT)
-  est3D = estimate3D(data, diversity = diversity, q = c(0, 1, 2), datatype, base = "coverage", level = NULL, nboot = 0, nT = nT, 
-                     PDtree = PDtree, PDreftime = PDreftime, PDtype = PDtype, 
-                     FDdistM = FDdistM, FDtype = FDtype, FDtau = FDtau, FDcut_number = FDcut_number)
   
   
   ##  Outpue_summary ##
-  summary = list(summary.deal(SC.table, 1),
-                 iNEXT.table[[3]] %>%  
-                   lapply(FUN = function(x) if(is.numeric(x)) round(x,2) else x) %>% data.frame,
-                 summary.deal(est3D, 3),
-                 summary.deal(Even.table, 4, estD)
-                 )
+  if (sum(q %in% c(0,1,2)) == 3) 
+    summary = list(summary.deal(SC.table, 1),
+                   iNEXT.table[[3]] %>%  
+                     lapply(FUN = function(x) if(is.numeric(x)) round(x,2) else x) %>% data.frame,
+                   summary.deal(estD, 3),
+                   summary.deal(Even.table, 4, estD)
+    ) else {
+      
+      SC.tableq012 <- Completeness(data, q = c(0,1,2), datatype = datatype, nboot = 0, nT = nT)
+      
+      Even.tableq012 <- Evenness(data, q = c(0,1,2), datatype = datatype, method = "Estimated", nboot = 0, nT = nT, E.class = 3)
+      
+      summary = list(summary.deal(SC.tableq012, 1),
+                     iNEXT.table[[3]] %>%  
+                       lapply(FUN = function(x) if(is.numeric(x)) round(x,2) else x) %>% data.frame,
+                     summary.deal(estD, 3),
+                     summary.deal(Even.tableq012, 4, estD)
+                     )
+    }
+  
+  
   names(summary) = table.names
   
   
@@ -213,8 +190,9 @@ iNEXT4steps <- function(data, diversity = "TD", q = seq(0, 2, 0.2), datatype = "
                   details = tab)
       
     } else { ans <- list(summary = summary, details = tab)}
-
+    
   }
+  
   return(ans)
 }
 
@@ -351,10 +329,9 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 #' \code{Completeness} Estimation of Sample Completeness with order q
 #'
 #' @param data (a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
-#' (b) For \code{datatype = "incidence_freq"}, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
-#' (c) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
+#' (b) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
 #' @param q a numerical vector specifying the diversity orders. Default is \code{seq(0, 2, by = 0.2)}.
-#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).
 #' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.
 #' @param conf a positive number < 1 specifying the level of confidence interval. Default is 0.95.
 #' @param nT (required only when \code{datatype = "incidence_raw"} and input data in a single matrix/data.frame) a vector of positive integers specifying the number of sampling units in each assemblage. If assemblage names are not specified (i.e., \code{names(nT) = NULL}), then assemblages are automatically named as "assemblage1", "assemblage2",..., etc. 
@@ -370,15 +347,15 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 #' \donttest{
 #' ## Type (1) example for abundance based data
 #' # Example 1
-#' data(Spider)
-#' output1 <- Completeness(data = Spider, datatype = "abundance")
+#' data(Data_spider)
+#' output1 <- Completeness(data = Data_spider, datatype = "abundance")
 #' output1
 #' }
 #' 
 #' ## Type (2) example for incidence based data
 #' # Example 2
-#' data(Woody_plants)
-#' output2 <- Completeness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq")
+#' data(Data_woody_plant)
+#' output2 <- Completeness(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw")
 #' output2
 #' 
 #' 
@@ -414,7 +391,7 @@ Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboo
   }
   
   if (inherits(data, c("numeric", "integer"))) {
-    data <- list(data = data)
+    data <- list("Assemblage_1" = data)
   }
   
   if (inherits(data, c("data.frame", "matrix"))) {
@@ -496,15 +473,15 @@ Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboo
 #' ## Type (1) example for abundance-based data
 #' ## Example 1
 #' \donttest{
-#' data(Spider)
-#' output1 <- Completeness(data = Spider, datatype = "abundance")
+#' data(Data_spider)
+#' output1 <- Completeness(data = Data_spider, datatype = "abundance")
 #' ggCompleteness(output1)
 #' }
 #' 
 #' ## Type (2) example for incidence-based data
 #' ## Example 2
-#' data(Woody_plants)
-#' output2 <- Completeness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq")
+#' data(Data_woody_plant)
+#' output2 <- Completeness(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw")
 #' ggCompleteness(output2)
 #' 
 #' 
@@ -623,10 +600,9 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' installed and loaded before running the scripts.
 
 #' @param data (a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
-#' (b) For \code{datatype = "incidence_freq"}, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
-#' (c) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
+#' (b) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
 #' @param q a numerical vector specifying the diversity orders. Default is \code{(0, 0.2, 0.4,...,2)}.
-#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).
+#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).
 #' @param method a binary calculation method with \code{"Estimated"} or \code{"Observed"}.\cr
 #' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is \code{50}.
 #' @param conf a positive number < \code{1} specifying the level of confidence interval. Default is \code{0.95}.
@@ -647,30 +623,30 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' @examples
 #' ## Type (1) example for abundance based data
 #' # Example 1. observed evenness for abundance data
-#' data(Spider)
-#' output1 <- Evenness(data = Spider, datatype = "abundance", 
+#' data(Data_spider)
+#' output1 <- Evenness(data = Data_spider, datatype = "abundance", 
 #'                     method = "Observed", E.class = 1:5)
 #' output1
 #' 
 #' \donttest{
 #' # Example 2. estimated evenness for abundance data with default SC = Cmax
-#' data(Spider)
-#' output2 <- Evenness(data = Spider, datatype = "abundance", 
+#' data(Data_spider)
+#' output2 <- Evenness(data = Data_spider, datatype = "abundance", 
 #'                     method = "Estimated", SC = NULL, E.class = 1:5)
 #' output2
 #' }
 #' 
 #' ## Type (2) example for incidence based data
 #' # Example 3. observed evenness for incidence data
-#' data(Woody_plants)
-#' output3 <- Evenness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq", 
+#' data(Data_woody_plant)
+#' output3 <- Evenness(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw", 
 #'                     method = "Observed", E.class = 1:5)
 #' output3
 #' 
 #' \donttest{
 #' # Example 4. estimated evenness for incidence data with default SC = Cmax
-#' data(Woody_plants)
-#' output4 <- Evenness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq", 
+#' data(Data_woody_plant)
+#' output4 <- Evenness(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw", 
 #'                     method = "Estimated", SC = NULL, E.class = 1:5)
 #' output4
 #' }
@@ -719,7 +695,7 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
   }
   
   if (inherits(data, c("numeric", "integer"))) {
-    data <- list(data = data)
+    data <- list("Assemblage_1" = data)
   }
   
   if (inherits(data, c("data.frame", "matrix"))) {
@@ -727,7 +703,7 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
     datalist <- lapply(1:ncol(data), function(i) data[, i])
     
     if (is.null(colnames(data)))
-      names(datalist) <- paste0("data", 1:ncol(data))
+      names(datalist) <- paste0("Assemblage_", 1:ncol(data))
     else names(datalist) <- colnames(data)
     
     data <- datalist
@@ -835,30 +811,30 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
 #' @examples
 #' ## Type (1) example for abundance based data
 #' # Example 1. observed evenness for abundance data
-#' data(Spider)
-#' output1 <- Evenness(data = Spider, datatype = "abundance", 
+#' data(Data_spider)
+#' output1 <- Evenness(data = Data_spider, datatype = "abundance", 
 #'                     method = "Observed", E.class = 1:5)
 #' ggEvenness(output1)
 #' 
 #' \donttest{
 #' # Example 2. estimated evenness for abundance data with default SC = Cmax
-#' data(Spider)
-#' output2 <- Evenness(data = Spider, datatype = "abundance", 
+#' data(Data_spider)
+#' output2 <- Evenness(data = Data_spider, datatype = "abundance", 
 #'                     method = "Estimated", SC = NULL, E.class = 1:5)
 #' ggEvenness(output2)
 #' }
 #' 
 #' ## Type (2) example for incidence based data
 #' # Example 3. observed evenness for incidence data
-#' data(Woody_plants)
-#' output3 <- Evenness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq", 
+#' data(Data_woody_plant)
+#' output3 <- Evenness(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw", 
 #'                     method = "Observed", E.class = 1:5)
 #' ggEvenness(output3)
 #' 
 #' \donttest{
 #' # Example 4. estimated evenness for incidence data with default SC = Cmax
-#' data(Woody_plants)
-#' output4 <- Evenness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq", 
+#' data(Data_woody_plant)
+#' output4 <- Evenness(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw", 
 #'                     method = "Estimated", SC = NULL, E.class = 1:5)
 #' ggEvenness(output4)
 #' }

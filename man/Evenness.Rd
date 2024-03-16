@@ -18,12 +18,11 @@ Evenness(
 }
 \arguments{
 \item{data}{(a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
-(b) For \code{datatype = "incidence_freq"}, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
-(c) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input.}
+(b) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input.}
 
 \item{q}{a numerical vector specifying the diversity orders. Default is \code{(0, 0.2, 0.4,...,2)}.}
 
-\item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).}
+\item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).}
 
 \item{method}{a binary calculation method with \code{"Estimated"} or \code{"Observed"}.\cr}
 
@@ -59,30 +58,30 @@ installed and loaded before running the scripts.
 \examples{
 ## Type (1) example for abundance based data
 # Example 1. observed evenness for abundance data
-data(Spider)
-output1 <- Evenness(data = Spider, datatype = "abundance", 
+data(Data_spider)
+output1 <- Evenness(data = Data_spider, datatype = "abundance", 
                     method = "Observed", E.class = 1:5)
 output1
 
 \donttest{
 # Example 2. estimated evenness for abundance data with default SC = Cmax
-data(Spider)
-output2 <- Evenness(data = Spider, datatype = "abundance", 
+data(Data_spider)
+output2 <- Evenness(data = Data_spider, datatype = "abundance", 
                     method = "Estimated", SC = NULL, E.class = 1:5)
 output2
 }
 
 ## Type (2) example for incidence based data
 # Example 3. observed evenness for incidence data
-data(Woody_plants)
-output3 <- Evenness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq", 
+data(Data_woody_plant)
+output3 <- Evenness(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw", 
                     method = "Observed", E.class = 1:5)
 output3
 
 \donttest{
 # Example 4. estimated evenness for incidence data with default SC = Cmax
-data(Woody_plants)
-output4 <- Evenness(data = Woody_plants[,c(1,4)], datatype = "incidence_freq", 
+data(Data_woody_plant)
+output4 <- Evenness(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw", 
                     method = "Estimated", SC = NULL, E.class = 1:5)
 output4
 }

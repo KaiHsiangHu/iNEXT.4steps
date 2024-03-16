@@ -6,52 +6,27 @@
 \usage{
 iNEXT4steps(
   data,
-  diversity = "TD",
   q = seq(0, 2, 0.2),
   datatype = "abundance",
   nboot = 30,
   conf = 0.95,
   nT = NULL,
-  PDtree = NULL,
-  PDreftime = NULL,
-  PDtype = "meanPD",
-  FDdistM = NULL,
-  FDtype = "AUC",
-  FDtau = NULL,
-  FDcut_number = 30,
   details = FALSE
 )
 }
 \arguments{
 \item{data}{(a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
-(b) For \code{datatype = "incidence_freq"}, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
-(c) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input.}
-
-\item{diversity}{selection of diversity type: \code{'TD'} = Taxonomic diversity, \code{'PD'} = Phylogenetic diversity, and \code{'FD'} = Functional diversity.}
+(b) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input.}
 
 \item{q}{a numerical vector specifying the diversity orders for q-profile output. Default is \code{seq(0, 2, by = 0.2)}.}
 
-\item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}), sampling-unit-based incidence frequencies data (\code{datatype = "incidence_freq"}), or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).}
+\item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).}
 
 \item{nboot}{a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 30.}
 
 \item{conf}{a positive number < 1 specifying the level of confidence interval. Default is 0.95.}
 
 \item{nT}{(required only when \code{datatype = "incidence_raw"} and input data in a single matrix/data.frame) a vector of positive integers specifying the number of sampling units in each assemblage. If assemblage names are not specified (i.e., \code{names(nT) = NULL}), then assemblages are automatically named as "assemblage1", "assemblage2",..., etc.}
-
-\item{PDtree}{(required argument for \code{diversity = "PD"}), a phylogenetic tree in Newick format for all observed species in the pooled assemblage.}
-
-\item{PDreftime}{(argument only for \code{diversity = "PD"}), a vector of numerical values specifying reference times for PD. Default is \code{NULL} (i.e., the age of the root of \code{PDtree}).}
-
-\item{PDtype}{(argument only for \code{diversity = "PD"}), select PD type: \code{PDtype = "PD"} (effective total branch length) or \code{PDtype = "meanPD"} (effective number of equally divergent lineages). Default is \code{"meanPD"}, where \code{meanPD = PD/tree depth}.}
-
-\item{FDdistM}{(required argument for \code{diversity = "FD"}), a species pairwise distance matrix for all species in the pooled assemblage.}
-
-\item{FDtype}{(argument only for \code{diversity = "FD"}), select FD type: \code{FDtype = "tau_values"} for FD under specified threshold values, or \code{FDtype = "AUC"} (area under the curve of tau-profile) for an overall FD which integrates all threshold values between zero and one. Default is \code{"AUC"}.}
-
-\item{FDtau}{(argument only for \code{diversity = "FD"} and \code{FDtype = "tau_values"}), a numerical vector between 0 and 1 specifying tau values (threshold levels). If \code{NULL} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled assemblage (i.e., quadratic entropy).}
-
-\item{FDcut_number}{(argument only for \code{diversity = "FD"} and \code{FDtype = "AUC"}), a numeric number to cut [0, 1] interval into equal-spaced sub-intervals to obtain the AUC value by integrating the tau-profile. Equivalently, the number of tau values that will be considered to compute the integrated AUC value. Default is \code{FDcut_number = 30}. A larger value can be set to obtain more accurate AUC value.}
 
 \item{details}{a logical variable to decide whether print out the detailed values for each steps or not. Default is \code{FALSE}.}
 }
@@ -72,32 +47,15 @@ Step 4. Evenness among species abundances\cr
 \examples{
 \donttest{
 ## Taxonomic diversity for abundance data
-data(Spider)
-output1 <- iNEXT4steps(data = Spider, diversity = "TD", datatype = "abundance")
+data(Data_spider)
+output1 <- iNEXT4steps(data = Data_spider, datatype = "abundance")
 output1
 
 
 ## Taxonomic diversity for incidence data
-data(Woody_plants)
-output2 <- iNEXT4steps(data = Woody_plants[,c(1,4)], diversity = "TD", datatype = "incidence_freq")
+data(Data_woody_plant)
+output2 <- iNEXT4steps(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw")
 output2
-
-
-## Phylogenetic diversity for abundance data
-data(Brazil_abun_data)
-data(Brazil_phylo_tree)
-output3 <- iNEXT4steps(data = Brazil_abun_data, diversity = "PD", datatype = "abundance", 
-                       nboot = 0, PDtree = Brazil_phylo_tree)
-output3
-
-
-## Functional diversity for abundance data
-data(Brazil_abun_data)
-data(Brazil_distance_matrix)
-output4 <- iNEXT4steps(data = Brazil_abun_data, diversity = "FD", 
-                       datatype = "abundance", nboot = 10, 
-                       FDdistM = Brazil_distance_matrix, FDtype = 'AUC', FDcut_number = 30)
-output4
 }
 
 
