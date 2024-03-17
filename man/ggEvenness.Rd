@@ -36,14 +36,14 @@ ggEvenness(output2)
 ## Type (2) example for incidence based data
 # Example 3. observed evenness for incidence data
 data(Data_woody_plant)
-output3 <- Evenness(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw", 
+output3 <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
                     method = "Observed", E.class = 1:5)
 ggEvenness(output3)
 
 \donttest{
 # Example 4. estimated evenness for incidence data with default SC = Cmax
 data(Data_woody_plant)
-output4 <- Evenness(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw", 
+output4 <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
                     method = "Estimated", SC = NULL, E.class = 1:5)
 ggEvenness(output4)
 }

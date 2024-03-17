@@ -27,7 +27,7 @@ ggCompleteness(output1)
 ## Type (2) example for incidence-based data
 ## Example 2
 data(Data_woody_plant)
-output2 <- Completeness(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw")
+output2 <- Completeness(data = Data_woody_plant, datatype = "incidence_raw")
 ggCompleteness(output2)
 
 

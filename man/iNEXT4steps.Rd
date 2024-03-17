@@ -54,7 +54,7 @@ output1
 
 ## Taxonomic diversity for incidence data
 data(Data_woody_plant)
-output2 <- iNEXT4steps(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw")
+output2 <- iNEXT4steps(data = Data_woody_plant, datatype = "incidence_raw")
 output2
 }
 
