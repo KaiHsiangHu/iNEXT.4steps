@@ -14,7 +14,7 @@ test_that("iNEXT4steps for sampling-unit-based incidence raw data", {
   
   # Test input by a demo data
   data("Data_woody_plant")
-  out <- iNEXT4steps(Data_woody_plant$Lowland, q = c(1,2), datatype = "incidence_raw")
+  out <- iNEXT4steps(Data_woody_plant$Upper_cloud, q = c(1,2), datatype = "incidence_raw")
   expect_equal(length(out), 2)
   expect_equal(length(out$figure), 6)
   
