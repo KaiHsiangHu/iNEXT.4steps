@@ -48,7 +48,7 @@ The sample completeness of order $q \geq 0$ quantifies the proportion of the ass
 
 When sampling data do not contain sufficient information to accurately infer true diversity, fair comparisons of diversity across multiple assemblages should be made by standardizing the sample coverage (i.e., comparing diversity for a standardized fraction of an assemblage's individuals). This comparison can be done based on seamless integration of coverage-based rarefaction and extrapolation sampling curves up to a maximum coverage (C_max = the minimum sample coverage among all samples extrapolated to double reference sizes). 
 
-** NOTE **: In STEP 2 and STEP 3, `iNEXT.4steps` only deals with taxonomic/species diversity. Researchers who are interested in phylogenetic diversity and functional diversity should use iNEXT.3D package from CRAN and see the relevant paper (Chao et al. 2021) for methodology.
+- **(NOTE)**: In STEP 2 and STEP 3, `iNEXT.4steps` only deals with taxonomic/species diversity. Researchers who are interested in phylogenetic diversity and functional diversity should use iNEXT.3D package from CRAN and see the relevant paper (Chao et al. 2021) for methodology.
 
 
 
@@ -177,7 +177,7 @@ The arguments of this function are briefly described below, and will explain det
 </tr>
 <tr class="even">
 <td align="center"><code>nT</code></td>
-<td align="left">(required only when <code>datatype = "incidence_raw"</code> and input data in a single matrix/data.frame) a vector of positive integers specifying the number of sampling units in each assemblage. If assemblage names are not specified (i.e., <code>names(nT) = NULL</code>), then assemblages are automatically named as "assemblage1", "assemblage2",..., etc.</td>
+<td align="left">(required only when <code>datatype = "incidence_raw"</code> and input data in a single matrix/data.frame) a vector of positive integers specifying the number of sampling units in each assemblage. If assemblage names are not specified (i.e., <code>names(nT) = NULL</code>), then assemblages are automatically named as "Assemblage1", "Assemblage2",..., etc.</td>
 </tr>
 <tr class="odd">
 <td align="center"><code>details</code></td>
@@ -209,20 +209,20 @@ output1$summary
 output1$figure[[6]]
 ```
 
-* Assemblage = the datasets you selected in the 'Data setting' on the left hand side of the screen.
-* qTD = 'Species richness' represents the diversity of order q=0; 'Shannon diversity' represents the diversity of order q=1, 'Simpson diversity' represents the diversity of order q=2.
-* TD_obs = the empirical diversity profile of order q.
-* TD_asy = the estimated asymptotic diversity profile of order q.
-* s.e. = the bootstrap standard error of the estimated asymptotic diversity of order q.
-* qTD.LCL, qTD.UCL = the bootstrap lower and upper confidence limits for the estimated asymptotic diversity of order q at the specified level in the setting (with a default value of 0.95).
-* Pielou J' = a widely used evenness measure and it is expressed as J' = H/log(S) where H denotes Shannon entropy.
+* `Assemblage` = the assemblage name.
+* `qTD` = 'Species richness' represents the diversity of order q=0; 'Shannon diversity' represents the diversity of order q=1, 'Simpson diversity' represents the diversity of order q=2.
+* `TD_obs` = the empirical diversity profile of order q.
+* `TD_asy` = the estimated asymptotic diversity profile of order q.
+* `s.e.` = the bootstrap standard error of the estimated asymptotic diversity of order q.
+* `qTD.LCL`, `qTD.UCL` = the bootstrap lower and upper confidence limits for the estimated asymptotic diversity of order q at the specified level in the setting (with a default value of `0.95`).
+* `Pielou J'` = a widely used evenness measure and it is expressed as J' = H/log(S) where H denotes Shannon entropy.
 
 
 `$summary` lists all biological summaries according to Chao et al. (2020). There are four parts corresponding to each step in the paper. They analysis and explain biological data from different and superimposed side. User can easily compare difference between each assemblages. 
 
 `$figure` visualize the statistics by continuous curves. There are five individual figures and an overall figure in `$figure`. `iNEXT4stpes` provides a complete analysis process from figure (a) to figure (e). User can analyze the process of biodiversity through these figures. 
 
-`$details` contains four parts: `Sample completeness`, `iNEXT`, `Observed and asymptotic diversity`, `Evenness`. They are the computing values which are used to plot each figure in `$figure`. 
+`$details` contains four parts: `Sample completeness`, `iNEXT`, `Observed and asymptotic diversity`, `Evenness`. They contain the numerical values which are used to plot each figure in `$figure`. 
 
 
 ### EXAMPLE 2: 4 steps for incidence data 
@@ -266,8 +266,7 @@ Completeness(data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
 <td align="center"><code>data</code></td>
 <td align="left">
 (a) For `datatype = "abundance"`, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
-(b) For `datatype = "incidence_freq"`, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
-(c) For `datatype = "incidence_raw"`, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
+(b) For `datatype = "incidence_raw"`, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
 </td>
 </tr>
 <tr class="even">
@@ -276,7 +275,7 @@ Completeness(data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
 </tr>
 <tr class="odd">
 <td align="center"><code>datatype</code></td>
-<td align="left">data type of input data: individual-based abundance data (`datatype = "abundance"`), sampling-unit-based incidence frequencies data (`datatype = "incidence_freq"`), or species by sampling-units incidence matrix (`datatype = "incidence_raw"`) with all entries being 0 (non-detection) or 1 (detection)</td>
+<td align="left">data type of input data: individual-based abundance data (`datatype = "abundance"`) or species by sampling-units incidence matrix (`datatype = "incidence_raw"`) with all entries being 0 (non-detection) or 1 (detection)</td>
 </tr>
 <tr class="even">
 <td align="center"><code>nboot</code></td>
@@ -288,7 +287,7 @@ Completeness(data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
 </tr>
 <tr class="even">
 <td align="center"><code>nT</code></td>
-<td align="left">(required only when `datatype = "incidence_raw"` and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc.</td>
+<td align="left">(required only when `datatype = "incidence_raw"` and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "Assemblage1", "Assemblage2",..., etc.</td>
 </tr>
 
 </tbody>
@@ -335,6 +334,12 @@ output1 <- Completeness(data = Data_spider, datatype = "abundance")
 output1
 ```
 
+* `Order.q`: the diversity order of q.
+* `Estimate.SC`: the estimated (or observed) sample completeness of order q.
+* `s.e.`: standard error of sample completeness.
+* `SC.LCL`, `SC.UCL`: the bootstrap lower and upper confidence limits for the sample completeness of order q at the specified level (with a default value of `0.95`).
+* `Assemblage`: the assemblage name.
+
 The following commands plot sample completeness curves, along with its confidence interval for q between 0 to 2.
 
 ```{r out.width="70%",fig.height=8}
@@ -344,7 +349,7 @@ ggCompleteness(output1)
 
 ### Sample completeness profiles for incidence data
 
-Use incidence frequency data `woody plants` to compute sample completeness.
+Use incidence frequency data `Data_woody_plant` to compute sample completeness.
 
 ```{r}
 data(Data_woody_plant)
@@ -385,8 +390,7 @@ Evenness(data, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
 <td align="center"><code>data</code></td>
 <td align="left">
 (a) For `datatype = "abundance"`, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
-(b) For `datatype = "incidence_freq"`, data can be input as a vector of incidence frequencies (for a single assemblage), matrix/data.frame (species by assemblages), or a list of incidence frequencies; the first entry in all types of input must be the number of sampling units in each assemblage. \cr
-(c) For `datatype = "incidence_raw"`, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
+(b) For `datatype = "incidence_raw"`, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
 </td>
 </tr>
 <tr class="even">
@@ -395,7 +399,7 @@ Evenness(data, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
 </tr>
 <tr class="odd">
 <td align="center"><code>datatype</code></td>
-<td align="left">data type of input data: individual-based abundance data (`datatype = "abundance"`), sampling-unit-based incidence frequencies data (`datatype = "incidence_freq"`), or species by sampling-units incidence matrix (`datatype = "incidence_raw"`) with all entries being 0 (non-detection) or 1 (detection)</td>
+<td align="left">data type of input data: individual-based abundance data (`datatype = "abundance"`) or species by sampling-units incidence matrix (`datatype = "incidence_raw"`) with all entries being 0 (non-detection) or 1 (detection)</td>
 </tr>
 <tr class="even">
 <td align="center"><code>method</code></td>
@@ -411,7 +415,7 @@ Evenness(data, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
 </tr>
 <tr class="odd">
 <td align="center"><code>nT</code></td>
-<td align="left">(required only when `datatype = "incidence_raw"` and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc.</td>
+<td align="left">(required only when `datatype = "incidence_raw"` and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "Assemblage1", "Assemblage2",..., etc.</td>
 </tr>
 <tr class="even">
 <td align="center"><code>E.class</code></td>
@@ -458,14 +462,31 @@ Following are four simple examples for functions `Evenness` and `ggEvenness`.
 
 ### Observed evenness profiles for abundance data
 
-Use abundance data `Data_spider` to compute observed evenness. Here only show the output for first class of evenness.
+Use abundance data `Data_spider` to compute observed evenness. Here only show the first five rows output for each class of evenness.
 
-```{r}
+```{r, eval=FALSE}
 data(Data_spider)
 output1 <- Evenness(data = Data_spider, datatype = "abundance", 
                     method = "Observed", E.class = 1:5)
-output1$E1
+output1
 ```
+
+
+```{r, echo=FALSE}
+data(Data_spider)
+output1 <- Evenness(data = Data_spider, datatype = "abundance", 
+                    method = "Observed", E.class = 1:5)
+lapply(output1, function(x) x[1:5,])
+```
+
+* `Order.q`: the diversity order of q.
+* `Evenness`: the evenness of order q.
+* `s.e.`: standard error of evenness.
+* `Even.LCL`, `Even.UCL`: the bootstrap lower and upper confidence limits for the evenness of order q at the specified level (with a default value of `0.95`).
+* `Assemblage`: the assemblage name.
+* `Method`: `"Estimated"` or `"Observed"`.
+* `SC`: the target standardized coverage value. (only when `method = "Estimated"`)
+
 
 The following commands plot the evenness curves for five classes, along with its confidence interval for q between 0 to 2.
 
@@ -476,14 +497,23 @@ ggEvenness(output1)
 
 ### Estimated evenness profiles for abundance data with default SC = Cmax
 
-Use abundance data `Data_spider` to compute estimated evenness with default `SC = NULL` (Cmax = 0.994). Here only show the output for first class of evenness.
+Use abundance data `Data_spider` to compute estimated evenness with default `SC = NULL` (Cmax = 0.994). Here only show the first five rows output for each class of evenness.
 
-```{r}
+```{r, eval=FALSE}
 data(Data_spider)
 output2 <- Evenness(data = Data_spider, datatype = "abundance", 
                     method = "Estimated", SC = NULL, E.class = 1:5)
-output2$E1
+output2
 ```
+
+
+```{r, echo=FALSE}
+data(Data_spider)
+output2 <- Evenness(data = Data_spider, datatype = "abundance", 
+                    method = "Estimated", SC = NULL, E.class = 1:5)
+lapply(output2, function(x) x[1:5,])
+```
+
 
 The following commands plot the evenness curves for five classes, along with its confidence interval for q between 0 to 2.
 
@@ -495,14 +525,23 @@ ggEvenness(output2)
 
 ### Observed evenness profiles for incidence data 
 
-Use incidence frequency data `Woody plants` to compute observed evenness. Here only show the output for first class of evenness.
+Use incidence frequency data `Data_woody_plant` to compute observed evenness. Here only show the first five rows output for each class of evenness.
 
-```{r}
+```{r, eval=FALSE}
 data(Data_woody_plant)
 output3 <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
                     method = "Observed", E.class = 1:5)
-output3$E1
+output3
 ```
+
+
+```{r, echo=FALSE}
+data(Data_spider)
+output3 <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
+                    method = "Observed", E.class = 1:5)
+lapply(output3, function(x) x[1:5,])
+```
+
 
 The following commands plot the evenness curves for five classes, along with its confidence interval for q between 0 to 2.
 
@@ -513,14 +552,23 @@ ggEvenness(output3)
 
 ### Estimated evenness profiles for incidence data with default SC = Cmax
 
-Use incidence frequency data `Woody plants` to compute estimated evenness with `SC = NULL` (Cmax = 0.993). Here only show the output for first class of evenness.
+Use incidence frequency data `Data_woody_plant` to compute estimated evenness with `SC = NULL` (Cmax = 0.993). Here only show the first five rows output for each class of evenness.
 
-```{r}
+```{r, eval=FALSE}
 data(Data_woody_plant)
 output4 <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
                     method = "Estimated", SC = NULL, E.class = 1:5)
-output4$E1
+output4
 ```
+
+
+```{r, echo=FALSE}
+data(Data_spider)
+output4 <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
+                    method = "Estimated", SC = NULL, E.class = 1:5)
+lapply(output4, function(x) x[1:5,])
+```
+
 
 The following commands plot the evenness curves for five classes, along with its confidence interval for q between 0 to 2.
 
@@ -539,10 +587,6 @@ The iNEXT.4steps package is licensed under the GPLv3. To help refine `iNEXT.4ste
 estimation in species biodiversity studies. Ecological Monographs 84, 45-67. 
 
 - Chao, A., Henderson, P. A., Chiu, C.-H., Moyes, F., Hu, K.-H., Dornelas, M and Magurran, A. E. (2021). Measuring temporal change in alpha diversity: a framework integrating taxonomic, phylogenetic and functional diversity and the iNEXT.3D standardization. Methods in Ecology and Evolution, 12, 1926-1940.
-
-- Chao, A. and Jost. L. (2012) Coverage-based rarefaction and extrapolation: standardizing samples by completeness rather than size. Ecology, 93, 2533-2547.
-
-- Chao, A. and Jost, L. (2015). Estimating diversity and entropy profiles via discovery rates of new species. Methods in Ecology and Evolution, 6, 873-882.
 
 - Chao, A. and Ricotta, C. (2019). Quantifying evenness and linking it to diversity, beta diversity, and similarity. Ecology, 100(12), e02852.
 
