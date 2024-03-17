@@ -182,8 +182,8 @@ iNEXT4steps <- function(data, q = seq(0, 2, 0.2), datatype = "abundance",
 
   } else if (details == TRUE) {
     
-    tab = list("Sample Completeness" = SC.table, "iNEXT" = iNEXT.table[[2]],
-               "Observed and asymptotic Diversity" = qD.table, "Evenness" = Even.table)
+    tab = list("Sample completeness" = SC.table, "iNEXT" = iNEXT.table[[2]],
+               "Observed and asymptotic diversity" = qD.table, "Evenness" = Even.table)
 
     if (length(unique(SC.table$Assemblage)) <= 8) {
       

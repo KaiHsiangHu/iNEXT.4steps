@@ -222,7 +222,7 @@ output1$figure[[6]]
 
 `$figure` visualize the statistics by continuous curves. There are five individual figures and an overall figure in `$figure`. `iNEXT4stpes` provides a complete analysis process from figure (a) to figure (e). User can analyze the process of biodiversity through these figures. 
 
-`$details` contains four parts: `Sample Completeness`, `iNEXT`, `Asymptotic Diversity`, `Evenness`. They are the computing values which are used to plot each figure in `$figure`. 
+`$details` contains four parts: `Sample completeness`, `iNEXT`, `Observed and asymptotic diversity`, `Evenness`. They are the computing values which are used to plot each figure in `$figure`. 
 
 
 ### EXAMPLE 2: 4 steps for incidence data 
