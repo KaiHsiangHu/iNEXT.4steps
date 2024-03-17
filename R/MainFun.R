@@ -63,17 +63,6 @@ iNEXT4steps <- function(data, q = seq(0, 2, 0.2), datatype = "abundance",
   if (pmatch(details, logic) == -1)
     stop("ambiguous details setting")
   
-  plot.names = c("(a) STEP 1.\n Sample completeness profiles",
-                 "(b) STEP 2a.\n Size-based rarefaction/extrapolation",
-                 "(c) STEP 2b.\n Asymptotic and empirical diversity profiles",
-                 "(d) STEP 3.\n Coverage-based rarefaction/extrapolation",
-                 "(e) STEP 4.\n Evenness profiles")
-  
-  table.names = c("STEP 1. Sample completeness profiles",
-                  "STEP 2. Asymptotic analysis",
-                  "STEP 3. Non-asymptotic coverage-based rarefaction and extrapolation analysis",
-                  "STEP 4. Evenness among species abundances")
-  
   ## SC ##
   SC.table <- Completeness(data, q = q, datatype = datatype, nboot = nboot, conf = conf, nT = nT)
   
@@ -86,6 +75,19 @@ iNEXT4steps <- function(data, q = seq(0, 2, 0.2), datatype = "abundance",
   ## Evenness ##
   Even.table <- Evenness(data, q = q, datatype = datatype, method = "Estimated", nboot = nboot, conf = conf, nT = nT, E.class = 3)
   Cmax = unique(Even.table$E3$SC)
+  
+  
+  plot.names = c("(a) STEP 1.\n Sample completeness profiles",
+                 "(b) STEP 2a.\n Size-based rarefaction/extrapolation",
+                 "(c) STEP 2b.\n Asymptotic and empirical diversity profiles",
+                 "(d) STEP 3.\n Coverage-based rarefaction/extrapolation",
+                 "(e) STEP 4.\n Evenness profiles")
+  
+  table.names = c("STEP 1. Sample completeness profiles",
+                  "STEP 2. Observed diversity values and asymptotic estimates",
+                  "STEP 3. Non-asymptotic coverage-based rarefaction and extrapolation analysis",
+                  paste("STEP 4. Evenness among species abundances at Cmax = ", round(Cmax, 3), sep = ""))
+  
   
   if (length(unique((Even.table[[1]]$Assemblage)))>1) {
     iNEXT.table[[2]]$size_based$Assemblage = factor(iNEXT.table[[2]]$size_based$Assemblage)
