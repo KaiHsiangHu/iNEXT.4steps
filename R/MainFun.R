@@ -84,7 +84,7 @@ iNEXT4steps <- function(data, q = seq(0, 2, 0.2), datatype = "abundance",
                  "(e) STEP 4.\n Evenness profiles")
   
   table.names = c("STEP 1. Sample completeness profiles",
-                  "STEP 2. Observed diversity values and asymptotic estimates",
+                  "STEP 2b. Observed diversity values and asymptotic estimates",
                   "STEP 3. Non-asymptotic coverage-based rarefaction and extrapolation analysis",
                   "STEP 4. Evenness among species abundances")
   
