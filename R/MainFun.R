@@ -221,7 +221,7 @@ summary.deal <- function(table, step, Pielou = NULL) {
   
   if (step == 3){
     tmp = table[,c(1, 2, 6)]
-    C = round(min(table$SC), 3)
+    C = round(unique(table$SC), 3)
     out = dcast(tmp, Assemblage ~ Order.q, value.var = colnames(tmp)[3]) %>% 
       lapply(FUN = function(x) if(is.numeric(x)) round(x,2)
              else x) %>% data.frame()
@@ -233,13 +233,15 @@ summary.deal <- function(table, step, Pielou = NULL) {
     
     tmp = (table[[1]] %>%
              filter(Order.q %in% c(0,1,2)))[, c("Order.q", "Evenness", "Assemblage")]
-    out = acast(tmp, Assemblage ~ Order.q, value.var="Evenness")
+    out = dcast(tmp, Assemblage ~ Order.q, value.var = "Evenness")
     
+    C = round(unique(table$E3$SC), 3)
     D = (Pielou %>% filter(Order.q == 1))[,c("Assemblage", "qTD")]
     S = (Pielou %>% filter(Order.q == 0))[,c("Assemblage", "qTD")]
-    out[,1] = sapply(rownames(out), function(x) log(D[D$Assemblage == x,"qTD"]) / log(S[S$Assemblage == x,"qTD"]))
-    colnames(out) = c("Pielou J'", paste("q = ", c(1,2), sep=""))
-    out <- round(out,2)
+    out[,2] = sapply(out$Assemblage, function(x) log(D[D$Assemblage == x,"qTD"]) / log(S[S$Assemblage == x,"qTD"]))
+    colnames(out) = c(paste("Cmax = ", C, sep = ""),
+                      "Pielou J'", paste("q = ", c(1,2), sep=""))
+    out[,-1] <- round(out[,-1],2)
   }
   
   return(out)
