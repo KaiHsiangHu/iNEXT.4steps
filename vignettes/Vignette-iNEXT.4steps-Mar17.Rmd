@@ -225,7 +225,7 @@ Run the following code to get the output from iNEXT4steps.
 
 ```{r align="center", out.width="100%"}
 data(Data_woody_plant)
-output2 <- iNEXT4steps(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw")
+output2 <- iNEXT4steps(data = Data_woody_plant, datatype = "incidence_raw")
 output2$summary
 output2$figure[[6]]
 ```
@@ -338,7 +338,7 @@ Use incidence frequency data `woody plants` to compute sample completeness.
 
 ```{r}
 data(Data_woody_plant)
-output2 <- Completeness(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw")
+output2 <- Completeness(data = Data_woody_plant, datatype = "incidence_raw")
 output2
 ```
 
@@ -489,7 +489,7 @@ Use incidence frequency data `Woody plants` to compute observed evenness. Here o
 
 ```{r}
 data(Data_woody_plant)
-output3 <- Evenness(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw", 
+output3 <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
                     method = "Observed", E.class = 1:5)
 output3$E1
 ```
@@ -507,7 +507,7 @@ Use incidence frequency data `Woody plants` to compute estimated evenness with `
 
 ```{r}
 data(Data_woody_plant)
-output4 <- Evenness(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw", 
+output4 <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
                     method = "Estimated", SC = NULL, E.class = 1:5)
 output4$E1
 ```

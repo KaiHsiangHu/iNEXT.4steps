@@ -42,7 +42,7 @@
 #' 
 #' ## Taxonomic diversity for incidence data
 #' data(Data_woody_plant)
-#' output2 <- iNEXT4steps(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw")
+#' output2 <- iNEXT4steps(data = Data_woody_plant, datatype = "incidence_raw")
 #' output2
 #' }
 #' 
@@ -359,7 +359,7 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 #' ## Type (2) example for incidence based data
 #' # Example 2
 #' data(Data_woody_plant)
-#' output2 <- Completeness(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw")
+#' output2 <- Completeness(data = Data_woody_plant, datatype = "incidence_raw")
 #' output2
 #' 
 #' 
@@ -485,7 +485,7 @@ Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboo
 #' ## Type (2) example for incidence-based data
 #' ## Example 2
 #' data(Data_woody_plant)
-#' output2 <- Completeness(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw")
+#' output2 <- Completeness(data = Data_woody_plant, datatype = "incidence_raw")
 #' ggCompleteness(output2)
 #' 
 #' 
@@ -643,14 +643,14 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' ## Type (2) example for incidence based data
 #' # Example 3. observed evenness for incidence data
 #' data(Data_woody_plant)
-#' output3 <- Evenness(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw", 
+#' output3 <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
 #'                     method = "Observed", E.class = 1:5)
 #' output3
 #' 
 #' \donttest{
 #' # Example 4. estimated evenness for incidence data with default SC = Cmax
 #' data(Data_woody_plant)
-#' output4 <- Evenness(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw", 
+#' output4 <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
 #'                     method = "Estimated", SC = NULL, E.class = 1:5)
 #' output4
 #' }
@@ -831,14 +831,14 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
 #' ## Type (2) example for incidence based data
 #' # Example 3. observed evenness for incidence data
 #' data(Data_woody_plant)
-#' output3 <- Evenness(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw", 
+#' output3 <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
 #'                     method = "Observed", E.class = 1:5)
 #' ggEvenness(output3)
 #' 
 #' \donttest{
 #' # Example 4. estimated evenness for incidence data with default SC = Cmax
 #' data(Data_woody_plant)
-#' output4 <- Evenness(data = Data_woody_plant[c(1,4)], datatype = "incidence_raw", 
+#' output4 <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
 #'                     method = "Estimated", SC = NULL, E.class = 1:5)
 #' ggEvenness(output4)
 #' }

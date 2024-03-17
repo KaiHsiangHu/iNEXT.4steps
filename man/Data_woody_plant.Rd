@@ -12,12 +12,10 @@ For illustration here, we selected only plots belonging to two vegetation types 
 }
 \usage{data(Data_woody_plant)}
 \format{
-  \code{Data_woody_plant} a list of four species-by-sampling-unit data frames. Each element in the data frame is 1 for a detection, and 0 for a non-detection.\cr
-  A list of 4: \cr
-  $ Upper_cloud: num [1:239, 1:153] 0 0 0 0 0 0 0 0 0 0 ... \cr
-  $ Lower_cloud: num [1:313, 1:203] 0 0 0 1 0 0 0 0 0 0 ... \cr
-  $ Lowland    : num [1:269, 1:129] 0 0 0 0 0 0 0 0 0 0 ... \cr
+  \code{Data_woody_plant} a list of two species-by-sampling-unit data frames. Each element in the data frame is 1 for a detection, and 0 for a non-detection.\cr
+  A list of 2: \cr
   $ Monsoon    : num [1:329, 1:191] 0 0 0 0 0 0 0 0 0 0 ... \cr
+  $ Upper_cloud: num [1:239, 1:153] 0 0 0 0 0 0 0 0 0 0 ... \cr
 }
 \source{
 The National Vegetation Database of Taiwan (AS-TW-001).
