@@ -86,7 +86,7 @@ iNEXT4steps <- function(data, q = seq(0, 2, 0.2), datatype = "abundance",
   table.names = c("STEP 1. Sample completeness profiles",
                   "STEP 2. Observed diversity values and asymptotic estimates",
                   "STEP 3. Non-asymptotic coverage-based rarefaction and extrapolation analysis",
-                  paste("STEP 4. Evenness among species abundances at Cmax = ", round(Cmax, 3), sep = ""))
+                  "STEP 4. Evenness among species abundances")
   
   
   if (length(unique((Even.table[[1]]$Assemblage)))>1) {
