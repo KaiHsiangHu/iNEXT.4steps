@@ -17,7 +17,7 @@ URL: https://sites.google.com/view/chao-lab-website/software/inext-4steps/
 Description: iNEXT.4steps provides a simple function to create a complete analysis process
             with following four parts:
             Step1: Sample completeness profiles.
-            Step2: Asymptotic analysis.
+            Step2: Observed diversity values and asymptotic estimates.
             Step3: Non-asymptotic coverage-based rarefaction and extrapolation analysis.
             Step4: Evenness among species abundances.
             The output contains a summary table and figures. In addition, iNEXT.4stpes also 

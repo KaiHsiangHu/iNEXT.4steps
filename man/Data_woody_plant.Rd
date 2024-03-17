@@ -25,7 +25,8 @@ data(Data_woody_plant)
 }
 \references{
 Chiou, C.-R., Hsieh, C.-F., Wang, J.-C., Chen, M.-Y., Liu, H.-Y., Yeh, C.-L., ... Song, M. G.-Z. (2009). The first national vegetation inventory in Taiwan. Taiwan Journal of Forest Science, 24, 295-302. \cr\cr
-Li, C.-F., Chytry, M., Zeleny, D., Chen, M. -Y., Chen, T.-Y., Chiou, C.-R., ... Hsieh, C.-F. (2013). Classification of Taiwan forest vegetation. Applied Vegetation Science, 16, 698-719. https://doi.org/10.1111/avsc.12025 \cr\cr
+Li, C.-F., Chytry, M., Zeleny, D., Chen, M. -Y., Chen, T.-Y., Chiou, C.-R., ... Hsieh, C.-F. (2013). Classification of Taiwan forest vegetation. Applied Vegetation Science, 16, 698-719. \cr
+https://doi.org/10.1111/avsc.12025 \cr\cr
 Su, H. -J. (1985). Studies on the climate and vegetation types of the natural forests in Taiwan (III) A Scheme of Geographical Climatic Regions. Quarterly Journal of Chinese Forestry, 18, 33-44. \cr\cr
 }
 \keyword{datasets}

@@ -26,7 +26,7 @@ iNEXT4steps(
 
 \item{conf}{a positive number < 1 specifying the level of confidence interval. Default is 0.95.}
 
-\item{nT}{(required only when \code{datatype = "incidence_raw"} and input data in a single matrix/data.frame) a vector of positive integers specifying the number of sampling units in each assemblage. If assemblage names are not specified (i.e., \code{names(nT) = NULL}), then assemblages are automatically named as "assemblage1", "assemblage2",..., etc.}
+\item{nT}{(required only when \code{datatype = "incidence_raw"} and input data in a single matrix/data.frame) a vector of positive integers specifying the number of sampling units in each assemblage. If assemblage names are not specified (i.e., \code{names(nT) = NULL}), then assemblages are automatically named as "Assemblage1", "Assemblage2",..., etc.}
 
 \item{details}{a logical variable to decide whether print out the detailed values for each steps or not. Default is \code{FALSE}.}
 }
@@ -40,7 +40,7 @@ a list of three of objects: \cr\cr
 \code{iNEXT4steps}:\cr
 A complete (random sampling) biological analysis combined with four parts:\cr
 Step 1. Sample completeness profiles\cr
-Step 2. Asymptotic analysis\cr
+Step 2. Observed diversity values and asymptotic estimates\cr
 Step 3. Non-asymptotic coverage-based rarefaction and extrapolation\cr
 Step 4. Evenness among species abundances\cr
 }

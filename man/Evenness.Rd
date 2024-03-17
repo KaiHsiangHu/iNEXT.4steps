@@ -30,11 +30,11 @@ Evenness(
 
 \item{conf}{a positive number < \code{1} specifying the level of confidence interval. Default is \code{0.95}.}
 
-\item{nT}{(required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc.}
+\item{nT}{(required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "Assemblage1", "Assemblage2",..., etc.}
 
 \item{E.class}{an integer vector between 1 to 5}
 
-\item{SC}{(required only when method = "Estimated") a standardized coverage for calculating estimated evenness. If \code{NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (Cmax).}
+\item{SC}{(required only when method = "Estimated") a standardized coverage for calculating estimated evenness. If \code{SC = NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (Cmax).}
 }
 \value{
 A list of several tables containing estimated (or observed) evenness with order q.\cr
@@ -48,12 +48,11 @@ A list of several tables containing estimated (or observed) evenness with order 
         \item{SC}{the target standardized coverage value. (only when \code{method = "Estimated"})}
 }
 \description{
-\code{Evenness} Estimation (Observed) of Evenness with order q
+\code{Evenness} Estimation (or Observed) of Evenness with order q
 }
 \details{
 R scipts "Evenness" for Chao and Ricotta (2019) Ecology paper.
-This R code is for computing Figures 2, 3 and 4 of Chao and Ricotta (2019) paper.
-installed and loaded before running the scripts.
+This R code is for computing Figures 2 of Chao and Ricotta (2019) paper.
 }
 \examples{
 ## Type (1) example for abundance based data

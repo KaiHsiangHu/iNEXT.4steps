@@ -3,7 +3,7 @@
 #' \code{iNEXT4steps}:\cr
 #' A complete (random sampling) biological analysis combined with four parts:\cr
 #' Step 1. Sample completeness profiles\cr
-#' Step 2. Asymptotic analysis\cr
+#' Step 2. Observed diversity values and asymptotic estimates\cr
 #' Step 3. Non-asymptotic coverage-based rarefaction and extrapolation\cr
 #' Step 4. Evenness among species abundances\cr
 #' 
@@ -13,7 +13,7 @@
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).
 #' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 30.
 #' @param conf a positive number < 1 specifying the level of confidence interval. Default is 0.95.
-#' @param nT (required only when \code{datatype = "incidence_raw"} and input data in a single matrix/data.frame) a vector of positive integers specifying the number of sampling units in each assemblage. If assemblage names are not specified (i.e., \code{names(nT) = NULL}), then assemblages are automatically named as "assemblage1", "assemblage2",..., etc. 
+#' @param nT (required only when \code{datatype = "incidence_raw"} and input data in a single matrix/data.frame) a vector of positive integers specifying the number of sampling units in each assemblage. If assemblage names are not specified (i.e., \code{names(nT) = NULL}), then assemblages are automatically named as "Assemblage1", "Assemblage2",..., etc. 
 #' @param details a logical variable to decide whether print out the detailed values for each steps or not. Default is \code{FALSE}.
 #' 
 #' @import ggplot2
@@ -183,7 +183,7 @@ iNEXT4steps <- function(data, q = seq(0, 2, 0.2), datatype = "abundance",
   } else if (details == TRUE) {
     
     tab = list("Sample Completeness" = SC.table, "iNEXT" = iNEXT.table[[2]],
-               "Asymptotic Diversity" = qD.table, "Evenness" = Even.table)
+               "Observed and asymptotic Diversity" = qD.table, "Evenness" = Even.table)
 
     if (length(unique(SC.table$Assemblage)) <= 8) {
       
@@ -338,7 +338,7 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).
 #' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.
 #' @param conf a positive number < 1 specifying the level of confidence interval. Default is 0.95.
-#' @param nT (required only when \code{datatype = "incidence_raw"} and input data in a single matrix/data.frame) a vector of positive integers specifying the number of sampling units in each assemblage. If assemblage names are not specified (i.e., \code{names(nT) = NULL}), then assemblages are automatically named as "assemblage1", "assemblage2",..., etc. 
+#' @param nT (required only when \code{datatype = "incidence_raw"} and input data in a single matrix/data.frame) a vector of positive integers specifying the number of sampling units in each assemblage. If assemblage names are not specified (i.e., \code{names(nT) = NULL}), then assemblages are automatically named as "Assemblage1", "Assemblage2",..., etc. 
 #' @return a matrix of estimated sample completeness with order q: 
 #'         \item{Order.q}{the diversity order of q.}
 #'         \item{Estimate.SC}{the estimated (or observed) sample completeness of order q.}
@@ -597,12 +597,11 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 
 #' Evenness main function
 #'
-#' \code{Evenness} Estimation (Observed) of Evenness with order q
+#' \code{Evenness} Estimation (or Observed) of Evenness with order q
 #'
 #' R scipts "Evenness" for Chao and Ricotta (2019) Ecology paper.
-#' This R code is for computing Figures 2, 3 and 4 of Chao and Ricotta (2019) paper.
-#' installed and loaded before running the scripts.
-
+#' This R code is for computing Figures 2 of Chao and Ricotta (2019) paper.
+#' 
 #' @param data (a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
 #' (b) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
 #' @param q a numerical vector specifying the diversity orders. Default is \code{(0, 0.2, 0.4,...,2)}.
@@ -610,9 +609,9 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' @param method a binary calculation method with \code{"Estimated"} or \code{"Observed"}.\cr
 #' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is \code{50}.
 #' @param conf a positive number < \code{1} specifying the level of confidence interval. Default is \code{0.95}.
-#' @param nT (required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "assemblage1", "assemblage2",..., etc. 
+#' @param nT (required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "Assemblage1", "Assemblage2",..., etc. 
 #' @param E.class an integer vector between 1 to 5
-#' @param SC (required only when method = "Estimated") a standardized coverage for calculating estimated evenness. If \code{NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (Cmax).
+#' @param SC (required only when method = "Estimated") a standardized coverage for calculating estimated evenness. If \code{SC = NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (Cmax).
 #' @return A list of several tables containing estimated (or observed) evenness with order q.\cr
 #'         Each tables represents a class of evenness.
 #'         \item{Order.q}{the diversity order of q.}

@@ -12,7 +12,7 @@ Epigeal spiders were sampled over three years with four pitfall traps in each pl
 }
 \usage{data("Data_spider")}
 \format{
-  \code{Woody_plants} is a species-by-assemblages data.frame with 85 species on the following 2 sites.
+  \code{Woody_plants} is a species-by-assemblages data.frame with 85 species on the following 2 sites. \cr
   $ Open  : int  350 325 237 102 91 72 68 61 53 50 ... \cr
   $ Closed: int  10 55 502 1 3 4 171 140 180 24 ... \cr
 }
