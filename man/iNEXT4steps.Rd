@@ -32,7 +32,14 @@ iNEXT4steps(
 }
 \value{
 a list of three of objects: \cr\cr
-\code{$summary} four tables for individual summary of 4 steps. \cr\cr
+\code{$summary} four tables for individual summary of 4 steps:
+\item{Assemblage}{the assemblage names.}
+\item{qTD}{'Species richness' represents the diversity of order q=0; 'Shannon diversity' represents the diversity of order q=1, 'Simpson diversity' represents the diversity of order q=2.}
+\item{TD_obs}{the empirical diversity value of order q.}
+\item{TD_asy}{the estimated asymptotic diversity value of order q.}
+\item{s.e.}{the bootstrap standard error of the estimated asymptotic diversity of order q.}
+\item{qTD.LCL, qTD.UCL}{the bootstrap lower and upper confidence limits for the estimated asymptotic diversity of order q at the specified level in the setting (with a default value of 0.95).}
+\item{Pielou J'}{a widely used evenness measure and it is expressed as J' = H/log(S) where H denotes Shannon entropy.} \cr\cr
 \code{$figure} six figures (five figures of each analysis process and an overall figure). \cr\cr
 \code{$details} (only when \code{details = TRUE}). The numerical output for plotting \code{figure}. \cr\cr
 }
