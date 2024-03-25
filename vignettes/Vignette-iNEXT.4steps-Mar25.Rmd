@@ -55,7 +55,7 @@ Chao and Ricotta (2019) developed five classes of evenness measures parameterize
 
 - ** NOTE 1 **: Sufficient data are required to perform the 4-step analysis. If there are only a few species in users' data, it is likely that data are too sparse to use `iNEXT.4steps.` 
 
-- ** NOTE 2 **: The analyses in STEP 2 and STEP 3 are mainly based on package `iNEXT` available from [CRAN]. Thus, `iNEXT.4steps` expands `iNEXT` to include the estimation of sample completeness and evenness. 
+- ** NOTE 2 **: The analyses in STEP 2 and STEP 3 are mainly based on package `iNEXT` available from CRAN. Thus, `iNEXT.4steps` expands `iNEXT` to include the estimation of sample completeness and evenness. 
 
 - ** NOTE 3 **: As with `iNEXT`, `iNEXT.4steps` only deals with taxonomic/species diversity. Researchers who are interested in phylogenetic diversity and functional diversity should use package `iNEXT.3D` available from CRAN and see the relevant paper (Chao et al. 2021) for methodology. 
 
@@ -75,7 +75,7 @@ If you publish your work based on results from iNEXT.4steps package, you should 
 
 
 ## HOW TO RUN INEXT.4STEPS:
-The `iNEXT.4steps` package can be downloaded from [CRAN] or Anne Chao's [iNEXT.4steps_github](https://github.com/AnneChao/iNEXT.4steps). For a first-time installation, some additional packages must be installed and loaded; see package manual.
+The `iNEXT.4steps` package can be downloaded from CRAN or Anne Chao's [iNEXT.4steps_github](https://github.com/AnneChao/iNEXT.4steps). For a first-time installation, some additional packages must be installed and loaded; see package manual.
 
 
 ```{r eval=FALSE}
@@ -196,7 +196,7 @@ The output of `iNEXT4steps` will have three parts (if `details = TRUE`): `$summa
 
 ## <span style="color:blue;">4 STEPS VIA EXAMPLES</span>
 
-`datatype = "abundance Data"` is used for a random sampling scheme. If the species has aggregation effect, such as trees or plants, please use `datatype = "incidence_raw"`. First, we use data `Data_spider` to compute taxonomic diversity.
+`datatype = "abundance"` is used for a random sampling scheme. If the species has aggregation effect, such as trees or plants, please use `datatype = "incidence_raw"`. First, we use data `Data_spider` to compute taxonomic diversity.
 
 ### EXAMPLE 1: 4 steps for abundance data 
 
