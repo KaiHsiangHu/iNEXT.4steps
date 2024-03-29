@@ -3,49 +3,49 @@
 \name{ggEvenness}
 \alias{ggEvenness}
 \title{ggplot for Evenness
-\code{ggEvenness} is a \code{ggplot2} extension for \code{Evenness} Object to plot evenness with order q.\cr\cr}
+\code{ggEvenness} is a \code{ggplot2} extension for \code{Evenness} object to plot evenness with order q.}
 \usage{
 ggEvenness(output)
 }
 \arguments{
-\item{output}{the output of the function \code{Evenness}.\cr}
+\item{output}{the output of the function \code{Evenness}.}
 }
 \value{
-a figure of estimated (or observed) evenness with order q.\cr
+a figure depicting the estimated (or observed) evenness with respect to order q.
 }
 \description{
 ggplot for Evenness
-\code{ggEvenness} is a \code{ggplot2} extension for \code{Evenness} Object to plot evenness with order q.\cr\cr
+\code{ggEvenness} is a \code{ggplot2} extension for \code{Evenness} object to plot evenness with order q.
 }
 \examples{
-## Type (1) example for abundance based data
-# Example 1. observed evenness for abundance data
+## Evenness profiles for abundance data
+# The observed evenness profile for abundance data
 data(Data_spider)
-output1 <- Evenness(data = Data_spider, datatype = "abundance", 
+Even_out1_obs <- Evenness(data = Data_spider, datatype = "abundance", 
                     method = "Observed", E.class = 1:5)
-ggEvenness(output1)
+ggEvenness(Even_out1_obs)
 
 \donttest{
-# Example 2. estimated evenness for abundance data with default SC = Cmax
+# The estimated evenness profile for abundance data with default SC = 0.993
 data(Data_spider)
-output2 <- Evenness(data = Data_spider, datatype = "abundance", 
-                    method = "Estimated", SC = NULL, E.class = 1:5)
-ggEvenness(output2)
+Even_out1_est <- Evenness(data = Data_spider, datatype = "abundance", 
+                          method = "Estimated", SC = 0.993, E.class = 1:5)
+ggEvenness(Even_out1_est)
 }
 
-## Type (2) example for incidence based data
-# Example 3. observed evenness for incidence data
+## Evenness profiles for incidence raw data
+# The observed evenness profile for incidence data
 data(Data_woody_plant)
-output3 <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
+Even_out2_obs <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
                     method = "Observed", E.class = 1:5)
-ggEvenness(output3)
+ggEvenness(Even_out2_obs)
 
 \donttest{
-# Example 4. estimated evenness for incidence data with default SC = Cmax
+# The estimated evenness profile for incidence data with default SC = 0.992
 data(Data_woody_plant)
-output4 <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
-                    method = "Estimated", SC = NULL, E.class = 1:5)
-ggEvenness(output4)
+Even_out2_est <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
+                          method = "Estimated", SC = 0.992, E.class = 1:5)
+ggEvenness(Even_out2_est)
 }
 
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/MainFun.R
 \name{iNEXT4steps}
 \alias{iNEXT4steps}
-\title{iNEXT 4 steps}
+\title{Main function for complete 4-step analysis}
 \usage{
 iNEXT4steps(
   data,
@@ -18,7 +18,7 @@ iNEXT4steps(
 \item{data}{(a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
 (b) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input.}
 
-\item{q}{a numerical vector specifying the diversity orders for q-profile output. Default is \code{seq(0, 2, by = 0.2)}.}
+\item{q}{a numerical vector specifying the orders. Default is \code{seq(0, 2, by = 0.2)}.}
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).}
 
@@ -28,45 +28,37 @@ iNEXT4steps(
 
 \item{nT}{(required only when \code{datatype = "incidence_raw"} and input data in a single matrix/data.frame) a vector of positive integers specifying the number of sampling units in each assemblage. If assemblage names are not specified (i.e., \code{names(nT) = NULL}), then assemblages are automatically named as "Assemblage1", "Assemblage2",..., etc.}
 
-\item{details}{a logical variable to decide whether print out the detailed values for each steps or not. Default is \code{FALSE}.}
+\item{details}{a logical variable to decide whether output the detailed values for each step. Default is \code{FALSE}.}
 }
 \value{
 a list of three of objects: \cr\cr
 \code{$summary} four tables for individual summary of 4 steps:
 \item{Assemblage}{the assemblage names.}
-\item{qTD}{'Species richness' represents the diversity of order q=0; 'Shannon diversity' represents the diversity of order q=1, 'Simpson diversity' represents the diversity of order q=2.}
-\item{TD_obs}{the empirical diversity value of order q.}
+\item{qTD}{'Species richness' represents the taxonomic diversity of order q=0; 'Shannon diversity' represents the taxonomic diversity of order q=1, 'Simpson diversity' represents the taxonomic diversity of order q=2.}
+\item{TD_obs}{the observed taxonomic diversity value of order q.}
 \item{TD_asy}{the estimated asymptotic diversity value of order q.}
 \item{s.e.}{the bootstrap standard error of the estimated asymptotic diversity of order q.}
 \item{qTD.LCL, qTD.UCL}{the bootstrap lower and upper confidence limits for the estimated asymptotic diversity of order q at the specified level in the setting (with a default value of 0.95).}
 \item{Pielou J'}{a widely used evenness measure and it is expressed as J' = H/log(S) where H denotes Shannon entropy.} \cr\cr
-\code{$figure} six figures (five figures of each analysis process and an overall figure). \cr\cr
-\code{$details} (only when \code{details = TRUE}). The numerical output for plotting \code{figure}. \cr\cr
+\code{$figure} six figures including five individual figures (for STEPS 1, 2a, 2b, 3 and 4 respectively) and a complete set of five plots. \cr\cr
+\code{$details} (only when \code{details = TRUE}). The numerical output for plotting all \code{$figure}. \cr\cr
 }
 \description{
-\code{iNEXT4steps}:\cr
-A complete (random sampling) biological analysis combined with four parts:\cr
-Step 1. Sample completeness profiles\cr
-Step 2. Observed diversity values and asymptotic estimates\cr
-Step 3. Non-asymptotic coverage-based rarefaction and extrapolation\cr
-Step 4. Evenness among species abundances\cr
+\code{iNEXT4steps} computes all statistics in the complete 4-step analysis and visualizes the output. It computes sample completeness, observed and asymptotic diversity, size-based and coverage-based standardized diversity, and evenness.
 }
 \examples{
 \donttest{
-## Taxonomic diversity for abundance data
+## Complete 4-step analysis for abundance data
 data(Data_spider)
-output1 <- iNEXT4steps(data = Data_spider, datatype = "abundance")
-output1
+Four_Steps_out1 <- iNEXT4steps(data = Data_spider, datatype = "abundance")
+Four_Steps_out1
 
 
-## Taxonomic diversity for incidence data
+## Complete 4-step analysis for incidence data
 data(Data_woody_plant)
-output2 <- iNEXT4steps(data = Data_woody_plant, datatype = "incidence_raw")
-output2
+Four_Steps_out2 <- iNEXT4steps(data = Data_woody_plant, datatype = "incidence_raw")
+Four_Steps_out2
 }
 
 
-}
-\references{
-Chao, A., Y. Kubota, D. Zeleny, C.-H. Chiu, C.-F. Li, B. Kusumoto, M. Yasuhara, S. Thorn, C.-L. Wei, M. J. Costello, and R. K. Colwell (2020). Quantifying sample completeness and comparing diversities among assemblages. Ecological Research, 35, 292-314.
 }

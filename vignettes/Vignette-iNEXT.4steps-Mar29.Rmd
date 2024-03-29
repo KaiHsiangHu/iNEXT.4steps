@@ -27,46 +27,48 @@ data("Data_woody_plant")
 </font>
 
 
-`iNEXT.4steps` (iNterpolation and EXTrapolation for four steps of biodiversity) expands `iNEXT` (Chao et al. 2014)  to include the estimation of sample completeness and evenness under a unified framework of Hill numbers. `iNEXT.4steps` links sample completeness, diversity estimation, interpolation and extrapolation (`iNEXT`), and evenness in a fully integrated approach. The pertinent background for the four-step methodology is provided in Chao et al. (2020). The four-step procedures are described in the following:
+`iNEXT.4steps` (Four-Step Biodiversity Analysis based on iNEXT) expands `iNEXT` (Chao et al. 2014)  to include the estimation of sample completeness and evenness under a unified framework of Hill numbers. `iNEXT.4steps` links sample completeness, diversity estimation, interpolation and extrapolation (`iNEXT`), and evenness in a fully integrated approach. The pertinent background for the four-step methodology is provided in Chao et al. (2020). The four-step procedures are described in the following:
 
 - **Step 1: Assessment of sample completeness profile**
 
-Before performing biodiversity analysis, it is important to first quantify the sample completeness of a biological survey. Chao et al. (2020) generalized the conventional sample completeness to a class of measures parametrized by an order $q \geq 0$. When $q = 0$, sample completeness reduces to the conventional measure of completeness, i.e., the ratio of the observed species richness to the true richness (observed plus undetected). When $q = 1$, the measure reduces to the sample coverage (the proportion of the total number of individuals in the entire assemblage that belong to detected species), a concept original developed by Alan Turing in his cryptographic analysis during WWII.  When $q = 2$, it represents a generalized sample coverage with each species being proportionally weighted by its squared species abundance (i.e., each individual being proportionally weighted by its species abundance); this measure thus is disproportionally sensitive to highly abundant species. For a general order $q \geq 0$ (not necessarily to be an integer) , the sample completeness of order q quantifies the proportion of the assemblage's individuals belonging to detected species, with each individual being proportionally weighted by the (q-1)th power of its abundance. Sample completeness profile depicts its estimate with respect to order $q \geq 0$; this profile fully characterizes the sample completeness of a biological survey. 
+Before performing biodiversity analysis, it is important to first quantify the sample completeness of a biological survey. Chao et al. (2020) generalized the conventional sample completeness to a class of measures parametrized by an order q ≥ 0. When q = 0, sample completeness reduces to the conventional measure of completeness, i.e., the ratio of the observed species richness to the true richness (observed plus undetected). When q = 1, the measure reduces to the sample coverage (the proportion of the total number of individuals in the entire assemblage that belong to detected species), a concept original developed by Alan Turing in his cryptographic analysis during WWII.  When q = 2, it represents a generalized sample coverage with each species being proportionally weighted by its squared species abundance (i.e., each individual being proportionally weighted by its species abundance); this measure thus is disproportionally sensitive to highly abundant species. For a general order q ≥ 0 (not necessarily to be an integer) , the sample completeness of order q quantifies the proportion of the assemblage's individuals belonging to detected species, with each individual being proportionally weighted by the (q-1)th power of its abundance. Sample completeness profile depicts its estimate with respect to order q ≥ 0; this profile fully characterizes the sample completeness of a biological survey. 
 
-`iNEXT.4steps` features the estimated profile for all orders of $q \geq 0$ based on the methodology developed in Chao et al. (2020). All estimates are theoretically between 0 and 1. If the estimated sample completeness profile is a horizontal line at the level of unity for all orders of $q \geq 0$, then the survey is complete, implying there is no undetected diversity. In most applications, the estimated profile increases with order q, revealing the existence of undetected diversity. The sample completeness estimate for $q = 0$ provides an upper bound for the proportion of observed species; its complement represents a lower bound for the proportion of undetected species. This interpretation is mainly because data typically do not contain sufficient information to accurately estimate species richness and only a lower bound of species richness can be well estimated. By contrast, for $q \geq 1$, when data are not sparse, the sample completeness value for $q \geq 1$ can be very accurately estimated measures. The values for $q \geq 2$ typically are very close to unity, signifying that almost all highly abundant species (for abundance data) or highly frequent species (for incidence data) had been detected in the reference sample. 
+`iNEXT.4steps` features the estimated profile for all orders of q ≥ 0 based on the methodology developed in Chao et al. (2020). All estimates are theoretically between 0 and 1. If the estimated sample completeness profile is a horizontal line at the level of unity for all orders of q ≥ 0, then the survey is complete, implying there is no undetected diversity. In most applications, the estimated profile increases with order q, revealing the existence of undetected diversity. The sample completeness estimate for q = 0 provides an upper bound for the proportion of observed species; its complement represents a lower bound for the proportion of undetected species. This interpretation is mainly because data typically do not contain sufficient information to accurately estimate species richness and only a lower bound of species richness can be well estimated. By contrast, for q ≥ 1, when data are not sparse, the sample completeness value for q ≥ 1 can be very accurately estimated measures. The values for q ≥ 2 typically are very close to unity, signifying that almost all highly abundant species (for abundance data) or highly frequent species (for incidence data) had been detected in the reference sample. 
 
 
-- **STEP 2. Examination of the size-based rarefaction and extrapolation sampling curves, and the asymptotic diversity profile for $0 \leq q \leq 2$.** 
+- **STEP 2. Examination of the size-based rarefaction and extrapolation sampling curves, and the asymptotic diversity profile for 0 ≤ q ≤ 2.** 
 
-- **(STEP 2a)**. For each dataset, first examine the pattern of the size-based rarefaction and extrapolation sampling curve up to double the reference sample size for $q = 0,1$ and $2$.  If the curve stays at a fixed level (this often occurs for the measures of $q = 1$ and $2$), then our asymptotic estimate presented in Step 2b can be used to accurately infer the true diversity of the entire assemblage. Otherwise, our asymptotic diversity estimate represents only a lower bound (this often occurs for the measures of $q = 0$). 
+- **(STEP 2a)**. For each dataset, first examine the pattern of the size-based rarefaction and extrapolation sampling curve up to double the reference sample size for q = 0, 1 and 2.  If the curve stays at a fixed level (this often occurs for the measures of q = 1 and 2), then our asymptotic estimate presented in Step 2b can be used to accurately infer the true diversity of the entire assemblage. Otherwise, our asymptotic diversity estimate represents only a lower bound (this often occurs for the measures of q = 0). 
 
 - **(STEP 2b)**. When the true diversity can be accurately inferred, the extent of undetected diversity within each dataset is obtained by comparing the estimated asymptotic diversity profile and empirical profile; the difference in diversity between any two assemblages can be evaluated and tested for significance.  
 
 
 - **STEP 3. Examination of non-asymptotic coverage-based rarefaction and extrapolation analysis for orders q = 0, 1 and 2.** 
 
-When sampling data do not contain sufficient information to accurately infer true diversity, fair comparisons of diversity across multiple assemblages should be made by standardizing the sample coverage (i.e., comparing diversity for a standardized fraction of an assemblage's individuals). This comparison can be done based on seamless integration of coverage-based rarefaction and extrapolation sampling curves up to a maximum coverage ($C_{max}$ = the minimum sample coverage among all samples extrapolated to double reference sizes). 
+When sampling data do not contain sufficient information to accurately infer true diversity, fair comparisons of diversity across multiple assemblages should be made by standardizing the sample coverage (i.e., comparing diversity for a standardized fraction of an assemblage's individuals). This comparison can be done based on seamless integration of coverage-based rarefaction and extrapolation sampling curves up to a maximum coverage (Cmax = the minimum sample coverage among all samples extrapolated to double reference sizes). 
 
 
 - **STEP 4. Assessment of evenness profiles**
 
-Chao and Ricotta (2019) developed five classes of evenness measures parameterized by an order $q \geq 0$, the same order that is used to index sample completeness. All classes of evenness measures are functions of diversity and species richness, and all are standardized to the range of [0, 1] to adjust for the effect of differing species richness. Evenness profile depicts evenness estimate with respect to order $q \geq 0$. Because true species richness typically cannot be accurately estimated, evenness profile typically can only be accurately measured when both diversity and richness are computed at a fixed level of sample coverage up to a maximum coverage $C_{max}$ defined in Step 3. `iNEXT.4steps` shows, by default, the relevant statistics and plot for only one class of evenness measure (based on the normalized slope of a diversity profile), but all the five classes are optionally featured.  
+Chao and Ricotta (2019) developed five classes of evenness measures parameterized by an order q ≥ 0, the same order that is used to index sample completeness. All classes of evenness measures are functions of diversity and species richness, and all are standardized to the range of [0, 1] to adjust for the effect of differing species richness. Evenness profile depicts evenness estimate with respect to order q ≥ 0. Because true species richness typically cannot be accurately estimated, evenness profile typically can only be accurately measured when both diversity and richness are computed at a fixed level of sample coverage up to a maximum coverage Cmax defined in Step 3. `iNEXT.4steps` shows, by default, the relevant statistics and plot for only one class of evenness measure (based on the normalized slope of a diversity profile), but all the five classes are optionally featured.  
 
 
-- ** NOTE 1 **: Sufficient data are required to perform the 4-step analysis. If there are only a few species in users' data, it is likely that data are too sparse to use `iNEXT.4steps.` 
+<span style="color:blue;">NOTE 1</span>: Sufficient data are required to perform the 4-step analysis. If there are only a few species in users' data, it is likely that data are too sparse to use `iNEXT.4steps.` 
 
-- ** NOTE 2 **: The analyses in STEP 2 and STEP 3 are mainly based on package `iNEXT` available from CRAN. Thus, `iNEXT.4steps` expands `iNEXT` to include the estimation of sample completeness and evenness. 
+<span style="color:blue;">NOTE 2</span>: The analyses in STEP 2 and STEP 3 are mainly based on package `iNEXT` available from CRAN. Thus, `iNEXT.4steps` expands `iNEXT` to include the estimation of sample completeness and evenness. 
 
-- ** NOTE 3 **: As with `iNEXT`, `iNEXT.4steps` only deals with taxonomic/species diversity. Researchers who are interested in phylogenetic diversity and functional diversity should use package `iNEXT.3D` available from CRAN and see the relevant paper (Chao et al. 2021) for methodology. 
+<span style="color:blue;">NOTE 3</span>: As with `iNEXT`, `iNEXT.4steps` only deals with taxonomic/species diversity. Researchers who are interested in phylogenetic diversity and functional diversity should use package `iNEXT.3D` available from CRAN and see the relevant paper (Chao et al. 2021) for methodology. 
 
 
-In addition, `iNEXT.4steps` also provides four functions for users to compute and visualize sample completeness curves and evenness curves: `Completeness` and `Evenness` for computation, and  `ggCompleteness` and `ggEvenness` for visualization. 
+`iNEXT.4steps` also provides four functions for users to compute and visualize sample completeness curves and evenness curves: `Completeness` and `Evenness` for computation, and  `ggCompleteness` and `ggEvenness` for visualization. 
 
 
 ## How to cite
 If you publish your work based on results from iNEXT.4steps package, you should make references to the following methodology paper and the package:
 
 - Chao, A., Y. Kubota, D. Zeleny, C.-H. Chiu, C.-F. Li, B. Kusumoto, M. Yasuhara, S. Thorn, C.-L. Wei, M. J. Costello, and R. K. Colwell (2020). Quantifying sample completeness and comparing diversities among assemblages. Ecological Research, 35, 292-314.
+
+- Chao, A. and Hu, K.-H. (2024). The iNEXT.4steps package: Four-Step Biodiversity Analysis based on iNEXT. R package available from CRAN.
 
 
 ## SOFTWARE NEEDED TO RUN INEXT IN R
@@ -91,18 +93,18 @@ install_github('AnneChao/iNEXT.4steps')
 library(iNEXT.4steps)
 ```
 
-An online version of iNEXT.4steps (https://chao.shinyapps.io/iNEXT_4steps/) is also available for users without R background.
+An online version of iNEXT.4steps (https://chao.shinyapps.io/iNEXT_4steps/) is also available for users without an R background.
 
 
 ## <span style="color:red;">DATA INPUT FORMAT</span>
 
 ### Species abundance/incidence data format
 
-For `iNEXT.4steps` package, pertinent information on species identity (or any unique identification code) and assemblage affiliation is suggested to be included in the input data for running `iNEXT.4steps`, although such information is not taken into account in inferring and comparing taxonomic/species diversity. Two types of species abundance/incidence data are supported:
+For `iNEXT.4steps` package, pertinent information on species identity (or any unique identification code) is suggested to be included in the input data for running `iNEXT.4steps`, although such information is not taken into account in inferring and comparing taxonomic/species diversity. Two types of species taxonomic data are supported:
 
 1. Individual-based abundance data (`datatype = "abundance"`): When there are multiple assemblages, in addition to the assemblage/site names (as column names) and the species names (as row names), species abundance data (reference sample) can be input as a species (in rows) by assemblage (in columns) matrix/data.frame or a list of species abundance vectors. In the special case that there is only one assemblage, all data should be read in one column.
 
-2. Sampling-unit-based incidence data: Incidence-raw data (`datatype = "incidence_raw"`): for each assemblage, input data for a reference sample consist of a species-by-sampling-unit matrix, in addition to the sampling-unit names (as column names) and the species names (as row names). When there are N assemblages, input data consist of N lists of matrices, and each matrix is a species-by-sampling-unit matrix. Each element in the incidence raw matrix is 1 for a detection, and 0 for a non-detection. Input a matrix which combines data for all assemblages is allowed, but the argument `nT` in the functions of `iNEXT.4steps` must be specified so that the number of sampling units in each assemblage is specified.
+2. Sampling-unit-based incidence data, i.e. Incidence-raw data (`datatype = "incidence_raw"`): for each assemblage, input data for a reference sample consist of a species-by-sampling-unit matrix, in addition to the sampling-unit names (as column names) and the species names (as row names). When there are N assemblages, input data consist of N lists of matrices, and each matrix is a species-by-sampling-unit matrix. Each element in the incidence raw matrix is 1 for a detection, and 0 for a non-detection. Input a matrix which combines data for all assemblages is allowed, but the argument `nT` in the main functions of `iNEXT.4steps` to specify so that the number of sampling units in each assemblage is specified.
 
 For example, the dataset `Data_spider` included in the `iNEXT.4steps` package consists of species sample abundances of two assemblages/sites: "Open" and "Closed". Run the following code to view the first 15 rows of the abundance data. 
 
@@ -164,7 +166,7 @@ The arguments of this function are briefly described below, and will explain det
 </tr>
 <tr class="even">
 <td align="center"><code>q</code></td>
-<td align="left">a numerical vector specifying the diversity orders for q-profile output. Default is <code>seq(0, 2, by = 0.2)</code>.</td>
+<td align="left">a numerical vector specifying the orders. Default is <code>seq(0, 2, by = 0.2)</code>.</td>
 </tr>
 <tr class="odd">
 <td align="center"><code>datatype</code></td>
@@ -184,7 +186,7 @@ The arguments of this function are briefly described below, and will explain det
 </tr>
 <tr class="odd">
 <td align="center"><code>details</code></td>
-<td align="left">a logical variable to decide whether do you want to print out the detailed value for each plots, default is `FALSE`.</td>
+<td align="left">a logical variable to decide whether output the detailed values for each step. Default is `FALSE`.</td>
 </tr>
 
 </tbody>
@@ -194,41 +196,40 @@ The arguments of this function are briefly described below, and will explain det
 The output of `iNEXT4steps` will have three parts (if `details = TRUE`): `$summary`, `$figure`, and `$details`. It may take some time to compute when data size is large or `nboot` is large.
 
 
-## <span style="color:blue;">4 STEPS VIA EXAMPLES</span>
+## <span style="color:blue;">iNEXT 4 STEPS VIA EXAMPLES</span>
 
-`datatype = "abundance"` is used for a random sampling scheme. If the species has aggregation effect, such as trees or plants, please use `datatype = "incidence_raw"`. First, we use data `Data_spider` to compute taxonomic diversity.
+First, we use data `Data_spider` to compute taxonomic diversity.
 
-### EXAMPLE 1: 4 steps for abundance data 
+### EXAMPLE 1: iNEXT 4 steps for abundance data 
 
 Datasets `Data_spider` were sampled in a mountain forest ecosystem in the Bavarian Forest National Park, Germany (Thorn et al. 2016, 2017).
-A total of 12 experimental plots were established in "closed forest" stands (6 plots) and "open forest" stands with naturally occurring gaps and edges (6 plots) to assess the effects of microclimate on communities of epigeal (ground-dwelling) spiders. Epigeal spiders were sampled over three years with four pitfall traps in each plot, yielding a total of 3171 individuals belonging to 85 species recorded in the pooled habitat. More details refer to data Source : A mountain forest ecosystem in the Bavarian Forest National Park, Germany (Thorn et al. 2016, 2017).
+A total of 12 experimental plots were established in "closed forest" stands (6 plots) and "open forest" stands with naturally occurring gaps and edges (6 plots) to assess the effects of microclimate on communities of epigeal (ground-dwelling) spiders. Epigeal spiders were sampled over three years with four pitfall traps in each plot, yielding a total of 3171 individuals belonging to 85 species recorded in the pooled habitat. More details refer to data Source: Thorn et al. 2016, 2017.
 
 Run the following code to get the output from iNEXT4steps. (Here only show the overall plot. The individual plot is omitted.)
 
 ```{r align="center",out.width="100%"}
 data(Data_spider)
-output1 <- iNEXT4steps(data = Data_spider, datatype = "abundance")
-output1$summary
-output1$figure[[6]]
+Four_Steps_out1 <- iNEXT4steps(data = Data_spider, datatype = "abundance")
+Four_Steps_out1$summary
+Four_Steps_out1$figure[[6]]
 ```
 
+`$summary`: four tables for individual summary of 4 steps. 
+
 * `Assemblage` = the assemblage names.
-* `qTD` = 'Species richness' represents the diversity of order q=0; 'Shannon diversity' represents the diversity of order q=1, 'Simpson diversity' represents the diversity of order q=2.
-* `TD_obs` = the empirical diversity value of order q.
+* `qTD` = 'Species richness' represents the taxonomic diversity of order q=0; 'Shannon diversity' represents the taxonomic diversity of order q=1, 'Simpson diversity' represents the taxonomic diversity of order q=2.
+* `TD_obs` = the observed taxonomic diversity value of order q.
 * `TD_asy` = the estimated asymptotic diversity value of order q.
 * `s.e.` = the bootstrap standard error of the estimated asymptotic diversity of order q.
-* `qTD.LCL`, `qTD.UCL` = the bootstrap lower and upper confidence limits for the estimated asymptotic diversity of order q at the specified level in the setting (with a default value of `0.95`).
+* `qTD.LCL`, `qTD.UCL` = the bootstrap lower and upper confidence limits for the estimated asymptotic diversity of order q at the specified level in the setting (with a default value of 0.95).
 * `Pielou J'` = a widely used evenness measure and it is expressed as J' = H/log(S) where H denotes Shannon entropy.
 
+`$figure`: six figures including five individual figures (for STEPS 1, 2a, 2b, 3 and 4 respectively) and a complete set of five plots.
 
-`$summary` lists all biological summaries according to Chao et al. (2020). There are four parts corresponding to each step in the paper. They analysis and explain biological data from different and superimposed side. User can easily compare difference between each assemblages. 
-
-`$figure` visualize the statistics by continuous curves. There are five individual figures and an overall figure in `$figure`. `iNEXT4stpes` provides a complete analysis process from figure (a) to figure (e). User can analyze the process of biodiversity through these figures. 
-
-`$details` contains four parts: `Sample completeness`, `iNEXT`, `Observed and asymptotic diversity`, `Evenness`. They contain the numerical values which are used to plot each figure in `$figure`. 
+`$details`: (only when `details = TRUE`). The numerical output for plotting all `$figure`. 
 
 
-### EXAMPLE 2: 4 steps for incidence data 
+### EXAMPLE 2: iNEXT 4 steps for incidence data 
 
 Incidence raw data is a species-by-incidence-sampling-units matrix/data.frame. We split a space into several quadrats and only record whether the species is detected or undetected in each quadrat. According to this sampling scheme, `incidence_raw` data can only contains value "0" (undetected) and "1" (detected) in matrix/data frame (species by assemblages). 
 
@@ -238,9 +239,9 @@ Run the following code to get the output from iNEXT4steps. (Here only show the o
 
 ```{r align="center", out.width="100%"}
 data(Data_woody_plant)
-output2 <- iNEXT4steps(data = Data_woody_plant, datatype = "incidence_raw")
-output2$summary
-output2$figure[[6]]
+Four_Steps_out2 <- iNEXT4steps(data = Data_woody_plant, datatype = "incidence_raw")
+Four_Steps_out2$summary
+Four_Steps_out2$figure[[6]]
 ```
 
 
@@ -249,7 +250,7 @@ output2$figure[[6]]
 `iNEXT.4steps` provides function `Completeness()` to compute estimated sample completeness with order q. The arguments is below: 
 
 ```{r eval=FALSE}
-Completeness(data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50, 
+Completeness(data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30, 
              conf = 0.95, nT = NULL)
 ```
 
@@ -282,7 +283,7 @@ Completeness(data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 50,
 </tr>
 <tr class="even">
 <td align="center"><code>nboot</code></td>
-<td align="left">a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 50.</td>
+<td align="left">a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is <code>30</code>.</td>
 </tr>
 <tr class="odd">
 <td align="center"><code>conf</code></td>
@@ -333,20 +334,20 @@ Use abundance data `Data_spider` to compute estimated sample completeness.
 
 ```{r}
 data(Data_spider)
-output1 <- Completeness(data = Data_spider, datatype = "abundance")
-output1
+SC_out1 <- Completeness(data = Data_spider, datatype = "abundance")
+SC_out1
 ```
 
-* `Order.q`: the diversity order of q.
-* `Estimate.SC`: the estimated (or observed) sample completeness of order q.
-* `s.e.`: standard error of sample completeness.
-* `SC.LCL`, `SC.UCL`: the bootstrap lower and upper confidence limits for the sample completeness of order q at the specified level (with a default value of `0.95`).
+* `Order.q`: the order of sample completeness.
+* `Estimate.SC`: the estimated sample completeness of order q.
+* `s.e.`: standard error of sample completeness estimate.
+* `SC.LCL`, `SC.UCL`: the bootstrap lower and upper confidence limits for the sample completeness of order q at the specified level (with a default value of 0.95).
 * `Assemblage`: the assemblage name.
 
 The following commands plot sample completeness curves, along with its confidence interval for q between 0 to 2.
 
 ```{r out.width="70%",fig.height=8}
-ggCompleteness(output1)
+ggCompleteness(SC_out1)
 ```
 
 
@@ -356,14 +357,14 @@ Use incidence frequency data `Data_woody_plant` to compute sample completeness.
 
 ```{r}
 data(Data_woody_plant)
-output2 <- Completeness(data = Data_woody_plant, datatype = "incidence_raw")
-output2
+SC_out2 <- Completeness(data = Data_woody_plant, datatype = "incidence_raw")
+SC_out2
 ```
 
 The following commands plot sample completeness curves, along with its confidence interval for q between 0 to 2.
 
 ```{r out.width="70%",fig.height=8}
-ggCompleteness(output2)
+ggCompleteness(SC_out2)
 ```
 
 
@@ -374,7 +375,7 @@ ggCompleteness(output2)
 
 ```{r eval=FALSE}
 Evenness(data, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
-         nboot = 50, conf = 0.95, nT = NULL, E.class = 1:5, SC = NULL)
+         nboot = 30, conf = 0.95, nT = NULL, E.class = 1:5, SC = NULL)
 ```
 
 <table style="width:100%;">
@@ -410,7 +411,7 @@ Evenness(data, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
 </tr>
 <tr class="odd">
 <td align="center"><code>nboot</code></td>
-<td align="left">a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is <code>50</code>.</td>
+<td align="left">a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is <code>30</code>.</td>
 </tr>
 <tr class="even">
 <td align="center"><code>conf</code></td>
@@ -422,7 +423,7 @@ Evenness(data, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
 </tr>
 <tr class="even">
 <td align="center"><code>E.class</code></td>
-<td align="left">an integer vector between 1 to 5.</td>
+<td align="left">an integer vector between 1 to 5 specifyng which class(es) of evenness measures are selected; default is 1:5 (select all five classes). </td>
 </tr>
 <tr class="odd">
 <td align="center"><code>SC</code></td>
@@ -465,118 +466,118 @@ Following are four simple examples for functions `Evenness` and `ggEvenness`.
 
 ### Observed evenness profiles for abundance data
 
-Use abundance data `Data_spider` to compute observed evenness. Here only show the first five rows output for each class of evenness.
+Use abundance data `Data_spider` to compute observed evenness. Here only show the first class of evenness.
 
 ```{r, eval=FALSE}
 data(Data_spider)
-output1 <- Evenness(data = Data_spider, datatype = "abundance", 
-                    method = "Observed", E.class = 1:5)
-output1
+Even_out1_obs <- Evenness(data = Data_spider, datatype = "abundance", 
+                          method = "Observed", E.class = 1:5)
+Even_out1_obs
 ```
 
 
 ```{r, echo=FALSE}
 data(Data_spider)
-output1 <- Evenness(data = Data_spider, datatype = "abundance", 
-                    method = "Observed", E.class = 1:5)
-lapply(output1, function(x) x[1:5,])
+Even_out1_obs <- Evenness(data = Data_spider, datatype = "abundance", 
+                          method = "Observed", E.class = 1:5)
+Even_out1_obs[1]
 ```
 
-* `Order.q`: the diversity order of q.
-* `Evenness`: the evenness of order q.
-* `s.e.`: standard error of evenness.
+* `Order.q`: the order of evenness.
+* `Evenness`: the computed evenness value of order q.
+* `s.e.`: standard error of evenness value.
 * `Even.LCL`, `Even.UCL`: the bootstrap lower and upper confidence limits for the evenness of order q at the specified level (with a default value of `0.95`).
 * `Assemblage`: the assemblage name.
 * `Method`: `"Estimated"` or `"Observed"`.
-* `SC`: the target standardized coverage value. (only when `method = "Estimated"`)
+* `SC`: the standardized coverage value under which evenness values are computed (only for `method = "Estimated"`)
 
 
 The following commands plot the evenness curves for five classes, along with its confidence interval for q between 0 to 2.
 
 ```{r out.width="100%",fig.height=8}
-ggEvenness(output1)
+ggEvenness(Even_out1_obs)
 ```
 
 
-### Estimated evenness profiles for abundance data with default SC = Cmax
+### Estimated evenness profiles for abundance data with default SC = 0.993
 
-Use abundance data `Data_spider` to compute estimated evenness with default `SC = NULL` (Cmax = 0.994). Here only show the first five rows output for each class of evenness.
+Use abundance data `Data_spider` to compute estimated evenness with `SC = 0.993`. Here only show the first class of evenness.
 
 ```{r, eval=FALSE}
 data(Data_spider)
-output2 <- Evenness(data = Data_spider, datatype = "abundance", 
-                    method = "Estimated", SC = NULL, E.class = 1:5)
-output2
+Even_out1_est <- Evenness(data = Data_spider, datatype = "abundance", 
+                          method = "Estimated", SC = 0.993, E.class = 1:5)
+Even_out1_est
 ```
 
 
 ```{r, echo=FALSE}
 data(Data_spider)
-output2 <- Evenness(data = Data_spider, datatype = "abundance", 
-                    method = "Estimated", SC = NULL, E.class = 1:5)
-lapply(output2, function(x) x[1:5,])
+Even_out1_est <- Evenness(data = Data_spider, datatype = "abundance", 
+                          method = "Estimated", SC = 0.993, E.class = 1:5)
+Even_out1_est[1]
 ```
 
 
 The following commands plot the evenness curves for five classes, along with its confidence interval for q between 0 to 2.
 
 ```{r out.width="100%",fig.height=8}
-ggEvenness(output2)
+ggEvenness(Even_out1_est)
 ```
 
 
 
 ### Observed evenness profiles for incidence data 
 
-Use incidence frequency data `Data_woody_plant` to compute observed evenness. Here only show the first five rows output for each class of evenness.
+Use incidence frequency data `Data_woody_plant` to compute observed evenness. Here only show the first class of evenness.
 
 ```{r, eval=FALSE}
 data(Data_woody_plant)
-output3 <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
-                    method = "Observed", E.class = 1:5)
-output3
+Even_out2_obs <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
+                          method = "Observed", E.class = 1:5)
+Even_out2_obs
 ```
 
 
 ```{r, echo=FALSE}
 data(Data_spider)
-output3 <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
-                    method = "Observed", E.class = 1:5)
-lapply(output3, function(x) x[1:5,])
+Even_out2_obs <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
+                          method = "Observed", E.class = 1:5)
+Even_out2_obs[1]
 ```
 
 
 The following commands plot the evenness curves for five classes, along with its confidence interval for q between 0 to 2.
 
 ```{r out.width="100%",fig.height=8}
-ggEvenness(output3)
+ggEvenness(Even_out2_obs)
 ```
 
 
-### Estimated evenness profiles for incidence data with default SC = Cmax
+### Estimated evenness profiles for incidence data with default SC = 0.992
 
-Use incidence frequency data `Data_woody_plant` to compute estimated evenness with `SC = NULL` (Cmax = 0.993). Here only show the first five rows output for each class of evenness.
+Use incidence frequency data `Data_woody_plant` to compute estimated evenness with `SC = 0.992`. Here only show the first class of evenness.
 
 ```{r, eval=FALSE}
 data(Data_woody_plant)
-output4 <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
-                    method = "Estimated", SC = NULL, E.class = 1:5)
-output4
+Even_out2_est <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
+                          method = "Estimated", SC = 0.992, E.class = 1:5)
+Even_out2_est
 ```
 
 
 ```{r, echo=FALSE}
 data(Data_spider)
-output4 <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
-                    method = "Estimated", SC = NULL, E.class = 1:5)
-lapply(output4, function(x) x[1:5,])
+Even_out2_est <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
+                          method = "Estimated", SC = 0.992, E.class = 1:5)
+Even_out2_est[1]
 ```
 
 
 The following commands plot the evenness curves for five classes, along with its confidence interval for q between 0 to 2.
 
 ```{r out.width="100%",fig.height=8}
-ggEvenness(output4)
+ggEvenness(Even_out2_est)
 ```
 
 
@@ -603,6 +604,6 @@ estimation in species biodiversity studies. Ecological Monographs 84, 45-67.
 
 - Thorn, S., Bassler, C., Svoboda, M., & Müller, J. (2017). Effects of natural disturbances and salvage logging on biodiversity - lessons from the bohemian Forest. Forest Ecology and Management, 388, 113–119. https://doi.org/10.1016/j.foreco.2016.06.006
 
-- Thorn, S., BuBler, H., Fritze, M. -A., Goeder, P., Muller, J., WeiB, I., & Seibold, S. (2016). Canopy closure determines arthropod assemblages in microhabitats created by windstorms and salvage logging. Forest Ecology and Managemen
+- Thorn, S., Buβler, H., Fritze, M. -A., Goeder, P., Muller, J., WeiB, I., & Seibold, S. (2016). Canopy closure determines arthropod assemblages in microhabitats created by windstorms and salvage logging. Forest Ecology and Managemen
 
 

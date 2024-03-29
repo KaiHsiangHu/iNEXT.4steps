@@ -1,6 +1,6 @@
 Package: iNEXT.4steps
 Type: Package
-Title: Four Steps of Interpolation and Extrapolation Analysis
+Title: Four-Step Biodiversity Analysis based on iNEXT
 Version: 1.0.0
 Author: Anne Chao [aut, cre], KaiHsiang Hu [ctb]
 Maintainer: Anne Chao <chao@stat.nthu.edu.tw>
@@ -14,16 +14,18 @@ Authors@R:
            role = "ctb",
            email = "river19951224@gmail.com"))
 URL: https://sites.google.com/view/chao-lab-website/software/inext-4steps/
-Description: iNEXT.4steps provides a simple function to create a complete analysis process
-            with following four parts:
-            Step1: Sample completeness profiles.
-            Step2: Observed diversity values and asymptotic estimates.
-            Step3: Non-asymptotic coverage-based rarefaction and extrapolation analysis.
-            Step4: Evenness among species abundances.
-            The output contains a summary table and figures. In addition, iNEXT.4stpes also 
-            provides a function to compute estimated sample completeness and a function to compute
-            observed (or estimated) evenness.
-            See Chao et al. (2020) <doi:10.1111/1440-1703.12102> for more details.
+Description: This package expands iNEXT to include the estimation of sample completeness and evenness.
+          The package provides simple functions to perform the following four-step biodiversity analysis:
+          STEP 1: Assessment of sample completeness profiles.
+          STEP 2a: Examination of size-based rarefaction and extrapolation sampling curves to 
+          determine whether the asymptotic diversity can be accurately estimated. 
+          STEP 2b: Comparison of the observed and the estimated asympototic diversity profiles. 
+          STEP 3: Estimation of non-asymptotic coverage-based rarefaction and extrapolation sampling 
+          curves.
+          STEP 4: Assessment of evenness profiles. 
+          The analyses in STEPs 2a, 2b and STEP 3 are mainly based on the previous iNEXT package. 
+          Refer to the iNEXT package for detials. This package is mainly focus on the computation 
+          for STEPs 1 and 4. See Chao et al. (2020) <doi:10.1111/1440-1703.12102> for more details.
 License: GPL (>= 3)
 Depends: R (>= 4.0)
 Imports: ggplot2,

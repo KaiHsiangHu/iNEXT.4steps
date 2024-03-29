@@ -2,7 +2,7 @@
 % Please edit documentation in R/MainFun.R
 \name{ggCompleteness}
 \alias{ggCompleteness}
-\title{ggplot for Sample Completeness}
+\title{ggplot for depicting sample completeness profiles}
 \usage{
 ggCompleteness(output)
 }
@@ -10,25 +10,23 @@ ggCompleteness(output)
 \item{output}{the output of the function \code{Completeness}.}
 }
 \value{
-a figure of estimated sample completeness with order q.
+a figure depicting the estimated sample completeness with respect to the order q.
 }
 \description{
-\code{ggCompleteness} is a \code{ggplot2} extension for \code{Completeness} Object to plot sample completeness with order q.\cr\cr
+\code{ggCompleteness} is a \code{ggplot2} extension for \code{Completeness} object to plot sample completeness with order q between 0 and 2.
 }
 \examples{
-## Type (1) example for abundance-based data
-## Example 1
 \donttest{
+## Sample completeness profile for abundance data
 data(Data_spider)
-output1 <- Completeness(data = Data_spider, datatype = "abundance")
-ggCompleteness(output1)
+SC_out1 <- Completeness(data = Data_spider, datatype = "abundance")
+ggCompleteness(SC_out1)
 }
 
-## Type (2) example for incidence-based data
-## Example 2
+## Sample completeness profile for incidence raw data
 data(Data_woody_plant)
-output2 <- Completeness(data = Data_woody_plant, datatype = "incidence_raw")
-ggCompleteness(output2)
+SC_out2 <- Completeness(data = Data_woody_plant, datatype = "incidence_raw")
+ggCompleteness(SC_out2)
 
 
 }
