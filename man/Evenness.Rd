@@ -32,9 +32,9 @@ Evenness(
 
 \item{nT}{(required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "Assemblage1", "Assemblage2",..., etc.}
 
-\item{E.class}{an integer vector between 1 to 5 specifyng which class(es) of evenness measures are selected; default is 1:5 (select all five classes).}
+\item{E.class}{an integer vector between 1 to 5 specifying which class(es) of evenness measures are selected; default is 1:5 (select all five classes).}
 
-\item{SC}{(required only when method = "Estimated") a standardized coverage value for calculating estimated evenness. If \code{SC = NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (Cmax).}
+\item{SC}{(required only when \code{method = "Estimated"}) a standardized coverage value for calculating estimated evenness. If \code{SC = NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (Cmax).}
 }
 \value{
 A list of several tables containing estimated (or observed) evenness with order q.\cr

@@ -92,17 +92,21 @@ iNEXT4steps <- function(data, q = seq(0, 2, 0.2), datatype = "abundance",
                   "STEP 4. Evenness among species abundances of orders q = 1 and 2 at Cmax based on the normalized slope of a diversity profile")
   
   
-  if (length(unique((Even.table[[1]]$Assemblage)))>1) {
+  if (length(unique((Even.table[[1]]$Assemblage))) > 1) {
     iNEXT.table[[2]]$size_based$Assemblage = factor(iNEXT.table[[2]]$size_based$Assemblage)
+    
     level = levels(iNEXT.table[[2]]$size_based$Assemblage)
     
     SC.table$Assemblage = factor(SC.table$Assemblage, level)
+    
     qD.table$Assemblage = factor(qD.table$Assemblage, level)
+    
     Even.table[[1]]$Assemblage = factor(Even.table[[1]]$Assemblage, level)
   }
 
   ## 5 figures ##
   if (length(unique(SC.table$Assemblage)) <= 8) {
+    
     SC.plot <- ggCompleteness(SC.table) +
       labs(title = plot.names[1]) +
       theme(text = element_text(size = 12),
@@ -136,6 +140,7 @@ iNEXT4steps <- function(data, q = seq(0, 2, 0.2), datatype = "abundance",
             plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
 
     legend.p = get_legend(SC.plot + theme(legend.direction = "vertical"))
+    
     steps.plot = ggarrange(SC.plot       + guides(color = "none", fill = "none"),
                            size.RE.plot  + guides(color = "none", fill = "none", shape = "none"),
                            AO.plot       + guides(color = "none", fill = "none"),
@@ -162,9 +167,12 @@ iNEXT4steps <- function(data, q = seq(0, 2, 0.2), datatype = "abundance",
       Even.tableq012 <- Evenness(data, q = c(0,1,2), datatype = datatype, method = "Estimated", nboot = 0, nT = nT, E.class = 3)
       
       summary = list(summary.deal(SC.tableq012, 1),
+                     
                      iNEXT.table[[3]] %>%  
                        lapply(FUN = function(x) if(is.numeric(x)) round(x,2) else x) %>% data.frame,
+                     
                      summary.deal(estD, 3),
+                     
                      summary.deal(Even.tableq012, 4, estD)
                      )
     }
@@ -179,19 +187,24 @@ iNEXT4steps <- function(data, q = seq(0, 2, 0.2), datatype = "abundance",
     if (length(unique(SC.table$Assemblage)) <= 8) {
       
       ans <- list(summary = summary,
+                  
                   figure = list(SC.plot, size.RE.plot, AO.plot, cover.RE.plot, even.plot, steps.plot))
       
     } else { ans <- list(summary = summary) }
 
   } else if (details == TRUE) {
     
-    tab = list("Sample completeness" = SC.table, "iNEXT" = iNEXT.table[[2]],
-               "Observed and asymptotic diversity" = qD.table, "Evenness" = Even.table)
+    tab = list("Sample completeness" = SC.table, 
+               "iNEXT" = iNEXT.table[[2]],
+               "Observed and asymptotic diversity" = qD.table, 
+               "Evenness" = Even.table)
 
     if (length(unique(SC.table$Assemblage)) <= 8) {
       
       ans <- list(summary = summary,
+                  
                   figure = list(SC.plot, size.RE.plot, AO.plot, cover.RE.plot, even.plot, steps.plot),
+                  
                   details = tab)
       
     } else { ans <- list(summary = summary, details = tab)}
@@ -215,19 +228,24 @@ iNEXT4steps <- function(data, q = seq(0, 2, 0.2), datatype = "abundance",
 summary.deal <- function(table, step, Pielou = NULL) {
   
   if (step == 1) {
-    tmp = (table %>% filter(Order.q %in% c(0,1,2)))[, c("Order.q", "Estimate.SC", "Assemblage")]
+    
+    tmp = (table %>% filter(Order.q %in% c(0, 1, 2)))[, c("Order.q", "Estimate.SC", "Assemblage")]
+    
     out = dcast(tmp, Assemblage ~ Order.q, value.var = "Estimate.SC") %>% 
       lapply(FUN = function(x) if(is.numeric(x)) round(x,2)
                      else x) %>% data.frame()
-    colnames(out)[-1] = paste("q = ", c(0,1,2), sep="")
+    colnames(out)[-1] = paste("q = ", c(0, 1, 2), sep="")
   }
   
   if (step == 3){
+    
     tmp = table[,c(1, 2, 6)]
     C = round(unique(table$SC), 3)
+    
     out = dcast(tmp, Assemblage ~ Order.q, value.var = colnames(tmp)[3]) %>% 
       lapply(FUN = function(x) if(is.numeric(x)) round(x,2)
              else x) %>% data.frame()
+    
     colnames(out) = c(paste("Cmax = ", C, sep = ""),
                       paste("q = ", c(0, 1, 2), sep = ""))
   }
@@ -235,15 +253,16 @@ summary.deal <- function(table, step, Pielou = NULL) {
   if (step == 4){
     
     tmp = (table[[1]] %>%
-             filter(Order.q %in% c(0,1,2)))[, c("Order.q", "Evenness", "Assemblage")]
+             filter(Order.q %in% c(0, 1, 2)))[, c("Order.q", "Evenness", "Assemblage")]
     out = dcast(tmp, Assemblage ~ Order.q, value.var = "Evenness")
     
     C = round(unique(table$E3$SC), 3)
     D = (Pielou %>% filter(Order.q == 1))[,c("Assemblage", "qTD")]
     S = (Pielou %>% filter(Order.q == 0))[,c("Assemblage", "qTD")]
-    out[,2] = sapply(out$Assemblage, function(x) log(D[D$Assemblage == x,"qTD"]) / log(S[S$Assemblage == x,"qTD"]))
+    out[,2] = sapply(out$Assemblage, function(x) log(D[D$Assemblage == x, "qTD"]) / log(S[S$Assemblage == x, "qTD"]))
+    
     colnames(out) = c(paste("Cmax = ", C, sep = ""),
-                      "Pielou J'", paste("q = ", c(1,2), sep=""))
+                      "Pielou J'", paste("q = ", c(1, 2), sep=""))
     out[,-1] <- round(out[,-1],2)
   }
   
@@ -258,75 +277,103 @@ summary.deal <- function(table, step, Pielou = NULL) {
 # @param datatype a binary choose with 'abundance' or 'incidence_freq'
 # @return a vector of estimated sample completeness with order q
 
-sample_completeness = function(x, q, datatype = c("abundance","incidence_freq")){
-  if(datatype=="abundance"){
-    x = x[x>0]
+sample_completeness = function(x, q, datatype = c("abundance", "incidence_freq")){
+  
+  if(datatype == "abundance"){
+    x = x[x > 0]
     n = sum(x)
-    f1 = sum(x==1); f2 = sum(x==2)
-    A = ifelse(f2>0,2*f2/((n-1)*f1+2*f2),ifelse(f1>0,2/((n-1)*(f1-1)+2),1))
+    f1 = sum(x == 1); f2 = sum(x == 2)
+    A = ifelse(f2 > 0, 2 * f2 / ((n - 1) * f1 + 2 * f2), ifelse(f1 > 0, 2 / ((n - 1) * (f1 - 1) + 2),1))
     
     sc.abund = function(q){
-      if (q==0){
+      
+      if (q == 0){
+        
         S_obs = length(x)
-        f0_hat = ifelse(f2==0, ((n-1)/n)*(f1*(f1-1)/2), ((n-1)/n)*((f1^2)/(2*f2)))
-        c_hat = S_obs/(S_obs + f0_hat)
+        f0_hat = ifelse(f2 == 0, ((n - 1) / n) * (f1 * (f1 - 1) / 2), ((n - 1) / n) * ((f1^2) / (2 * f2)))
+        c_hat = S_obs / (S_obs + f0_hat)
         return(c_hat)
-      } else if (q==1){
-        c_hat = 1-(f1/n)*(1-A)
+        
+      } else if (q == 1){
+        
+        c_hat = 1 - (f1 / n) * (1 - A)
         return(c_hat)
-      } else if (q==2){
-        x = x[x>=2]
-        c_hat = 1-(f1/n)*((A*(1-A))/sum(x*(x-1)/(n*(n-1))))
+        
+      } else if (q == 2){
+        
+        x = x[x >= 2]
+        c_hat = 1 - (f1 / n) * ((A * (1 - A)) / sum(x * (x - 1) / (n * (n - 1))))
         return(c_hat)
+        
       } else {
+        
         r <- 0:(n-1)
         sort.data = sort(unique(x))
         tab = table(x)
-        term = sapply(sort.data,function(z){
-          k=0:(n-z)
-          sum(choose(k-q,k)*exp(lchoose(n-k-1,z-1)-lchoose(n,z)))
+        
+        term = sapply(sort.data, function(z){
+          k = 0:(n - z)
+          sum(choose(k - q, k) * exp(lchoose(n - k - 1, z - 1) - lchoose(n, z)))
         })
-        lambda_hat = sum(tab*term) + ifelse(f1==0|A==1, 0, f1/n*(1-A)^(1-n)*(A^(q-1)-sum(choose(q-1,r)*(A-1)^r)))
-        c_hat = 1-((f1/n)*(A^(q-1))*(1-A)/lambda_hat)
+        
+        lambda_hat = sum(tab * term) + ifelse(f1 == 0 | A == 1, 0, f1 / n * (1 - A)^(1 - n) * (A^(q - 1) - sum(choose(q - 1, r) * (A - 1)^r)))
+        c_hat = 1 - ((f1 / n) * (A^(q - 1)) * (1 - A) / lambda_hat)
         return(c_hat)
+        
       }
     }
-    est=sapply(q, sc.abund)
+    
+    est = sapply(q, sc.abund)
+    
   } else if (datatype == "incidence_freq") {
+    
     t = x[1]
     x = x[-1]; x = x[x>0]
     u = sum(x)
-    Q1 = sum(x==1); Q2 = sum(x==2)
-    B = ifelse(Q2>0,2*Q2/((t-1)*Q1+2*Q2), ifelse(Q1>0, 2/((t-1)*(Q1-1)+2), 1))
+    Q1 = sum(x == 1); Q2 = sum(x == 2)
+    B = ifelse(Q2 > 0, 2 * Q2 / ((t - 1) * Q1 + 2 * Q2), ifelse(Q1 > 0, 2 / ((t - 1) * (Q1 - 1) + 2), 1))
     
     sc.incid = function(q){
-      if (q==0){
+      
+      if (q == 0){
+        
         S_obs = length(x)
-        f0_hat = ifelse(Q2==0, ((t-1)/t)*(Q1*(Q1-1)/2), ((t-1)/t)*((Q1^2)/(2*Q2)))
-        c_hat = S_obs/(S_obs+f0_hat)
+        f0_hat = ifelse(Q2 == 0, ((t - 1) / t) * (Q1 * (Q1 - 1) / 2), ((t - 1) / t) * ((Q1^2) / (2 * Q2)))
+        c_hat = S_obs / (S_obs + f0_hat)
         return(c_hat)
-      } else if (q==1){
-        c_hat = 1-(Q1/u)*(1-B)
+        
+      } else if (q == 1){
+        
+        c_hat = 1 - (Q1 / u) * (1 - B)
         return(c_hat)
-      } else if (q==2){
-        x = x[x>=2]
-        c_hat = 1-(t-1)*Q1*((B*(1-B))/sum(x*(x-1)))
+        
+      } else if (q == 2){
+        
+        x = x[x >= 2]
+        c_hat = 1 - (t - 1) * Q1 * ((B * (1 - B)) / sum(x * (x - 1)))
         return(c_hat)
+        
       } else {
-        r <- 0:(t-1)
+        
+        r <- 0:(t - 1)
         sort.data = sort(unique(x))
         tab = table(x)
+        
         term = sapply(sort.data,function(z){
-          k=0:(t-z)
-          sum(choose(k-q,k)*exp(lchoose(t-k-1,z-1)-lchoose(t,z)))
+          k = 0:(t - z)
+          sum(choose(k - q, k) * exp(lchoose(t - k - 1, z - 1) - lchoose(t, z)))
         })
-        phi_hat = sum(tab*term) + ifelse(Q1==0|B==1, 0, Q1/t*(1-B)^(1-t)*(B^(q-1)-sum(choose(q-1,r)*(B-1)^r)))
-        c_hat = 1-((Q1/t)*(B^(q-1))*(1-B)/phi_hat)
+        
+        phi_hat = sum(tab * term) + ifelse(Q1 == 0 | B == 1, 0, Q1 / t * (1 - B)^(1 - t) * (B^(q - 1) - sum(choose(q - 1,r) * (B - 1)^r)))
+        c_hat = 1 - ((Q1 / t) * (B^(q - 1)) * (1 - B) / phi_hat)
         return(c_hat)
+        
       }
     }
-    est=sapply(q, sc.incid)
+    
+    est = sapply(q, sc.incid)
   }
+  
   return(est)
 }
 
@@ -416,17 +463,22 @@ Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboo
     
     out <- lapply(1:length(data), function(i) {
       dq <- sample_completeness(data[[i]], q, "abundance")
+      
       if (nboot > 1) {
         Prob.hat <- iNEXT.3D:::EstiBootComm.Ind(data[[i]])
         Abun.Mat <- rmultinom(nboot, sum(data[[i]]), Prob.hat)
+        
         se <- apply( matrix(apply(Abun.Mat,  2, function(xb) sample_completeness(xb, q, "abundance")), nrow=length(q)),
                      1, sd, na.rm = TRUE)
       }
       else {
         se = NA
       }
-      out <- data.frame(Order.q = q, Estimate.SC = dq, s.e. = se,
-                        SC.LCL = dq-qnorm(1-(1-conf)/2)*se, SC.UCL = dq+qnorm(1-(1-conf)/2)*se,
+      out <- data.frame(Order.q = q, 
+                        Estimate.SC = dq, 
+                        s.e. = se,
+                        SC.LCL = dq - qnorm(1 - (1 - conf) / 2) * se, 
+                        SC.UCL = dq + qnorm(1 - (1 - conf) / 2) * se,
                         Assemblage = names(data)[i])
       out$SC.LCL[out$SC.LCL < 0] <- 0
       out$SC.UCL[out$SC.UCL > 1] <- 1
@@ -438,20 +490,24 @@ Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboo
     
     out <- lapply(1:length(data), function(i) {
       dq <- sample_completeness(data[[i]], q, "incidence_freq")
+      
       if (nboot > 1) {
         nT <- data[[i]][1]
         Prob.hat <- iNEXT.3D:::EstiBootComm.Sam(data[[i]])
         Incid.Mat <- t(sapply(Prob.hat, function(p) rbinom(nboot, nT, p)))
         Incid.Mat <- matrix(c(rbind(nT, Incid.Mat)), ncol = nboot)
         
-        se <- apply( matrix(apply(Incid.Mat, 2, function(yb) sample_completeness(yb, q, "incidence_freq")), nrow=length(q)),
+        se <- apply( matrix(apply(Incid.Mat, 2, function(yb) sample_completeness(yb, q, "incidence_freq")), nrow = length(q)),
                      1, sd, na.rm = TRUE)
       }
       else {
         se = NA
       }
-      out <- data.frame(Order.q = q, Estimate.SC = dq, s.e. = se,
-                        SC.LCL = dq-qnorm(1-(1-conf)/2)*se, SC.UCL = dq+qnorm(1-(1-conf)/2)*se,
+      out <- data.frame(Order.q = q, 
+                        Estimate.SC = dq, 
+                        s.e. = se,
+                        SC.LCL = dq - qnorm(1 - (1 - conf) / 2) * se, 
+                        SC.UCL = dq + qnorm(1 - (1 - conf) / 2) * se,
                         Assemblage = names(data)[i])
       out$SC.LCL[out$SC.LCL < 0] <- 0
       out$SC.UCL[out$SC.UCL > 1] <- 1
@@ -531,27 +587,37 @@ ggCompleteness <- function(output) {
 
 even.class = function(q, qTD, S, E.class, pi) {
   tmp = c()
+  
   if (E.class == 1)
-    tmp = ifelse(q!=1, (1-qTD^(1-q))/(1-S^(1-q)), log(qTD)/log(S))
+    tmp = ifelse(q != 1, (1 - qTD^(1 - q)) / (1 - S^(1 - q)), log(qTD) / log(S))
+  
   if (E.class == 2)
-    tmp = ifelse(q!=1, (1-qTD^(q-1))/(1-S^(q-1)), log(qTD)/log(S))
+    tmp = ifelse(q != 1, (1 - qTD^(q - 1)) / (1 - S^(q - 1)), log(qTD) / log(S))
+  
   if (E.class == 3)
-    tmp = (qTD-1)/(S-1)
+    tmp = (qTD - 1) / (S - 1)
+  
   if (E.class == 4)
-    tmp = (1-1/qTD)/(1-1/S)
+    tmp = (1 - 1 / qTD) / (1 - 1 / S)
+  
   if (E.class == 5)
-    tmp = log(qTD)/log(S)
+    tmp = log(qTD) / log(S)
+  
   if (E.class == 6) 
     tmp = sapply(q, function(qi) {
-      if(qi == 0){
+      
+      if(qi == 0) {
+        
         pi <- pi[pi > 0]
         nu <- abs(pi - (1/S))
         nu <- nu[nu > 0]
-        sub <- (sum(log(abs(nu)))/sum(nu > 0) - (log(1 - 1/S) + (1 - S)*log(S)) / S)
+        sub <- (sum(log(abs(nu))) / sum(nu > 0) - (log(1 - 1/S) + (1 - S) * log(S)) / S)
         1 - exp(sub)
+        
       }else{
+        
         pi <- pi[pi > 0]
-        1 - (sum(abs(pi - 1/S)^qi)/((1 - 1/S)^qi + (S - 1) * S^(-qi)))^(1/qi)
+        1 - (sum(abs(pi - 1/S)^qi) / ((1 - 1/S)^qi + (S - 1) * S^(-qi)))^(1/qi)
       }
     })
   
@@ -577,9 +643,12 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
     estS = estimate3D(x, diversity = 'TD', 0, datatype, base = "coverage", level = C, nboot = 0)
     
     out = lapply(E.class, function(i) {
-      tmp = sapply(1:length(x), function(k) even.class(q, estqD[estqD$Assemblage == names(x)[k], "qTD"], estS[estS$Assemblage == names(x)[k], "qTD"], i, x[[k]]/sum(x[[k]])))
+      tmp = sapply(1:length(x), function(k) even.class(q, estqD[estqD$Assemblage == names(x)[k], "qTD"], 
+                                                       estS[estS$Assemblage == names(x)[k], "qTD"], i, x[[k]]/sum(x[[k]])))
+      
       if (inherits(tmp, c("numeric","integer"))) {tmp = t(as.matrix(tmp, nrow = 1))}
       rownames(tmp) = q
+      
       tmp
     })
     
@@ -589,9 +658,12 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
     empS = ObsAsy3D(x, diversity = 'TD', q = 0, datatype = datatype, nboot = 0, method = 'Observed')
     
     out = lapply(E.class, function(i) {
-      tmp = sapply(1:length(x), function(k) even.class(q, empqD[empqD$Assemblage == names(x)[k], "qTD"], empS[empS$Assemblage == names(x)[k], "qTD"], i, x[[k]]/sum(x[[k]])))
+      tmp = sapply(1:length(x), function(k) even.class(q, empqD[empqD$Assemblage == names(x)[k], "qTD"], 
+                                                       empS[empS$Assemblage == names(x)[k], "qTD"], i, x[[k]]/sum(x[[k]])))
+      
       if (inherits(tmp, c("numeric","integer"))) {tmp = t(as.matrix(tmp, nrow = 1))}
       rownames(tmp) = q
+      
       tmp
     })
     
@@ -617,8 +689,8 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is \code{30}.
 #' @param conf a positive number < \code{1} specifying the level of confidence interval. Default is \code{0.95}.
 #' @param nT (required only when \code{datatype = "incidence_raw"} and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "Assemblage1", "Assemblage2",..., etc. 
-#' @param E.class an integer vector between 1 to 5 specifyng which class(es) of evenness measures are selected; default is 1:5 (select all five classes). 
-#' @param SC (required only when method = "Estimated") a standardized coverage value for calculating estimated evenness. If \code{SC = NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (Cmax).
+#' @param E.class an integer vector between 1 to 5 specifying which class(es) of evenness measures are selected; default is 1:5 (select all five classes). 
+#' @param SC (required only when \code{method = "Estimated"}) a standardized coverage value for calculating estimated evenness. If \code{SC = NULL}, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (Cmax).
 #' @return A list of several tables containing estimated (or observed) evenness with order q.\cr
 #'         Each tables represents a class of evenness.
 #'         \item{Order.q}{the order of evenness}
@@ -736,14 +808,18 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
     
     if (nboot > 1) {
       Prob.hat <- lapply(1:length(data), function(i) iNEXT.3D:::EstiBootComm.Ind(data[[i]]))
+      
       Abun.Mat <- lapply(1:length(data), function(i) rmultinom(nboot, sum(data[[i]]), Prob.hat[[i]]))
       
       error = apply( matrix(sapply(1:nboot, function(b) {
+        
         dat = lapply(1:length(Abun.Mat),function(j) Abun.Mat[[j]][,b])
         names(dat) = paste("Site", 1:length(dat), sep="")
+        
         dat.qD = Evenness.profile(dat, q, "abundance", method, E.class, SC)
+        
         unlist(dat.qD)
-      }), nrow=length(q)*length(E.class)*length(Abun.Mat))
+        }), nrow = length(q) * length(E.class) * length(Abun.Mat))
       , 1, sd, na.rm = TRUE)
       
       error = matrix(error, ncol=length(E.class))
@@ -754,10 +830,15 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
     }
     
     out <- lapply(1:length(E.class), function(k) {
-      tmp = data.frame(Order.q = rep(q, length(data)), Evenness = as.vector(qD[[k]]), s.e. = as.vector(se[[k]]),
-                       Even.LCL = as.vector(qD[[k]] - qnorm(1-(1-conf)/2)*se[[k]]), Even.UCL = as.vector(qD[[k]] + qnorm(1-(1-conf)/2)*se[[k]]),
-                       Assemblage = rep(names(data), each=length(q)), Method = rep( method, length(q)*length(data))
-      )
+      
+      tmp = data.frame(Order.q = rep(q, length(data)), 
+                       Evenness = as.vector(qD[[k]]), 
+                       s.e. = as.vector(se[[k]]),
+                       Even.LCL = as.vector(qD[[k]] - qnorm(1-(1-conf)/2)*se[[k]]), 
+                       Even.UCL = as.vector(qD[[k]] + qnorm(1-(1-conf)/2)*se[[k]]),
+                       Assemblage = rep(names(data), each=length(q)), 
+                       Method = rep( method, length(q)*length(data))
+                       )
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
     })
@@ -770,15 +851,19 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
     if (nboot > 1) {
       nT <- lapply(1:length(data), function(i) data[[i]][1])
       Prob.hat <- lapply(1:length(data), function(i) iNEXT.3D:::EstiBootComm.Sam(data[[i]]))
+      
       Incid.Mat <- lapply(1:length(data), function(i) t(sapply(Prob.hat[[i]], function(p) rbinom(nboot, nT[[i]], p))))
       Incid.Mat <- lapply(1:length(data), function(i) matrix(c(rbind(nT[[i]], Incid.Mat[[i]])), ncol = nboot))
       
       error = apply(  matrix(sapply(1:nboot, function(b) {
+        
         dat = lapply(1:length(Incid.Mat),function(j) Incid.Mat[[j]][,b])
         names(dat) = paste("Site", 1:length(dat), sep="")
+        
         dat.qD = Evenness.profile(dat, q, "incidence_freq", method, E.class, SC)
-        unlist(dat.qD)  }
-      ), nrow=length(q)*length(E.class)*length(Incid.Mat))
+        
+        unlist(dat.qD)  
+        }), nrow = length(q) * length(E.class) * length(Incid.Mat))
       , 1, sd, na.rm = TRUE)
       
       error = matrix(error, ncol=length(E.class))
@@ -789,10 +874,15 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
     }
     
     out <- lapply(1:length(E.class), function(k) {
-      tmp = data.frame(Order.q = rep(q, length(data)), Evenness = as.vector(qD[[k]]), s.e. = as.vector(se[[k]]),
-                       Even.LCL = as.vector(qD[[k]] - qnorm(1-(1-conf)/2)*se[[k]]), Even.UCL = as.vector(qD[[k]] + qnorm(1-(1-conf)/2)*se[[k]]),
-                       Assemblage = rep(names(data), each=length(q)), Method = rep(method, length(q)*length(data))
-      )
+      
+      tmp = data.frame(Order.q = rep(q, length(data)), 
+                       Evenness = as.vector(qD[[k]]), 
+                       s.e. = as.vector(se[[k]]),
+                       Even.LCL = as.vector(qD[[k]] - qnorm(1-(1-conf)/2)*se[[k]]), 
+                       Even.UCL = as.vector(qD[[k]] + qnorm(1-(1-conf)/2)*se[[k]]),
+                       Assemblage = rep(names(data), each=length(q)), 
+                       Method = rep(method, length(q)*length(data))
+                       )
       tmp$Even.LCL[tmp$Even.LCL < 0] <- 0
       tmp
     })

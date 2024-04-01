@@ -253,6 +253,7 @@ Completeness(data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
 ```{r eval=FALSE}
 ggCompleteness(output)
 ```
+
 All the arguments in these two functions are the same as those in the main fnction `iNEXT4steps` for details.
 
 ### Sample completeness profiles for abundance data
@@ -308,6 +309,7 @@ Evenness(data, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
 ```{r eval=FALSE}
 ggEvenness(output)
 ```
+
 There are only three arguments that are not used in the main function `iNEXT4steps`; these three aruments are described below (see `iNEXT4steps` for other arguments)
 
 <table style="width:100%;">
@@ -323,35 +325,8 @@ There are only three arguments that are not used in the main function `iNEXT4ste
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center"><code>data</code></td>
-<td align="left">
-(a) For `datatype = "abundance"`, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
-(b) For `datatype = "incidence_raw"`, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
-</td>
-</tr>
-<tr class="even">
-<td align="center"><code>q</code></td>
-<td align="left">a numerical vector specifying the diversity orders. Default is <code>(0, 0.2, 0.4,...,2)</code>.</td>
-</tr>
-<tr class="odd">
-<td align="center"><code>datatype</code></td>
-<td align="left">data type of input data: individual-based abundance data (`datatype = "abundance"`) or species by sampling-units incidence matrix (`datatype = "incidence_raw"`) with all entries being 0 (non-detection) or 1 (detection)</td>
-</tr>
-<tr class="even">
 <td align="center"><code>method</code></td>
-<td align="left">a binary calculation method with <code>"Estimated"</code> or <code>"Observed"</code>.</td>
-</tr>
-<tr class="odd">
-<td align="center"><code>nboot</code></td>
-<td align="left">a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is <code>30</code>.</td>
-</tr>
-<tr class="even">
-<td align="center"><code>conf</code></td>
-<td align="left">a positive number < <code>1</code> specifying the level of confidence interval. Default is <code>0.95</code>.</td>
-</tr>
-<tr class="odd">
-<td align="center"><code>nT</code></td>
-<td align="left">(required only when `datatype = "incidence_raw"` and input data is matrix/data.frame) a vector of nonnegative integers specifying the number of sampling units in each assemblage. If assemblage names are not specified, then assemblages are automatically named as "Assemblage1", "Assemblage2",..., etc.</td>
+<td align="left">a binary selection of method with <code>"Estimated"</code> (evenness is computed under a standardized coverage value) or <code>"Observed"</code> (evenness is computed for the observed data).</td>
 </tr>
 <tr class="even">
 <td align="center"><code>E.class</code></td>
@@ -359,57 +334,32 @@ There are only three arguments that are not used in the main function `iNEXT4ste
 </tr>
 <tr class="odd">
 <td align="center"><code>SC</code></td>
-<td align="left">(required only when method = "Estimated") a standardized coverage for calculating estimated evenness. If <code>NULL</code>, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (Cmax).</td>
+<td align="left">(required only when <code>method = "Estimated"</code>) a standardized coverage value for calculating estimated evenness. If <code>SC=NULL</code>, then this function computes the diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes (Cmax).</td>
 </tr>
 
 </tbody>
 </table>
 
 
-## <span style="color:red;">FUNCTION ggEvenness(): GRAPHIC DISPLAYS OF EVENNESS PROFILES</span>
+Following are two simple examples for functions `Evenness` and `ggEvenness`. 
 
-The function `ggevenness` is used to plot the output from `Evenness()`.
+### Estimated evenness profiles for abundance data with default (Cmax)
 
-
-<table style="width:100%;">
-<colgroup>
-<col width="20%">
-<col width="80%">
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">Argument</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center"><code>output</code></td>
-<td align="left">the output of the function <code>Evenness</code>.
-</td>
-
-</tbody>
-</table>
-
-Following are four simple examples for functions `Evenness` and `ggEvenness`. 
-
-### Observed evenness profiles for abundance data
-
-Use abundance data `Data_spider` to compute observed evenness. Here only show the first class of evenness.
+Use abundance data `Data_spider` to compute estimated evenness with default `SC = NULL`. Here only show the first class of evenness.
 
 ```{r, eval=FALSE}
 data(Data_spider)
-Even_out1_obs <- Evenness(data = Data_spider, datatype = "abundance", 
-                          method = "Observed", E.class = 1:5)
-Even_out1_obs
+Even_out1_est <- Evenness(data = Data_spider, datatype = "abundance", 
+                          method = "Estimated", SC = NULL, E.class = 1:5)
+Even_out1_est
 ```
 
 
 ```{r, echo=FALSE}
 data(Data_spider)
-Even_out1_obs <- Evenness(data = Data_spider, datatype = "abundance", 
-                          method = "Observed", E.class = 1:5)
-Even_out1_obs[1]
+Even_out1_est <- Evenness(data = Data_spider, datatype = "abundance", 
+                          method = "Estimated", SC = NULL, E.class = 1:5)
+Even_out1_est[1]
 ```
 
 * `Order.q`: the order of evenness.
@@ -424,73 +374,18 @@ Even_out1_obs[1]
 The following commands plot the evenness curves for five classes, along with its confidence interval for q between 0 to 2.
 
 ```{r out.width="100%",fig.height=8}
-ggEvenness(Even_out1_obs)
-```
-
-
-### Estimated evenness profiles for abundance data with default SC = 0.993
-
-Use abundance data `Data_spider` to compute estimated evenness with `SC = 0.993`. Here only show the first class of evenness.
-
-```{r, eval=FALSE}
-data(Data_spider)
-Even_out1_est <- Evenness(data = Data_spider, datatype = "abundance", 
-                          method = "Estimated", SC = 0.993, E.class = 1:5)
-Even_out1_est
-```
-
-
-```{r, echo=FALSE}
-data(Data_spider)
-Even_out1_est <- Evenness(data = Data_spider, datatype = "abundance", 
-                          method = "Estimated", SC = 0.993, E.class = 1:5)
-Even_out1_est[1]
-```
-
-
-The following commands plot the evenness curves for five classes, along with its confidence interval for q between 0 to 2.
-
-```{r out.width="100%",fig.height=8}
 ggEvenness(Even_out1_est)
 ```
 
 
+### Estimated evenness profiles for incidence data with user's specified coverage value of 0.98.
 
-### Observed evenness profiles for incidence data 
-
-Use incidence frequency data `Data_woody_plant` to compute observed evenness. Here only show the first class of evenness.
-
-```{r, eval=FALSE}
-data(Data_woody_plant)
-Even_out2_obs <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
-                          method = "Observed", E.class = 1:5)
-Even_out2_obs
-```
-
-
-```{r, echo=FALSE}
-data(Data_spider)
-Even_out2_obs <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
-                          method = "Observed", E.class = 1:5)
-Even_out2_obs[1]
-```
-
-
-The following commands plot the evenness curves for five classes, along with its confidence interval for q between 0 to 2.
-
-```{r out.width="100%",fig.height=8}
-ggEvenness(Even_out2_obs)
-```
-
-
-### Estimated evenness profiles for incidence data with default SC = 0.992
-
-Use incidence frequency data `Data_woody_plant` to compute estimated evenness with `SC = 0.992`. Here only show the first class of evenness.
+Use incidence frequency data `Data_woody_plant` to compute estimated evenness with user's specified coverage value of 0.98. Here only show the first class of evenness.
 
 ```{r, eval=FALSE}
 data(Data_woody_plant)
 Even_out2_est <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
-                          method = "Estimated", SC = 0.992, E.class = 1:5)
+                          method = "Estimated", SC = 0.98, E.class = 1:5)
 Even_out2_est
 ```
 
@@ -498,7 +393,7 @@ Even_out2_est
 ```{r, echo=FALSE}
 data(Data_spider)
 Even_out2_est <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
-                          method = "Estimated", SC = 0.992, E.class = 1:5)
+                          method = "Estimated", SC = 0.98, E.class = 1:5)
 Even_out2_est[1]
 ```
 
