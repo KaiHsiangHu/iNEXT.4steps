@@ -36,7 +36,7 @@ a matrix of estimated sample completeness of order q:
         \item{Assemblage}{the assemblage name.}
 }
 \description{
-\code{Completeness} computes sample completeness estimates of order q = 0 to q = 2 in increments of 0.2 (by default).
+\code{Completeness} computes sample completeness estimates of orders q = 0 to 2 in increments of 0.2 (by default).
 }
 \examples{
 \donttest{

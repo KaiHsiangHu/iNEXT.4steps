@@ -2,19 +2,17 @@
 % Please edit documentation in R/MainFun.R
 \name{ggEvenness}
 \alias{ggEvenness}
-\title{ggplot for Evenness
-\code{ggEvenness} is a \code{ggplot2} extension for \code{Evenness} object to plot evenness with order q.}
+\title{ggplot for depicting evenness profiles}
 \usage{
 ggEvenness(output)
 }
 \arguments{
-\item{output}{the output of the function \code{Evenness}.}
+\item{output}{output obtained from the function \code{Evenness}.}
 }
 \value{
 a figure depicting the estimated (or observed) evenness with respect to order q.
 }
 \description{
-ggplot for Evenness
 \code{ggEvenness} is a \code{ggplot2} extension for \code{Evenness} object to plot evenness with order q.
 }
 \examples{
@@ -26,10 +24,10 @@ Even_out1_obs <- Evenness(data = Data_spider, datatype = "abundance",
 ggEvenness(Even_out1_obs)
 
 \donttest{
-# The estimated evenness profile for abundance data with default SC = 0.993
+# The estimated evenness profile for abundance data with user's specified coverage value of 0.98
 data(Data_spider)
 Even_out1_est <- Evenness(data = Data_spider, datatype = "abundance", 
-                          method = "Estimated", SC = 0.993, E.class = 1:5)
+                          method = "Estimated", SC = 0.98, E.class = 1:5)
 ggEvenness(Even_out1_est)
 }
 
@@ -41,10 +39,10 @@ Even_out2_obs <- Evenness(data = Data_woody_plant, datatype = "incidence_raw",
 ggEvenness(Even_out2_obs)
 
 \donttest{
-# The estimated evenness profile for incidence data with default SC = 0.992
+# The estimated evenness profile for incidence data with default sample coverage value
 data(Data_woody_plant)
 Even_out2_est <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
-                          method = "Estimated", SC = 0.992, E.class = 1:5)
+                          method = "Estimated", SC = NULL, E.class = 1:5)
 ggEvenness(Even_out2_est)
 }
 

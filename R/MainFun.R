@@ -5,12 +5,12 @@
 #' 
 #' @param data (a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
 #' (b) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input.
-#' @param q a numerical vector specifying the orders. Default is \code{seq(0, 2, by = 0.2)}.
+#' @param q a numerical vector specifying the orders of q that will be used to compute sample completeness and evenness and plot th relevant profiles. Default is \code{seq(0, 2, by = 0.2)}.
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).
 #' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 30.
 #' @param conf a positive number < 1 specifying the level of confidence interval. Default is 0.95.
 #' @param nT (required only when \code{datatype = "incidence_raw"} and input data in a single matrix/data.frame) a vector of positive integers specifying the number of sampling units in each assemblage. If assemblage names are not specified (i.e., \code{names(nT) = NULL}), then assemblages are automatically named as "Assemblage1", "Assemblage2",..., etc. 
-#' @param details a logical variable to decide whether output the detailed values for each step. Default is \code{FALSE}.
+#' @param details a logical variable to indicate whether the detailed numerical values for each step are displayed. Default is \code{FALSE}.
 #' 
 #' @import ggplot2
 #' @import reshape2
@@ -25,16 +25,16 @@
 #' @importFrom grDevices hcl
 #' 
 #' @return a list of three of objects: \cr\cr
-#' \code{$summary} four tables for individual summary of 4 steps:
+#' \code{$summary} four tables for each individual step.
 #' \item{Assemblage}{the assemblage names.}
 #' \item{qTD}{'Species richness' represents the taxonomic diversity of order q=0; 'Shannon diversity' represents the taxonomic diversity of order q=1, 'Simpson diversity' represents the taxonomic diversity of order q=2.}
 #' \item{TD_obs}{the observed taxonomic diversity value of order q.}
 #' \item{TD_asy}{the estimated asymptotic diversity value of order q.}
 #' \item{s.e.}{the bootstrap standard error of the estimated asymptotic diversity of order q.}
 #' \item{qTD.LCL, qTD.UCL}{the bootstrap lower and upper confidence limits for the estimated asymptotic diversity of order q at the specified level in the setting (with a default value of 0.95).}
-#' \item{Pielou J'}{a widely used evenness measure and it is expressed as J' = H/log(S) where H denotes Shannon entropy.} \cr\cr
+#' \item{Pielou J'}{a widely used evenness measure based on Shannon entropy.} \cr\cr
 #' \code{$figure} six figures including five individual figures (for STEPS 1, 2a, 2b, 3 and 4 respectively) and a complete set of five plots. \cr\cr
-#' \code{$details} (only when \code{details = TRUE}). The numerical output for plotting all \code{$figure}. \cr\cr
+#' \code{$details} (only when \code{details = TRUE}). The numerical output for plotting all figures. \cr\cr
 #' 
 #' 
 #' @examples
@@ -333,7 +333,7 @@ sample_completeness = function(x, q, datatype = c("abundance","incidence_freq"))
 
 #' Main function for STEP 1: Assessment of sample completeness 
 #'
-#' \code{Completeness} computes sample completeness estimates of order q = 0 to q = 2 in increments of 0.2 (by default).
+#' \code{Completeness} computes sample completeness estimates of orders q = 0 to 2 in increments of 0.2 (by default).
 #'
 #' @param data (a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
 #' (b) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below for this argument) must be input. 
@@ -468,7 +468,7 @@ Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboo
 #'
 #' \code{ggCompleteness} is a \code{ggplot2} extension for \code{Completeness} object to plot sample completeness with order q between 0 and 2.
 #'
-#' @param output the output of the function \code{Completeness}.
+#' @param output output obtained from the function \code{Completeness}.
 #' @return a figure depicting the estimated sample completeness with respect to the order q.
 #' 
 #' 
@@ -611,7 +611,7 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' 
 #' @param data (a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
 #' (b) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
-#' @param q a numerical vector specifying the orders of evenness. Default is \code{(0, 0.2, 0.4,...,2)}.
+#' @param q a numerical vector specifying the orders of evenness. Default is \code{seq(0, 2, by = 0.2)}.
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).
 #' @param method a binary selection of method with \code{"Estimated"} (evenness is computed under a standardized coverage value) or \code{"Observed"} (evenness is computed for the observed data).\cr
 #' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is \code{30}.
@@ -639,10 +639,10 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' Even_out1_obs
 #' 
 #' \donttest{
-#' # Estimated evenness for abundance data with default SC = 0.993
+#' # Estimated evenness for abundance data with default sample coverage value
 #' data(Data_spider)
 #' Even_out1_est <- Evenness(data = Data_spider, datatype = "abundance", 
-#'                           method = "Estimated", SC = 0.993, E.class = 1:5)
+#'                           method = "Estimated", SC = NULL, E.class = 1:5)
 #' Even_out1_est
 #' }
 #' 
@@ -654,10 +654,10 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' Even_out2_obs
 #' 
 #' \donttest{
-#' # Estimated evenness for incidence data with default SC = 0.992
+#' # Estimated evenness for incidence data with user's specified coverage value of 0.98
 #' data(Data_woody_plant)
 #' Even_out2_est <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
-#'                           method = "Estimated", SC = 0.992, E.class = 1:5)
+#'                           method = "Estimated", SC = 0.98, E.class = 1:5)
 #' Even_out2_est
 #' }
 #' 
@@ -810,11 +810,11 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
 
 
 
-#' ggplot for Evenness
-#
+#' ggplot for depicting evenness profiles
+#'
 #' \code{ggEvenness} is a \code{ggplot2} extension for \code{Evenness} object to plot evenness with order q. 
 #'
-#' @param output the output of the function \code{Evenness}.
+#' @param output output obtained from the function \code{Evenness}.
 #' @return a figure depicting the estimated (or observed) evenness with respect to order q.
 #' 
 #' 
@@ -827,10 +827,10 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
 #' ggEvenness(Even_out1_obs)
 #' 
 #' \donttest{
-#' # The estimated evenness profile for abundance data with default SC = 0.993
+#' # The estimated evenness profile for abundance data with user's specified coverage value of 0.98
 #' data(Data_spider)
 #' Even_out1_est <- Evenness(data = Data_spider, datatype = "abundance", 
-#'                           method = "Estimated", SC = 0.993, E.class = 1:5)
+#'                           method = "Estimated", SC = 0.98, E.class = 1:5)
 #' ggEvenness(Even_out1_est)
 #' }
 #' 
@@ -842,10 +842,10 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
 #' ggEvenness(Even_out2_obs)
 #' 
 #' \donttest{
-#' # The estimated evenness profile for incidence data with default SC = 0.992
+#' # The estimated evenness profile for incidence data with default sample coverage value
 #' data(Data_woody_plant)
 #' Even_out2_est <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
-#'                           method = "Estimated", SC = 0.992, E.class = 1:5)
+#'                           method = "Estimated", SC = NULL, E.class = 1:5)
 #' ggEvenness(Even_out2_est)
 #' }
 #' 

@@ -7,7 +7,7 @@
 ggCompleteness(output)
 }
 \arguments{
-\item{output}{the output of the function \code{Completeness}.}
+\item{output}{output obtained from the function \code{Completeness}.}
 }
 \value{
 a figure depicting the estimated sample completeness with respect to the order q.

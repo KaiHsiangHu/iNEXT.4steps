@@ -20,7 +20,7 @@ Evenness(
 \item{data}{(a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
 (b) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input.}
 
-\item{q}{a numerical vector specifying the orders of evenness. Default is \code{(0, 0.2, 0.4,...,2)}.}
+\item{q}{a numerical vector specifying the orders of evenness. Default is \code{seq(0, 2, by = 0.2)}.}
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).}
 
@@ -60,10 +60,10 @@ Even_out1_obs <- Evenness(data = Data_spider, datatype = "abundance",
 Even_out1_obs
 
 \donttest{
-# Estimated evenness for abundance data with default SC = 0.993
+# Estimated evenness for abundance data with default sample coverage value
 data(Data_spider)
 Even_out1_est <- Evenness(data = Data_spider, datatype = "abundance", 
-                          method = "Estimated", SC = 0.993, E.class = 1:5)
+                          method = "Estimated", SC = NULL, E.class = 1:5)
 Even_out1_est
 }
 
@@ -75,10 +75,10 @@ Even_out2_obs <- Evenness(data = Data_woody_plant, datatype = "incidence_raw",
 Even_out2_obs
 
 \donttest{
-# Estimated evenness for incidence data with default SC = 0.992
+# Estimated evenness for incidence data with user's specified coverage value of 0.98
 data(Data_woody_plant)
 Even_out2_est <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
-                          method = "Estimated", SC = 0.992, E.class = 1:5)
+                          method = "Estimated", SC = 0.98, E.class = 1:5)
 Even_out2_est
 }
 

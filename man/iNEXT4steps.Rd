@@ -18,7 +18,7 @@ iNEXT4steps(
 \item{data}{(a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
 (b) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input.}
 
-\item{q}{a numerical vector specifying the orders. Default is \code{seq(0, 2, by = 0.2)}.}
+\item{q}{a numerical vector specifying the orders of q that will be used to compute sample completeness and evenness and plot th relevant profiles. Default is \code{seq(0, 2, by = 0.2)}.}
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).}
 
@@ -28,20 +28,20 @@ iNEXT4steps(
 
 \item{nT}{(required only when \code{datatype = "incidence_raw"} and input data in a single matrix/data.frame) a vector of positive integers specifying the number of sampling units in each assemblage. If assemblage names are not specified (i.e., \code{names(nT) = NULL}), then assemblages are automatically named as "Assemblage1", "Assemblage2",..., etc.}
 
-\item{details}{a logical variable to decide whether output the detailed values for each step. Default is \code{FALSE}.}
+\item{details}{a logical variable to indicate whether the detailed numerical values for each step are displayed. Default is \code{FALSE}.}
 }
 \value{
 a list of three of objects: \cr\cr
-\code{$summary} four tables for individual summary of 4 steps:
+\code{$summary} four tables for each individual step.
 \item{Assemblage}{the assemblage names.}
 \item{qTD}{'Species richness' represents the taxonomic diversity of order q=0; 'Shannon diversity' represents the taxonomic diversity of order q=1, 'Simpson diversity' represents the taxonomic diversity of order q=2.}
 \item{TD_obs}{the observed taxonomic diversity value of order q.}
 \item{TD_asy}{the estimated asymptotic diversity value of order q.}
 \item{s.e.}{the bootstrap standard error of the estimated asymptotic diversity of order q.}
 \item{qTD.LCL, qTD.UCL}{the bootstrap lower and upper confidence limits for the estimated asymptotic diversity of order q at the specified level in the setting (with a default value of 0.95).}
-\item{Pielou J'}{a widely used evenness measure and it is expressed as J' = H/log(S) where H denotes Shannon entropy.} \cr\cr
+\item{Pielou J'}{a widely used evenness measure based on Shannon entropy.} \cr\cr
 \code{$figure} six figures including five individual figures (for STEPS 1, 2a, 2b, 3 and 4 respectively) and a complete set of five plots. \cr\cr
-\code{$details} (only when \code{details = TRUE}). The numerical output for plotting all \code{$figure}. \cr\cr
+\code{$details} (only when \code{details = TRUE}). The numerical output for plotting all figures. \cr\cr
 }
 \description{
 \code{iNEXT4steps} computes all statistics in the complete 4-step analysis and visualizes the output. It computes sample completeness, observed and asymptotic diversity, size-based and coverage-based standardized diversity, and evenness.
