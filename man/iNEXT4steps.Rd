@@ -18,7 +18,7 @@ iNEXT4steps(
 \item{data}{(a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
 (b) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input.}
 
-\item{q}{a numerical vector specifying the orders of q that will be used to compute sample completeness and evenness and plot th relevant profiles. Default is \code{seq(0, 2, by = 0.2)}.}
+\item{q}{a numerical vector specifying the orders of q that will be used to compute sample completeness and evenness as well as plot the relevant profiles. Default is \code{seq(0, 2, by = 0.2)}.}
 
 \item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).}
 
@@ -32,7 +32,7 @@ iNEXT4steps(
 }
 \value{
 a list of three of objects: \cr\cr
-\code{$summary} four tables for each individual step.
+\code{$summary} Numerical table for each individual step.
 \item{Assemblage}{the assemblage names.}
 \item{qTD}{'Species richness' represents the taxonomic diversity of order q=0; 'Shannon diversity' represents the taxonomic diversity of order q=1, 'Simpson diversity' represents the taxonomic diversity of order q=2.}
 \item{TD_obs}{the observed taxonomic diversity value of order q.}

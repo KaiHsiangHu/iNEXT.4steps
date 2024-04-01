@@ -24,10 +24,10 @@ Even_out1_obs <- Evenness(data = Data_spider, datatype = "abundance",
 ggEvenness(Even_out1_obs)
 
 \donttest{
-# The estimated evenness profile for abundance data with user's specified coverage value of 0.98
+# The estimated evenness profile for abundance data with default sample coverage value
 data(Data_spider)
 Even_out1_est <- Evenness(data = Data_spider, datatype = "abundance", 
-                          method = "Estimated", SC = 0.98, E.class = 1:5)
+                          method = "Estimated", SC = NULL, E.class = 1:5)
 ggEvenness(Even_out1_est)
 }
 
@@ -39,10 +39,10 @@ Even_out2_obs <- Evenness(data = Data_woody_plant, datatype = "incidence_raw",
 ggEvenness(Even_out2_obs)
 
 \donttest{
-# The estimated evenness profile for incidence data with default sample coverage value
+# The estimated evenness profile for incidence data with user's specified coverage value of 0.98
 data(Data_woody_plant)
 Even_out2_est <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
-                          method = "Estimated", SC = NULL, E.class = 1:5)
+                          method = "Estimated", SC = 0.98, E.class = 1:5)
 ggEvenness(Even_out2_est)
 }
 

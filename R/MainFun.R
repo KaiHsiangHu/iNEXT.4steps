@@ -5,7 +5,7 @@
 #' 
 #' @param data (a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
 #' (b) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input.
-#' @param q a numerical vector specifying the orders of q that will be used to compute sample completeness and evenness and plot th relevant profiles. Default is \code{seq(0, 2, by = 0.2)}.
+#' @param q a numerical vector specifying the orders of q that will be used to compute sample completeness and evenness as well as plot the relevant profiles. Default is \code{seq(0, 2, by = 0.2)}.
 #' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).
 #' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 30.
 #' @param conf a positive number < 1 specifying the level of confidence interval. Default is 0.95.
@@ -25,7 +25,7 @@
 #' @importFrom grDevices hcl
 #' 
 #' @return a list of three of objects: \cr\cr
-#' \code{$summary} four tables for each individual step.
+#' \code{$summary} Numerical table for each individual step.
 #' \item{Assemblage}{the assemblage names.}
 #' \item{qTD}{'Species richness' represents the taxonomic diversity of order q=0; 'Shannon diversity' represents the taxonomic diversity of order q=1, 'Simpson diversity' represents the taxonomic diversity of order q=2.}
 #' \item{TD_obs}{the observed taxonomic diversity value of order q.}
@@ -827,10 +827,10 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
 #' ggEvenness(Even_out1_obs)
 #' 
 #' \donttest{
-#' # The estimated evenness profile for abundance data with user's specified coverage value of 0.98
+#' # The estimated evenness profile for abundance data with default sample coverage value
 #' data(Data_spider)
 #' Even_out1_est <- Evenness(data = Data_spider, datatype = "abundance", 
-#'                           method = "Estimated", SC = 0.98, E.class = 1:5)
+#'                           method = "Estimated", SC = NULL, E.class = 1:5)
 #' ggEvenness(Even_out1_est)
 #' }
 #' 
@@ -842,10 +842,10 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
 #' ggEvenness(Even_out2_obs)
 #' 
 #' \donttest{
-#' # The estimated evenness profile for incidence data with default sample coverage value
+#' # The estimated evenness profile for incidence data with user's specified coverage value of 0.98
 #' data(Data_woody_plant)
 #' Even_out2_est <- Evenness(data = Data_woody_plant, datatype = "incidence_raw", 
-#'                           method = "Estimated", SC = NULL, E.class = 1:5)
+#'                           method = "Estimated", SC = 0.98, E.class = 1:5)
 #' ggEvenness(Even_out2_est)
 #' }
 #' 
