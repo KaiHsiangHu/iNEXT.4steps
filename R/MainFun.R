@@ -781,7 +781,7 @@ Evenness <- function(data, q = seq(0, 2, 0.2), datatype = "abundance", method = 
   if (pmatch(method, kind) == -1)
     stop("ambiguous method")
   
-  class <- c(1:6)
+  class <- c(1:5)
   if (sum(E.class %in% class) != length(E.class))
     stop("invalid E.class")
   
