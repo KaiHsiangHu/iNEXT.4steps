@@ -413,8 +413,8 @@ sample_completeness = function(x, q, datatype = c("abundance", "incidence_freq")
 #' 
 #' @export
 
-Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
-                          conf = 0.95, nT = NULL)
+Completeness <- function(data, q = seq(0, 2, 0.2), datatype = "abundance", nboot = 30,
+                         conf = 0.95, nT = NULL)
 {
   TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
   if (is.na(pmatch(datatype, TYPE)))
@@ -423,7 +423,19 @@ Completeness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", nboo
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
   
-  if(datatype == "incidence") stop("Completeness can only accept datatype = 'incidence_freq' or 'datatype = incidence_raw'.") 
+  if(!inherits(q, "numeric"))
+    stop("invalid class of order q, q should be a postive value/vector of numeric object", call. = FALSE)
+  if(min(q) < 0){
+    warning("ambigous of order q, we only compute postive q", call. = FALSE)
+    q <- q[q >= 0]
+  }
+  
+  if (length(nboot) != 1) stop('Please enter a non-negative integer for nboot.', call. = FALSE)
+  if ((nboot < 0) | (is.numeric(nboot)==F)) stop('Please enter a non-negative integer for nboot.', call. = FALSE)
+  if (length(conf) != 1) stop('Please enter a value between zero and one for conf.', call. = FALSE)
+  if ((conf < 0) | (conf > 1) | (is.numeric(conf)==F)) stop('Please enter a value between zero and one for conf.', call. = FALSE)
+  
+  if(datatype == "incidence") stop("Completeness can only accept 'datatype = incidence_raw'.") 
   
   if (datatype == "incidence_raw") {
     
@@ -737,8 +749,8 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' Chao, A. and Ricotta, C. (2019). Quantifying evenness and linking it to diversity, beta diversity, and similarity. Ecology, 100(12), e02852.
 #' @export
 
-Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
-                      nboot = 30, conf = 0.95, nT = NULL, E.class = 1:5, SC = NULL)
+Evenness <- function(data, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
+                     nboot = 30, conf = 0.95, nT = NULL, E.class = 1:5, SC = NULL)
 {
   TYPE <- c("abundance", "incidence", "incidence_freq", "incidence_raw")
   if (is.na(pmatch(datatype, TYPE)))
@@ -747,7 +759,19 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
     stop("ambiguous datatype")
   datatype <- match.arg(datatype, TYPE)
   
-  if(datatype == "incidence") stop("Completeness can only accept datatype = 'incidence_freq' or 'datatype = incidence_raw'.") 
+  if(!inherits(q, "numeric"))
+    stop("invalid class of order q, q should be a postive value/vector of numeric object", call. = FALSE)
+  if(min(q) < 0){
+    warning("ambigous of order q, we only compute postive q", call. = FALSE)
+    q <- q[q >= 0]
+  }
+  
+  if (length(nboot) != 1) stop('Please enter a non-negative integer for nboot.', call. = FALSE)
+  if ((nboot < 0) | (is.numeric(nboot)==F)) stop('Please enter a non-negative integer for nboot.', call. = FALSE)
+  if (length(conf) != 1) stop('Please enter a value between zero and one for conf.', call. = FALSE)
+  if ((conf < 0) | (conf > 1) | (is.numeric(conf)==F)) stop('Please enter a value between zero and one for conf.', call. = FALSE)
+  
+  if(datatype == "incidence") stop("Evenness can only accept 'datatype = incidence_raw'.") 
   
   kind <- c("Estimated", "Observed")
   if (length(method) > 1)
@@ -799,6 +823,7 @@ Evenness <- function (data, q = seq(0, 2, 0.2), datatype = "abundance", method =
     if (datatype == "abundance") SC = sapply(data, function(x) iNEXT.3D:::Coverage(x, "abundance", 2*sum(x))) %>% min
     if (datatype == "incidence_freq") SC = sapply(data, function(x) iNEXT.3D:::Coverage(x, "incidence_freq", 2*x[1])) %>% min
   }
+  if ((length(SC) != 1) | (SC < 0) | (SC > 1) | (is.numeric(SC)==F)) stop("The sample coverage value should be a value between zero and one.", call. = FALSE)
   
   
   if (datatype == "abundance") {
