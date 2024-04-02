@@ -155,25 +155,25 @@ iNEXT4steps <- function(data, q = seq(0, 2, 0.2), datatype = "abundance",
   
   ##  Outpue_summary ##
   if (sum(q %in% c(0,1,2)) == 3) 
-    summary = list(summary.deal(SC.table, 1),
+    summary = list(summary.table(SC.table, 1),
                    iNEXT.table[[3]] %>%  
                      lapply(FUN = function(x) if(is.numeric(x)) round(x,2) else x) %>% data.frame,
-                   summary.deal(estD, 3),
-                   summary.deal(Even.table, 4, estD)
+                   summary.table(estD, 3),
+                   summary.table(Even.table, 4, estD)
     ) else {
       
       SC.tableq012 <- Completeness(data, q = c(0,1,2), datatype = datatype, nboot = 0, nT = nT)
       
       Even.tableq012 <- Evenness(data, q = c(0,1,2), datatype = datatype, method = "Estimated", nboot = 0, nT = nT, E.class = 3)
       
-      summary = list(summary.deal(SC.tableq012, 1),
+      summary = list(summary.table(SC.tableq012, 1),
                      
                      iNEXT.table[[3]] %>%  
                        lapply(FUN = function(x) if(is.numeric(x)) round(x,2) else x) %>% data.frame,
                      
-                     summary.deal(estD, 3),
+                     summary.table(estD, 3),
                      
-                     summary.deal(Even.tableq012, 4, estD)
+                     summary.table(Even.tableq012, 4, estD)
                      )
     }
   
@@ -218,14 +218,14 @@ iNEXT4steps <- function(data, q = seq(0, 2, 0.2), datatype = "abundance",
 
 # Generate the summary table from the deatils of each function.
 #
-# \code{summary.deal} Generate the summary table of four lists from the deatils of each function.
+# \code{summary.table} Generate the summary table of four lists from the deatils of each function.
 #
 # @param table a table
 # @param step a numerical value of which step summary do you need
 # @param Pielou a logical variable whether you want to generate step 4 summary
 # @return a matrix or a list according different steps
 
-summary.deal <- function(table, step, Pielou = NULL) {
+summary.table <- function(table, step, Pielou = NULL) {
   
   if (step == 1) {
     
@@ -283,7 +283,7 @@ sample_completeness = function(x, q, datatype = c("abundance", "incidence_freq")
     x = x[x > 0]
     n = sum(x)
     f1 = sum(x == 1); f2 = sum(x == 2)
-    A = ifelse(f2 > 0, 2 * f2 / ((n - 1) * f1 + 2 * f2), ifelse(f1 > 0, 2 / ((n - 1) * (f1 - 1) + 2),1))
+    A = ifelse(f2 > 0, 2 * f2 / ((n - 1) * f1 + 2 * f2), ifelse(f1 > 0, 2 / ((n - 1) * (f1 - 1) + 2), 1))
     
     sc.abund = function(q){
       
