@@ -299,12 +299,13 @@ data
 </td>
 <td style='text-align: left;'>
 
-1.  For `datatype = 'abundance'`, data can be input as a vector of
-    species abundances (for a single assemblage), matrix/data.frame
-    (species by assemblages), or a list of species abundance vectors.
-2.  For `datatype = 'incidence_raw'`, data can be input as a list of
-    matrix/data.frame (species by sampling units); data can also be
-    input as a matrix/data.frame by merging all sampling units across
+1.  For <code>datatype = ‘abundance’</code>, data can be input as a
+    vector of species abundances (for a single assemblage),
+    matrix/data.frame (species by assemblages), or a list of species
+    abundance vectors.
+2.  For <code>datatype = ‘incidence_raw’</code>, data can be input as a
+    list of matrix/data.frame (species by sampling units); data can also
+    be input as a matrix/data.frame by merging all sampling units across
     assemblages based on species identity; in this case, the number of
     sampling units (nT, see below) must be input.
     </td>
@@ -325,9 +326,9 @@ data
     </td>
     <td style="text-align: left;">
     data type of input data: individual-based abundance data
-    (`datatype = 'abundance'`) or species by sampling-units incidence
-    matrix (`datatype = 'incidence_raw'`) with all entries being 0
-    (non-detection) or 1 (detection)
+    (<code>datatype = ‘abundance’</code>) or species by sampling-units
+    incidence matrix (<code>datatype = ‘incidence_raw’</code>) with all
+    entries being 0 (non-detection) or 1 (detection)
     </td>
     </tr>
     <tr>
@@ -368,7 +369,7 @@ data
     </td>
     <td style="border-bottom: 2px solid grey; text-align: left;">
     a logical variable to indicate whether the detailed numerical values
-    for each step are displayed. Default is `FALSE`.
+    for each step are displayed. Default is <code>FALSE</code>.
     </td>
     </tr>
     </tbody>
@@ -408,17 +409,17 @@ $`STEP 1. Sample completeness profiles`
 
 $`STEP 2b. Observed diversity values and asymptotic estimates`
   Assemblage               qTD TD_obs TD_asy  s.e. qTD.LCL qTD.UCL
-1     Closed  Species richness  44.00  72.11 23.16   26.72  117.49
-2     Closed Shannon diversity  10.04  10.30  0.31    9.69   10.91
-3     Closed Simpson diversity   5.71   5.73  0.20    5.33    6.12
-4       Open  Species richness  74.00  96.31 12.46   71.89  120.73
-5       Open Shannon diversity  16.34  16.84  0.59   15.68   18.00
-6       Open Simpson diversity   9.41   9.46  0.32    8.83   10.09
+1     Closed  Species richness  44.00  72.11 17.17   38.45  105.76
+2     Closed Shannon diversity  10.04  10.30  0.34    9.64   10.97
+3     Closed Simpson diversity   5.71   5.73  0.24    5.26    6.19
+4       Open  Species richness  74.00  96.31 12.56   71.69  120.93
+5       Open Shannon diversity  16.34  16.84  0.55   15.77   17.91
+6       Open Simpson diversity   9.41   9.46  0.31    8.85   10.07
 
 $`STEP 3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
   Cmax = 0.994 q = 0 q = 1 q = 2
-1       Closed 55.62 10.18  5.72
-2         Open 86.51 16.59  9.43
+1       Closed  55.6  10.2  5.72
+2         Open  86.5  16.6  9.43
 
 $`STEP 4. Evenness among species abundances of orders q = 1 and 2 at Cmax based on the normalized slope of a diversity profile`
   Cmax = 0.994 Pielou J' q = 1 q = 2
@@ -481,17 +482,17 @@ $`STEP 1. Sample completeness profiles`
 
 $`STEP 2b. Observed diversity values and asymptotic estimates`
    Assemblage               qTD TD_obs TD_asy  s.e. qTD.LCL qTD.UCL
-1     Monsoon  Species richness 329.00 421.67 20.20  382.07  461.27
-2     Monsoon Shannon diversity 145.65 150.15  1.81  146.61  153.69
-3     Monsoon Simpson diversity 102.33 103.35  1.54  100.33  106.36
-4 Upper_cloud  Species richness 239.00 307.78 17.30  273.86  341.69
-5 Upper_cloud Shannon diversity 105.53 110.50  1.88  106.81  114.19
-6 Upper_cloud Simpson diversity  71.17  72.23  1.10   70.06   74.39
+1     Monsoon  Species richness  329.0  421.7 22.90   376.8   466.6
+2     Monsoon Shannon diversity  145.7  150.2  1.59   147.0   153.3
+3     Monsoon Simpson diversity  102.3  103.3  1.03   101.3   105.4
+4 Upper_cloud  Species richness  239.0  307.8 17.97   272.6   343.0
+5 Upper_cloud Shannon diversity  105.5  110.5  1.69   107.2   113.8
+6 Upper_cloud Simpson diversity   71.2   72.2  1.29    69.7    74.8
 
 $`STEP 3. Non-asymptotic coverage-based rarefaction and extrapolation analysis`
-  Cmax = 0.993  q = 0  q = 1  q = 2
-1      Monsoon 359.80 147.29 102.67
-2  Upper_cloud 278.96 108.52  71.69
+  Cmax = 0.993 q = 0 q = 1 q = 2
+1      Monsoon   360   147 102.7
+2  Upper_cloud   279   109  71.7
 
 $`STEP 4. Evenness among species abundances of orders q = 1 and 2 at Cmax based on the normalized slope of a diversity profile`
   Cmax = 0.993 Pielou J' q = 1 q = 2
@@ -532,29 +533,29 @@ the abundance data `Data_spider`:
 data(Data_spider)
 SC_out1 <- Completeness(data = Data_spider, datatype = "abundance")
 SC_out1
-   Order.q Estimate.SC         s.e.    SC.LCL    SC.UCL Assemblage
-1      0.0   0.7683622 9.973432e-02 0.5728865 0.9638379       Open
-2      0.2   0.8181065 7.486201e-02 0.6713796 0.9648333       Open
-3      0.4   0.8768761 4.564035e-02 0.7874227 0.9663296       Open
-4      0.6   0.9302044 2.156722e-02 0.8879335 0.9724754       Open
-5      0.8   0.9664828 8.007891e-03 0.9507876 0.9821779       Open
-6      1.0   0.9858045 2.445838e-03 0.9810107 0.9905982       Open
-7      1.2   0.9944729 6.459167e-04 0.9932069 0.9957388       Open
-8      1.4   0.9979624 1.730570e-04 0.9976232 0.9983016       Open
-9      1.6   0.9992757 6.790607e-05 0.9991426 0.9994088       Open
-10     1.8   0.9997489 3.316620e-05 0.9996839 0.9998140       Open
-11     2.0   0.9999146 1.548913e-05 0.9998842 0.9999449       Open
-12     0.0   0.6102206 1.617713e-01 0.2931547 0.9272866     Closed
-13     0.2   0.7182647 1.283739e-01 0.4666565 0.9698729     Closed
-14     0.4   0.8338575 7.549952e-02 0.6858812 0.9818339     Closed
-15     0.6   0.9215916 3.005453e-02 0.8626858 0.9804974     Closed
-16     0.8   0.9692426 8.931708e-03 0.9517368 0.9867484     Closed
-17     1.0   0.9893733 2.393479e-03 0.9846821 0.9940644     Closed
-18     1.2   0.9966174 6.939717e-04 0.9952573 0.9979776     Closed
-19     1.4   0.9989804 2.335822e-04 0.9985226 0.9994382     Closed
-20     1.6   0.9997042 8.447411e-05 0.9995387 0.9998698     Closed
-21     1.8   0.9999166 3.060301e-05 0.9998566 0.9999766     Closed
-22     2.0   0.9999770 1.087748e-05 0.9999557 0.9999983     Closed
+   Order.q Estimate.SC     s.e. SC.LCL SC.UCL Assemblage
+1      0.0       0.768 8.89e-02  0.594  0.943       Open
+2      0.2       0.818 6.49e-02  0.691  0.945       Open
+3      0.4       0.877 3.89e-02  0.801  0.953       Open
+4      0.6       0.930 1.85e-02  0.894  0.966       Open
+5      0.8       0.966 7.12e-03  0.953  0.980       Open
+6      1.0       0.986 2.38e-03  0.981  0.990       Open
+7      1.2       0.994 7.56e-04  0.993  0.996       Open
+8      1.4       0.998 2.61e-04  0.997  0.998       Open
+9      1.6       0.999 1.05e-04  0.999  0.999       Open
+10     1.8       1.000 4.59e-05  1.000  1.000       Open
+11     2.0       1.000 2.01e-05  1.000  1.000       Open
+12     0.0       0.610 1.31e-01  0.353  0.867     Closed
+13     0.2       0.718 9.83e-02  0.526  0.911     Closed
+14     0.4       0.834 5.69e-02  0.722  0.945     Closed
+15     0.6       0.922 2.43e-02  0.874  0.969     Closed
+16     0.8       0.969 8.18e-03  0.953  0.985     Closed
+17     1.0       0.989 2.43e-03  0.985  0.994     Closed
+18     1.2       0.997 7.21e-04  0.995  0.998     Closed
+19     1.4       0.999 2.35e-04  0.999  0.999     Closed
+20     1.6       1.000 8.37e-05  1.000  1.000     Closed
+21     1.8       1.000 3.08e-05  1.000  1.000     Closed
+22     2.0       1.000 1.12e-05  1.000  1.000     Closed
 ```
 
 -   `Order.q`: the order of sample completeness.
@@ -583,29 +584,29 @@ to infer sample completeness.
 data(Data_woody_plant)
 SC_out2 <- Completeness(data = Data_woody_plant, datatype = "incidence_raw")
 SC_out2
-   Order.q Estimate.SC         s.e.    SC.LCL    SC.UCL  Assemblage
-1      0.0   0.7802244 5.443597e-02 0.6735319 0.8869170     Monsoon
-2      0.2   0.8490462 3.596453e-02 0.7785570 0.9195354     Monsoon
-3      0.4   0.9086970 1.922901e-02 0.8710089 0.9463852     Monsoon
-4      0.6   0.9508262 8.389296e-03 0.9343835 0.9672690     Monsoon
-5      0.8   0.9758389 3.089211e-03 0.9697842 0.9818936     Monsoon
-6      1.0   0.9888942 9.979319e-04 0.9869383 0.9908501     Monsoon
-7      1.2   0.9951304 3.172420e-04 0.9945086 0.9957522     Monsoon
-8      1.4   0.9979362 1.370679e-04 0.9976676 0.9982049     Monsoon
-9      1.6   0.9991474 7.772191e-05 0.9989951 0.9992997     Monsoon
-10     1.8   0.9996547 4.360856e-05 0.9995693 0.9997402     Monsoon
-11     2.0   0.9998625 2.285966e-05 0.9998176 0.9999073     Monsoon
-12     0.0   0.7765330 6.598825e-02 0.6471984 0.9058676 Upper_cloud
-13     0.2   0.8358241 4.572396e-02 0.7462068 0.9254414 Upper_cloud
-14     0.4   0.8915125 2.644153e-02 0.8396880 0.9433369 Upper_cloud
-15     0.6   0.9354738 1.265255e-02 0.9106752 0.9602723 Upper_cloud
-16     0.8   0.9649731 5.068840e-03 0.9550384 0.9749079 Upper_cloud
-17     1.0   0.9823020 1.729246e-03 0.9789128 0.9856913 Upper_cloud
-18     1.2   0.9915212 5.621355e-04 0.9904194 0.9926230 Upper_cloud
-19     1.4   0.9960932 2.764244e-04 0.9955514 0.9966350 Upper_cloud
-20     1.6   0.9982514 1.843399e-04 0.9978901 0.9986127 Upper_cloud
-21     1.8   0.9992348 1.156412e-04 0.9990081 0.9994614 Upper_cloud
-22     2.0   0.9996711 6.632610e-05 0.9995411 0.9998011 Upper_cloud
+   Order.q Estimate.SC     s.e. SC.LCL SC.UCL  Assemblage
+1      0.0       0.780 4.25e-02  0.697  0.864     Monsoon
+2      0.2       0.849 2.76e-02  0.795  0.903     Monsoon
+3      0.4       0.909 1.52e-02  0.879  0.938     Monsoon
+4      0.6       0.951 7.12e-03  0.937  0.965     Monsoon
+5      0.8       0.976 2.93e-03  0.970  0.982     Monsoon
+6      1.0       0.989 1.11e-03  0.987  0.991     Monsoon
+7      1.2       0.995 4.20e-04  0.994  0.996     Monsoon
+8      1.4       0.998 1.84e-04  0.998  0.998     Monsoon
+9      1.6       0.999 9.49e-05  0.999  0.999     Monsoon
+10     1.8       1.000 5.13e-05  1.000  1.000     Monsoon
+11     2.0       1.000 2.70e-05  1.000  1.000     Monsoon
+12     0.0       0.777 4.07e-02  0.697  0.856 Upper_cloud
+13     0.2       0.836 2.81e-02  0.781  0.891 Upper_cloud
+14     0.4       0.892 1.66e-02  0.859  0.924 Upper_cloud
+15     0.6       0.935 8.47e-03  0.919  0.952 Upper_cloud
+16     0.8       0.965 3.78e-03  0.958  0.972 Upper_cloud
+17     1.0       0.982 1.55e-03  0.979  0.985 Upper_cloud
+18     1.2       0.992 6.56e-04  0.990  0.993 Upper_cloud
+19     1.4       0.996 3.25e-04  0.995  0.997 Upper_cloud
+20     1.6       0.998 1.83e-04  0.998  0.999 Upper_cloud
+21     1.8       0.999 1.05e-04  0.999  0.999 Upper_cloud
+22     2.0       1.000 5.79e-05  1.000  1.000 Upper_cloud
 ```
 
 Run the following code to plot sample completeness profiles for q
@@ -711,29 +712,29 @@ Even_out1_est
 ```
 
     $E1
-       Order.q  Evenness        s.e.  Even.LCL  Even.UCL Assemblage    Method        SC
-    1      0.0 1.0000000 0.000000000 1.0000000 1.0000000       Open Estimated 0.9937676
-    2      0.2 0.7276194 0.023738926 0.6810919 0.7741468       Open Estimated 0.9937676
-    3      0.4 0.6008010 0.030661740 0.5407051 0.6608969       Open Estimated 0.9937676
-    4      0.6 0.5628529 0.030325802 0.5034154 0.6222904       Open Estimated 0.9937676
-    5      0.8 0.5801167 0.026422376 0.5283298 0.6319036       Open Estimated 0.9937676
-    6      1.0 0.6297250 0.020846901 0.5888658 0.6705841       Open Estimated 0.9937676
-    7      1.2 0.6941362 0.015075231 0.6645892 0.7236831       Open Estimated 0.9937676
-    8      1.4 0.7600773 0.010243046 0.7400013 0.7801533       Open Estimated 0.9937676
-    9      1.6 0.8190763 0.006881747 0.8055883 0.8325643       Open Estimated 0.9937676
-    10     1.8 0.8673381 0.004872872 0.8577874 0.8768887       Open Estimated 0.9937676
-    11     2.0 0.9044427 0.003733457 0.8971253 0.9117602       Open Estimated 0.9937676
-    12     0.0 1.0000000 0.000000000 1.0000000 1.0000000     Closed Estimated 0.9937676
-    13     0.2 0.6996114 0.033769758 0.6334239 0.7657989     Closed Estimated 0.9937676
-    14     0.4 0.5665175 0.045015232 0.4782893 0.6547457     Closed Estimated 0.9937676
-    15     0.6 0.5253117 0.046017907 0.4351183 0.6155052     Closed Estimated 0.9937676
-    16     0.8 0.5365988 0.041426598 0.4554041 0.6177934     Closed Estimated 0.9937676
-    17     1.0 0.5775431 0.033821777 0.5112536 0.6438325     Closed Estimated 0.9937676
-    18     1.2 0.6330777 0.025399022 0.5832966 0.6828589     Closed Estimated 0.9937676
-    19     1.4 0.6926130 0.017983239 0.6573665 0.7278595     Closed Estimated 0.9937676
-    20     1.6 0.7491390 0.012664600 0.7243169 0.7739612     Closed Estimated 0.9937676
-    21     1.8 0.7988183 0.009586218 0.7800296 0.8176069     Closed Estimated 0.9937676
-    22     2.0 0.8402207 0.008084184 0.8243760 0.8560654     Closed Estimated 0.9937676
+       Order.q Evenness    s.e. Even.LCL Even.UCL Assemblage    Method    SC
+    1      0.0    1.000 0.00000    1.000    1.000       Open Estimated 0.994
+    2      0.2    0.728 0.02257    0.683    0.772       Open Estimated 0.994
+    3      0.4    0.601 0.02916    0.544    0.658       Open Estimated 0.994
+    4      0.6    0.563 0.02886    0.506    0.619       Open Estimated 0.994
+    5      0.8    0.580 0.02537    0.530    0.630       Open Estimated 0.994
+    6      1.0    0.630 0.02043    0.590    0.670       Open Estimated 0.994
+    7      1.2    0.694 0.01528    0.664    0.724       Open Estimated 0.994
+    8      1.4    0.760 0.01083    0.739    0.781       Open Estimated 0.994
+    9      1.6    0.819 0.00751    0.804    0.834       Open Estimated 0.994
+    10     1.8    0.867 0.00530    0.857    0.878       Open Estimated 0.994
+    11     2.0    0.904 0.00390    0.897    0.912       Open Estimated 0.994
+    12     0.0    1.000 0.00000    1.000    1.000     Closed Estimated 0.994
+    13     0.2    0.700 0.03053    0.640    0.759     Closed Estimated 0.994
+    14     0.4    0.567 0.03952    0.489    0.644     Closed Estimated 0.994
+    15     0.6    0.525 0.03938    0.448    0.603     Closed Estimated 0.994
+    16     0.8    0.537 0.03500    0.468    0.605     Closed Estimated 0.994
+    17     1.0    0.578 0.02870    0.521    0.634     Closed Estimated 0.994
+    18     1.2    0.633 0.02204    0.590    0.676     Closed Estimated 0.994
+    19     1.4    0.693 0.01620    0.661    0.724     Closed Estimated 0.994
+    20     1.6    0.749 0.01185    0.726    0.772     Closed Estimated 0.994
+    21     1.8    0.799 0.00905    0.781    0.817     Closed Estimated 0.994
+    22     2.0    0.840 0.00742    0.826    0.855     Closed Estimated 0.994
 
 -   `Order.q`: the order of evenness.
 -   `Evenness`: the computed evenness value of order q.
@@ -775,29 +776,29 @@ Even_out2_est
 ```
 
     $E1
-       Order.q  Evenness         s.e.  Even.LCL  Even.UCL  Assemblage    Method   SC
-    1      0.0 1.0000000 0.0000000000 1.0000000 1.0000000     Monsoon Estimated 0.98
-    2      0.2 0.8756341 0.0040909678 0.8676160 0.8836523     Monsoon Estimated 0.98
-    3      0.4 0.8206746 0.0056212690 0.8096572 0.8316921     Monsoon Estimated 0.98
-    4      0.6 0.8142938 0.0055707897 0.8033753 0.8252124     Monsoon Estimated 0.98
-    5      0.8 0.8394339 0.0045936444 0.8304305 0.8484373     Monsoon Estimated 0.98
-    6      1.0 0.8797243 0.0032418153 0.8733705 0.8860782     Monsoon Estimated 0.98
-    7      1.2 0.9206306 0.0019800198 0.9167499 0.9245114     Monsoon Estimated 0.98
-    8      1.4 0.9530254 0.0010677797 0.9509326 0.9551183     Monsoon Estimated 0.98
-    9      1.6 0.9745076 0.0005256135 0.9734775 0.9755378     Monsoon Estimated 0.98
-    10     1.8 0.9870261 0.0002460964 0.9865437 0.9875084     Monsoon Estimated 0.98
-    11     2.0 0.9936878 0.0001141111 0.9934641 0.9939114     Monsoon Estimated 0.98
-    12     0.0 1.0000000 0.0000000000 1.0000000 1.0000000 Upper_cloud Estimated 0.98
-    13     0.2 0.8606066 0.0065549808 0.8477590 0.8734541 Upper_cloud Estimated 0.98
-    14     0.4 0.7970245 0.0090550828 0.7792769 0.8147721 Upper_cloud Estimated 0.98
-    15     0.6 0.7868162 0.0091104141 0.7689601 0.8046723 Upper_cloud Estimated 0.98
-    16     0.8 0.8119024 0.0077189656 0.7967735 0.8270313 Upper_cloud Estimated 0.98
-    17     1.0 0.8550606 0.0056813182 0.8439255 0.8661958 Upper_cloud Estimated 0.98
-    18     1.2 0.9007350 0.0036838034 0.8935148 0.9079551 Upper_cloud Estimated 0.98
-    19     1.4 0.9385213 0.0021499901 0.9343074 0.9427352 Upper_cloud Estimated 0.98
-    20     1.6 0.9648542 0.0011662102 0.9625685 0.9671399 Upper_cloud Estimated 0.98
-    21     1.8 0.9810635 0.0006089086 0.9798701 0.9822570 Upper_cloud Estimated 0.98
-    22     2.0 0.9902087 0.0003148737 0.9895916 0.9908259 Upper_cloud Estimated 0.98
+       Order.q Evenness     s.e. Even.LCL Even.UCL  Assemblage    Method   SC
+    1      0.0    1.000 0.000000    1.000    1.000     Monsoon Estimated 0.98
+    2      0.2    0.876 0.004796    0.866    0.885     Monsoon Estimated 0.98
+    3      0.4    0.821 0.006472    0.808    0.833     Monsoon Estimated 0.98
+    4      0.6    0.814 0.006299    0.802    0.827     Monsoon Estimated 0.98
+    5      0.8    0.839 0.005098    0.829    0.849     Monsoon Estimated 0.98
+    6      1.0    0.880 0.003523    0.873    0.887     Monsoon Estimated 0.98
+    7      1.2    0.921 0.002097    0.917    0.925     Monsoon Estimated 0.98
+    8      1.4    0.953 0.001094    0.951    0.955     Monsoon Estimated 0.98
+    9      1.6    0.975 0.000516    0.973    0.976     Monsoon Estimated 0.98
+    10     1.8    0.987 0.000230    0.987    0.987     Monsoon Estimated 0.98
+    11     2.0    0.994 0.000102    0.993    0.994     Monsoon Estimated 0.98
+    12     0.0    1.000 0.000000    1.000    1.000 Upper_cloud Estimated 0.98
+    13     0.2    0.861 0.006899    0.847    0.874 Upper_cloud Estimated 0.98
+    14     0.4    0.797 0.009336    0.779    0.815 Upper_cloud Estimated 0.98
+    15     0.6    0.787 0.009218    0.769    0.805 Upper_cloud Estimated 0.98
+    16     0.8    0.812 0.007673    0.797    0.827 Upper_cloud Estimated 0.98
+    17     1.0    0.855 0.005545    0.844    0.866 Upper_cloud Estimated 0.98
+    18     1.2    0.901 0.003520    0.894    0.908 Upper_cloud Estimated 0.98
+    19     1.4    0.939 0.002001    0.935    0.942 Upper_cloud Estimated 0.98
+    20     1.6    0.965 0.001052    0.963    0.967 Upper_cloud Estimated 0.98
+    21     1.8    0.981 0.000531    0.980    0.982 Upper_cloud Estimated 0.98
+    22     2.0    0.990 0.000266    0.990    0.991 Upper_cloud Estimated 0.98
 
 The following commands plot the evenness profiles for five classes,
 along with their confidence intervals.

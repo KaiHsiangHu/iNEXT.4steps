@@ -16,14 +16,12 @@ knitr::opts_chunk$set(
   warning = FALSE,
   message = FALSE
 )
-options("width"=200)
+options("width"=200, digits = 3)
 
 library(iNEXT.4steps)
 library(ggplot2)
-data("Spider")
-data("Brazil_abun_data")
-data("Brazil_phylo_tree")
-data("Brazil_distance_matrix")
+data("Data_spider")
+data("Data_woody_plant")
 ```
 
 iNEXT.4steps (R package)
@@ -157,14 +155,14 @@ iNEXT4steps(data, q = seq(0, 2, 0.2), datatype = "abundance",
 The arguments of this function are briefly described below, and will explain details by illustrative examples in later text. 
 
 ```{r, echo=FALSE,warning=FALSE}
-Des <- c("data","(a) For `datatype = 'abundance'`, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors.
-(b) For `datatype = 'incidence_raw'`, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input.",
+Des <- c("data","(a) For <code>datatype = 'abundance'</code>, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors.
+(b) For <code>datatype = 'incidence_raw'</code>, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input.",
 "q","a numerical vector specifying the orders of q that will be used to compute sample completeness and evenness as well as plot the relevant profiles. Default is <code>seq(0, 2, by = 0.2)</code>.",
-"datatype","data type of input data: individual-based abundance data (`datatype = 'abundance'`) or species by sampling-units incidence matrix (`datatype = 'incidence_raw'`) with all entries being 0 (non-detection) or 1 (detection)", 
+"datatype","data type of input data: individual-based abundance data (<code>datatype = 'abundance'</code>) or species by sampling-units incidence matrix (<code>datatype = 'incidence_raw'</code>) with all entries being 0 (non-detection) or 1 (detection)", 
 "nboot","a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty and constructing confidence intervals. Enter 0 to skip the bootstrap procedures. Default is 30.",
 "conf","a positive number < 1 specifying the level of confidence interval. Default is 0.95.",
 "nT","(required only when <code>datatype = 'incidence_raw'</code> and input data in a single matrix/data.frame) a vector of positive integers specifying the number of sampling units in each assemblage. If assemblage names are not specified (i.e., <code>names(nT) = NULL</code>), then assemblages are automatically named as 'Assemblage1', 'Assemblage2',..., etc.",
-"details","a logical variable to indicate whether the detailed numerical values for each step are displayed. Default is `FALSE`.")
+"details","a logical variable to indicate whether the detailed numerical values for each step are displayed. Default is <code>FALSE</code>.")
 
 output <- 
   matrix(Des, 
