@@ -49,7 +49,7 @@ A list of several tables containing estimated (or observed) evenness with order 
 }
 \description{
 \code{Evenness} computes standardized and observed evenness of order q = 0 to q = 2 in increments of 0.2 (by default) and depicts evenness profiles based on five classes of evenness measures developed 
-in Chao and Ricotta (2019).
+in Chao and Ricotta (2019). Note that for q = 0 species abundances are disregarded, so it is not meaningful to evaluate evenness among abundances specifically for q = 0. As q tends to 0, all evenness values tend to 1 as a limiting value.
 }
 \examples{
 ## Evenness for abundance data

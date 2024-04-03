@@ -50,7 +50,7 @@ When sampling data do not contain sufficient information to accurately infer tru
 
 - **STEP 4. Assessment of evenness profiles**
 
-Chao and Ricotta (2019) developed five classes of evenness measures parameterized by an order q ≥ 0, the same order that is used to index sample completeness. All classes of evenness measures are functions of diversity and species richness, and all are standardized to the range of [0, 1] to adjust for the effect of differing species richness. Evenness profile depicts evenness estimate with respect to order q ≥ 0. Because true species richness typically cannot be accurately estimated, evenness profile typically can only be accurately measured when both diversity and richness are computed at a fixed level of sample coverage up to a maximum coverage Cmax defined in Step 3. `iNEXT.4steps` shows, by default, the relevant statistics and plot for only one class of evenness measure (based on the normalized slope of a diversity profile), but all the five classes are optionally featured.  
+Chao and Ricotta (2019) developed five classes of evenness measures parameterized by an order q > 0. (For q = 0, species abundances are disregarded, so it is not meaningful to evaluate evenness among abundances specifically for q = 0. As q tends to 0, all evenness values tend to 1 as a limiting value.) All classes of evenness measures are functions of diversity and species richness, and all are standardized to the range of [0, 1] to adjust for the effect of differing species richness. Evenness profile depicts evenness estimate with respect to order q ≥ 0. Because true species richness typically cannot be accurately estimated, evenness profile typically can only be accurately measured when both diversity and richness are computed at a fixed level of sample coverage up to a maximum coverage Cmax defined in Step 3. `iNEXT.4steps` shows, by default, the relevant statistics and plot for only one class of evenness measure (based on the normalized slope of a diversity profile), but all the five classes are featured.  
 
 
 <span style="color:blue;">NOTE 1</span>: Sufficient data are required to perform the 4-step analysis. If there are only a few species in users' data, it is likely that data are too sparse to use `iNEXT.4steps.` 
@@ -59,7 +59,8 @@ Chao and Ricotta (2019) developed five classes of evenness measures parameterize
 
 <span style="color:blue;">NOTE 3</span>: As with `iNEXT`, `iNEXT.4steps` only deals with taxonomic/species diversity. Researchers who are interested in phylogenetic diversity and functional diversity should use package `iNEXT.3D` available from CRAN and see the relevant paper (Chao et al. 2021) for methodology. 
 
-
+<span style="color:blue;">NOTE 4</span>: `iNEXT.4steps` aims to compare within-assemblage diversity. If the goal is to assess the extent of differentiation among assemblages or to infer species compositional shift and abundance changes, users should use `iNEXT.beta3D` available from CRAN and see the relevant paper (Chao et al. 2023) for methodology.  
+ 
 
 ## How to cite
 If you publish your work based on results from iNEXT.4steps package, you should make references to the following methodology paper and the package:
@@ -69,7 +70,7 @@ If you publish your work based on results from iNEXT.4steps package, you should 
 - Chao, A. and Hu, K.-H. (2024). The iNEXT.4steps package: Four-Step Biodiversity Analysis based on iNEXT. R package available from CRAN.
 
 
-## SOFTWARE NEEDED TO RUN INEXT IN R
+## SOFTWARE NEEDED TO RUN iNEXT.4STEPS IN R
 - Required: [R](https://cran.r-project.org/)
 - Suggested: [RStudio IDE](https://posit.co/products/open-source/rstudio/#Desktop)
 
@@ -98,7 +99,7 @@ An online version of iNEXT.4steps (https://chao.shinyapps.io/iNEXT_4steps/) is a
 
 ### Species abundance/incidence data format
 
-For `iNEXT.4steps` package, pertinent information on species identity (or any unique identification code) is suggested to be included in the input data for running `iNEXT.4steps`, although such information is not taken into account in inferring and comparing taxonomic/species diversity. Two types of species taxonomic data are supported:
+For `iNEXT.4steps` package, pertinent information on species identity (or any unique identification code) and assemblage affiliation is required to be included in the input data for running iNEXT.4steps, although species identity information is not taken into account in inferring and comparing taxonomic/species diversity. Two types of species taxonomic data are supported:
 
 1. Individual-based abundance data (`datatype = "abundance"`): When there are multiple assemblages, in addition to the assemblage/site names (as column names) and the species names (as row names), species abundance data (reference sample) can be input as a species (in rows) by assemblage (in columns) matrix/data.frame or a list of species abundance vectors. In the special case that there is only one assemblage, all data should be read in one column.
 
@@ -240,7 +241,7 @@ Four_Steps_out2$figure[[6]]
 ```
 
 
-## <span style="color:red;">FUNCTIONs Completeness and ggCompleteness: MAIN FUNCTIONS FOR STEP 1</span>
+## <span style="color:red;">Completeness and ggCompleteness: MAIN FUNCTIONS FOR STEP 1</span>
 
 Function `Completeness()` computes sample completeness estimates of orders q = 0 to q = 2 in increments of 0.2 (by default), and function `ggCompleteness` is used to plot the corresponding sample completeness profiles. These two functions are specifically for users who only require sample completeness estimates and profiles.
 The two functions with arguments are described below: 
@@ -256,7 +257,7 @@ ggCompleteness(output)
 
 All the arguments in these two functions are the same as those in the main fnction `iNEXT4steps` for details.
 
-### Sample completeness profiles for abundance data
+### Sample completeness estimates and profiles for abundance data
 
 Run the following code to obtain sample completeness estimates based on the abundance data `Data_spider`:
 
@@ -279,7 +280,7 @@ ggCompleteness(SC_out1)
 ```
 
 
-### Sample completeness profiles for incidence data
+### Sample completeness estimates and profiles for incidence data
 
 Similar procedures can be applied to incidence data `Data_woody_plant` to infer sample completeness.
 
@@ -297,7 +298,7 @@ ggCompleteness(SC_out2)
 
 
 
-## <span style="color:red;">FUNCTIONs Evenness and ggevenness: MAIN FUNCTIONS FOR STEP 4</span>
+## <span style="color:red;">Evenness and ggevenness: MAIN FUNCTIONS FOR STEP 4</span>
 
 `Evenness()` computes standardized (or observed) evenness of order q = 0 to q = 2 in increments of 0.2 (by default) based on five classes of evenness measures, and function `ggevenness` is used to plot the corresponding evenness profiles. These two functions are specifically for users who only require evenness estimates and profiles. The two functions with arguments are described below: 
 
@@ -310,7 +311,7 @@ Evenness(data, q = seq(0, 2, 0.2), datatype = "abundance", method = "Estimated",
 ggEvenness(output)
 ```
 
-There are only three arguments that are not used in the main function `iNEXT4steps`; these three aruments are described below (see `iNEXT4steps` for other arguments)
+There are only three arguments that are not used in the main function `iNEXT4steps`; these three arguments are described below (see `iNEXT4steps` for other arguments)
 
 <table style="width:100%;">
 <colgroup>
@@ -341,11 +342,11 @@ There are only three arguments that are not used in the main function `iNEXT4ste
 </table>
 
 
-Following are two simple examples for functions `Evenness` and `ggEvenness`. 
+Two simple examples for demonstrating functions `Evenness` and `ggEvenness` are given below. 
 
-### Estimated evenness profiles for abundance data with default (Cmax)
+### Evenness estimates and profiles for abundance data with default standardized coverage value (Cmax)
 
-Use abundance data `Data_spider` to compute estimated evenness with default `SC = NULL`. Here only show the first class of evenness.
+The dataset `Data_spider` is used to estimate evenness at the default standardized sample coverage (`SC = NULL`). Evenness estimates of order q = 0 to q = 2 in increments of 0.2 (by default) will be computed based on five classes of evenness measures. (For q = 0, species abundances are disregarded, so it is not meaningful to evaluate evenness among abundances specifically for q = 0. As q tends to 0, all evenness values tend to 1 as a limiting value.) Function `ggevenness` is used to plot the corresponding evenness profiles. Here only the evenness estimates are shown for the first class of evenness measures. The corresponding numerical tables for the other four classes of evenness measures are omitted. Users also can use argument `E.class` to specify which class (e.g., `E.class= 3`) or classes are required.
 
 ```{r, eval=FALSE}
 data(Data_spider)
@@ -371,16 +372,16 @@ Even_out1_est[1]
 * `SC`: the standardized coverage value under which evenness values are computed (only for `method = "Estimated"`)
 
 
-The following commands plot the evenness curves for five classes, along with its confidence interval for q between 0 to 2.
+The following commands plot the evenness profiles for all five classes of even measures, along with their confidence intervals.
 
 ```{r out.width="100%",fig.height=8}
 ggEvenness(Even_out1_est)
 ```
 
 
-### Estimated evenness profiles for incidence data with user's specified coverage value of 0.98.
+### Evenness estimates and profiles for incidence data with user's specified coverage value of 0.98.
 
-Use incidence frequency data `Data_woody_plant` to compute estimated evenness with user's specified coverage value of 0.98. Here only show the first class of evenness.
+In the function `Evenness`, users can specify a particular sample coverage value under which all five classes of evenness measures will be computed. For example, instead of using the default standardized coverage value, if users want to compute evenness estimates for 0.98 based on the incidence dataset `Data_woody_plant`, then the argument `SC=0.98` is used instead of `SC=NULL`, as shown below. Here only the evenness estimates are displayed for the first class of evenness measures. The corresponding numerical tables for the other four classes of evenness measures are omitted.
 
 ```{r, eval=FALSE}
 data(Data_woody_plant)
@@ -398,7 +399,7 @@ Even_out2_est[1]
 ```
 
 
-The following commands plot the evenness curves for five classes, along with its confidence interval for q between 0 to 2.
+The following commands plot the evenness profiles for five classes, along with their confidence intervals.
 
 ```{r out.width="100%",fig.height=8}
 ggEvenness(Even_out2_est)
@@ -416,8 +417,11 @@ estimation in species biodiversity studies. Ecological Monographs 84, 45-67.
 
 - Chao, A., Henderson, P. A., Chiu, C.-H., Moyes, F., Hu, K.-H., Dornelas, M and Magurran, A. E. (2021). Measuring temporal change in alpha diversity: a framework integrating taxonomic, phylogenetic and functional diversity and the iNEXT.3D standardization. Methods in Ecology and Evolution, 12, 1926-1940.
 
+
+- Chao, A., Kubota, Y., Zelený, D., Chiu, C.-H., Li, C.-F., Kusumoto, B., Yasuhara, M., Thorn, S., Wei, C.-L., Costello, M. J. and Colwell, R. K. (2020). Quantifying sample completeness and comparing diversities among assemblages. Ecological Research, 35, 292-314.
+
 - Chao, A. and Ricotta, C. (2019). Quantifying evenness and linking it to diversity, beta diversity, and similarity. Ecology, 100(12), e02852.
 
-- Chao, A., Y. Kubota, D. Zeleny, C.-H. Chiu, C.-F. Li, B. Kusumoto, M. Yasuhara, S. Thorn, C.-L. Wei, M. J. Costello, and R. K. Colwell (2020). Quantifying sample completeness and comparing diversities among assemblages. Ecological Research, 35, 292-314.
+- Chao, A., Thorn, S., Chiu, C.-H., Moyes, F., Hu, K.-H., Chazdon, R. L., Wu, J., Magnago, L. F. S., Dornelas, M., Zelený, D., Colwell, R. K., and Magurran, A. E. (2023). Rarefaction and extrapolation with beta diversity under a framework of Hill numbers: the iNEXT.beta3D standardization. Ecological Monographs e1588.
 
 

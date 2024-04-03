@@ -40,6 +40,8 @@ NOTE 2: The analyses in STEP 2 and STEP 3 are mainly based on package \pkg{iNEXT
 
 NOTE 3: As with \pkg{iNEXT}, \pkg{iNEXT.4steps} only deals with taxonomic/species diversity. Researchers who are interested in phylogenetic diversity and functional diversity should use package \pkg{iNEXT.3D} available from CRAN and see the relevant paper (Chao et al. 2021) for methodology.  \cr \cr
 
+NOTE 4: \pkg{iNEXT.4steps} aims to compare within-assemblage diversity. If the goal is to assess the extent of differentiation among assemblages or to infer species compositional shift and abundance changes, users should use \pkg{iNEXT.beta3D} available from CRAN and see the relevant paper (Chao et al. 2023) for methodology.  \cr \cr
+
 
 There are five main functions in \pkg{iNEXT.4steps}: 
 
@@ -63,7 +65,8 @@ Maintainer: Anne Chao <chao@stat.nthu.edu.tw>
 \references{
 Chao, A., Gotelli, N. G., Hsieh, T. C., Sander, E. L., Ma, K. H., Colwell, R. K. and Ellison, A. M. (2014). Rarefaction and extrapolation with Hill numbers: a framework for sampling and estimation in species biodiversity studies. Ecological Monographs, 84, 45-67. \cr\cr
 Chao, A., Henderson, P. A., Chiu, C.-H., Moyes, F., Hu, K.-H., Dornelas, M and Magurran, A. E. (2021). Measuring temporal change in alpha diversity: a framework integrating taxonomic, phylogenetic and functional diversity and the iNEXT.3D standardization. Methods in Ecology and Evolution, 12, 1926-1940. \cr\cr
+Chao, A., Kubota, Y., Zelený, D., Chiu, C.-H., Li, C.-F., Kusumoto, B., Yasuhara, M., Thorn,  S., Wei, C.-L., Costello, M. J. and Colwell, R. K. (2020). Quantifying sample completeness and comparing diversities among assemblages. Ecological Research, 35, 292-314.\cr\cr
 Chao, A. and Ricotta, C. (2019). Quantifying evenness and linking it to diversity, beta diversity, and similarity. Ecology, 100(12), e02852. \cr\cr
-Chao, A., Y. Kubota, D. Zeleny, C.-H. Chiu, C.-F. Li, B. Kusumoto, M. Yasuhara, S. Thorn, C.-L. Wei, M. J. Costello, and R. K. Colwell (2020). Quantifying sample completeness and comparing diversities among assemblages. Ecological Research, 35, 292-314. \cr\cr
+Chao, A., Thorn, S., Chiu, C.-H., Moyes, F., Hu, K.-H., Chazdon, R. L., Wu, J., Magnago, L. F. S., Dornelas, M., Zelený, D., Colwell, R. K., and Magurran, A. E. (2023). Rarefaction and extrapolation with beta diversity under a framework of Hill numbers: the iNEXT.beta3D standardization. Ecological Monographs, e1588.\cr\cr
 }
 \keyword{ package }

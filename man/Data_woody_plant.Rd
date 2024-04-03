@@ -8,7 +8,8 @@
   This dataset was taken from The National Vegetation Database of Taiwan, sampled between 2003 and 2007 (Chiou et al. 2009). Only data in plots (each 20x20-m in area) belonging to two 
 vegetation types (monsoon forest and upper_cloud forest) were used (Li et al. 2013). All woody plant individuals taller than 2 meters were recorded in each plot. 
 In the monsoon forest, 329 species and 6814 incidences were recorded in 191 plots. In the upper cloud forest, 239 species and 3371 incidences were recorded in 153 plots (each plot is regarded as a sampling unit). 
-
+  
+  
 }
 \usage{data(Data_woody_plant)}
 \format{
@@ -18,7 +19,7 @@ In the monsoon forest, 329 species and 6814 incidences were recorded in 191 plot
   $ Upper_cloud: num [1:239, 1:153] 0 0 0 0 0 0 0 0 0 0 ... \cr
 }
 \source{
-  The National Vegetation Database of Taiwan (AS-TW-001).
+  The National Vegetation Database of Taiwan (AS-TW-001) by Chiou et al. (2009).
 }
 \examples{
   data(Data_woody_plant)

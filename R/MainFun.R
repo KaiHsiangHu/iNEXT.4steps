@@ -691,7 +691,7 @@ Evenness.profile <- function(x, q, datatype = c("abundance","incidence_freq"), m
 #' Main function for STEP 4: Assessment of evenness
 #'
 #' \code{Evenness} computes standardized and observed evenness of order q = 0 to q = 2 in increments of 0.2 (by default) and depicts evenness profiles based on five classes of evenness measures developed 
-#' in Chao and Ricotta (2019).
+#' in Chao and Ricotta (2019). Note that for q = 0 species abundances are disregarded, so it is not meaningful to evaluate evenness among abundances specifically for q = 0. As q tends to 0, all evenness values tend to 1 as a limiting value.      
 #' 
 #' @param data (a) For \code{datatype = "abundance"}, data can be input as a vector of species abundances (for a single assemblage), matrix/data.frame (species by assemblages), or a list of species abundance vectors. \cr
 #' (b) For \code{datatype = "incidence_raw"}, data can be input as a list of matrix/data.frame (species by sampling units); data can also be input as a matrix/data.frame by merging all sampling units across assemblages based on species identity; in this case, the number of sampling units (nT, see below) must be input. 
