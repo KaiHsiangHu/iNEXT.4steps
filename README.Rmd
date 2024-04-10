@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
   warning = FALSE,
   message = FALSE
 )
-options("width"=200, digits = 3)
+old <- options("width" = 200, digits = 3)
 
 library(iNEXT.4steps)
 library(ggplot2)
@@ -375,6 +375,10 @@ The following commands plot the evenness profiles for five classes, along with t
 ggEvenness(Even_out2_est)
 ```
 
+
+```{r, include = FALSE}
+options(old)
+```
 
 
 ## License
