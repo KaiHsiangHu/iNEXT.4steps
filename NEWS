@@ -3,3 +3,6 @@ Publish public version
 - Create functions 'iNEXT4steps', 'Completeness', 'ggCompleteness', 'Evenness', 'ggEvenness'.
 - Create the project and upload to CRAN.
 
+# iNEXT.4steps 1.0.1
+- Add the 4 steps figure when the number of assemblages exceed eight.
+

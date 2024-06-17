@@ -105,50 +105,47 @@ iNEXT4steps <- function(data, q = seq(0, 2, 0.2), datatype = "abundance",
   }
 
   ## 5 figures ##
-  if (length(unique(SC.table$Assemblage)) <= 8) {
-    
-    SC.plot <- ggCompleteness(SC.table) +
-      labs(title = plot.names[1]) +
-      theme(text = element_text(size = 12),
-            plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
-            plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
-
-    size.RE.plot <- ggiNEXT3D(iNEXT.table, type = 1, facet.var = "Order.q", color.var = "Order.q") +
-      labs(title = plot.names[2]) +
-      theme(text = element_text(size = 12),
-            plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
-            legend.margin = margin(0, 0, 0, 0),
-            plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
-
-    cover.RE.plot <- ggiNEXT3D(iNEXT.table, type = 3, facet.var = "Order.q", color.var = "Order.q") +
-      labs(title = plot.names[4]) +
-      theme(text = element_text(size = 12),
-            plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
-            legend.margin = margin(0, 0, 0, 0),
-            plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
-
-    AO.plot <- ggObsAsy3D(qD.table) +
-      labs(title = plot.names[3]) +
-      theme(text = element_text(size = 12),
-            plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
-            plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
-
-    even.plot <- ggEvenness(Even.table) +
-      labs(title = plot.names[5]) +
-      theme(text = element_text(size = 12),
-            plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
-            plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
-
-    legend.p = get_legend(SC.plot + theme(legend.direction = "vertical"))
-    
-    steps.plot = ggarrange(SC.plot       + guides(color = "none", fill = "none"),
-                           size.RE.plot  + guides(color = "none", fill = "none", shape = "none"),
-                           AO.plot       + guides(color = "none", fill = "none"),
-                           cover.RE.plot + guides(color = "none", fill = "none", shape = "none"),
-                           even.plot     + guides(color = "none", fill = "none"),
-                           legend.p, nrow = 3, ncol = 2
-    )
-  } else { warning("The number of communities exceeds eight. We don't show the figures.") }
+  SC.plot <- ggCompleteness(SC.table) +
+    labs(title = plot.names[1]) +
+    theme(text = element_text(size = 12),
+          plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
+          plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
+  
+  size.RE.plot <- ggiNEXT3D(iNEXT.table, type = 1, facet.var = "Order.q", color.var = "Order.q") +
+    labs(title = plot.names[2]) +
+    theme(text = element_text(size = 12),
+          plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
+          legend.margin = margin(0, 0, 0, 0),
+          plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
+  
+  cover.RE.plot <- ggiNEXT3D(iNEXT.table, type = 3, facet.var = "Order.q", color.var = "Order.q") +
+    labs(title = plot.names[4]) +
+    theme(text = element_text(size = 12),
+          plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
+          legend.margin = margin(0, 0, 0, 0),
+          plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
+  
+  AO.plot <- ggObsAsy3D(qD.table) +
+    labs(title = plot.names[3]) +
+    theme(text = element_text(size = 12),
+          plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
+          plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
+  
+  even.plot <- ggEvenness(Even.table) +
+    labs(title = plot.names[5]) +
+    theme(text = element_text(size = 12),
+          plot.margin = unit(c(5.5, 5.5, 5.5, 5.5), "pt"),
+          plot.title = element_text(size = 11, colour = 'blue', face = "bold", hjust = 0))
+  
+  legend.p = get_legend(SC.plot + theme(legend.direction = "vertical"))
+  
+  steps.plot = ggarrange(SC.plot       + guides(color = "none", fill = "none"),
+                         size.RE.plot  + guides(color = "none", fill = "none", shape = "none"),
+                         AO.plot       + guides(color = "none", fill = "none"),
+                         cover.RE.plot + guides(color = "none", fill = "none", shape = "none"),
+                         even.plot     + guides(color = "none", fill = "none"),
+                         legend.p, nrow = 3, ncol = 2
+                         )
   
   estD = estimate3D(data, diversity = 'TD', q = c(0, 1, 2), datatype, base = "coverage", level = NULL, nboot = 0, nT = nT)
   
@@ -184,13 +181,9 @@ iNEXT4steps <- function(data, q = seq(0, 2, 0.2), datatype = "abundance",
   ##  Output ##
   if (details == FALSE) {
 
-    if (length(unique(SC.table$Assemblage)) <= 8) {
-      
-      ans <- list(summary = summary,
-                  
-                  figure = list(SC.plot, size.RE.plot, AO.plot, cover.RE.plot, even.plot, steps.plot))
-      
-    } else { ans <- list(summary = summary) }
+    ans <- list(summary = summary,
+                
+                figure = list(SC.plot, size.RE.plot, AO.plot, cover.RE.plot, even.plot, steps.plot))
 
   } else if (details == TRUE) {
     
@@ -199,15 +192,11 @@ iNEXT4steps <- function(data, q = seq(0, 2, 0.2), datatype = "abundance",
                "Observed and asymptotic diversity" = qD.table, 
                "Evenness" = Even.table)
 
-    if (length(unique(SC.table$Assemblage)) <= 8) {
-      
-      ans <- list(summary = summary,
-                  
-                  figure = list(SC.plot, size.RE.plot, AO.plot, cover.RE.plot, even.plot, steps.plot),
-                  
-                  details = tab)
-      
-    } else { ans <- list(summary = summary, details = tab)}
+    ans <- list(summary = summary,
+                
+                figure = list(SC.plot, size.RE.plot, AO.plot, cover.RE.plot, even.plot, steps.plot),
+                
+                details = tab)
     
   }
   
